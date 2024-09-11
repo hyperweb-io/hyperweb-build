@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../__fixtures__/first/src/greet.ts", "../../__fixtures__/first/src/farewell.ts", "../../__fixtures__/first/src/index.ts"],
+  "sourcesContent": ["export function greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n", "export function farewell(name: string): string {\n  myname();\n  return `Goodbye, ${name}!`;\n}\n\nfunction myname() {\n  console.log('hello');\n}\n", "import { greet } from './greet';\nimport { farewell } from './farewell';\n\nfunction myname() {\n  console.log('hello');\n}\n\nconsole.log(greet('World'));\nconsole.log(farewell('World'));\nmyname();\n"],
+  "mappings": ";;;AAAO,SAAS,MAAM,MAAsB;AAC1C,SAAO,UAAU,IAAI;AACvB;;;ACFO,SAAS,SAAS,MAAsB;AAC7C,SAAO;AACP,SAAO,YAAY,IAAI;AACzB;AAEA,SAAS,SAAS;AAChB,UAAQ,IAAI,OAAO;AACrB;;;ACJA,SAASA,UAAS;AAChB,UAAQ,IAAI,OAAO;AACrB;AAEA,QAAQ,IAAI,MAAM,OAAO,CAAC;AAC1B,QAAQ,IAAI,SAAS,OAAO,CAAC;AAC7BA,QAAO;",
+  "names": ["myname"]
+}
