@@ -34,3 +34,6 @@ jobs:
       - name: Test @interweb/build 🔍
         run: cd packages/build && yarn test
       
+      - name: Test @interweb/ts-json-schema 🔍
+        run: cd packages/ts-json-schema && yarn test
+      
