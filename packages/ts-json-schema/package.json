@@ -1,0 +1,36 @@
+{
+  "name": "@interweb/ts-json-schema",
+  "version": "0.0.1",
+  "author": "Interweb, Inc. <developers@cosmology.zone>",
+  "description": "TS to JSON Schema",
+  "main": "index.js",
+  "module": "esm/index.js",
+  "types": "index.d.ts",
+  "homepage": "https://github.com/cosmology-tech/interweb-build",
+  "license": "SEE LICENSE IN LICENSE",
+  "publishConfig": {
+    "access": "public",
+    "directory": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cosmology-tech/interweb-build"
+  },
+  "bugs": {
+    "url": "https://github.com/cosmology-tech/interweb-build/issues"
+  },
+  "scripts": {
+    "copy": "copyfiles -f ../../LICENSE README.md package.json dist",
+    "clean": "rimraf dist/**",
+    "prepare": "npm run build",
+    "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "build:dev": "npm run clean; tsc --declarationMap; tsc -p tsconfig.esm.json; npm run copy",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": [],
+  "dependencies": {
+    "ts-json-schema-generator": "^2.3.0"
+  }
+}

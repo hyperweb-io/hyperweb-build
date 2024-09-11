@@ -1,4 +1,4 @@
-# Interweb Build
+# Interweb Build Tools
 
 <p align="center" width="100%">
     <img height="90" src="https://user-images.githubusercontent.com/545047/190171432-5526db8f-9952-45ce-a745-bea4302f912b.svg" />
@@ -10,82 +10,40 @@
   </a>
   <br />
    <a href="https://github.com/cosmology-tech/interweb-build/blob/main/LICENSE"><img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-   <a href="https://www.npmjs.com/package/@interweb/build"><img height="20" src="https://img.shields.io/github/package-json/v/cosmology-tech/interweb-build?filename=packages%2Fbuild%2Fpackage.json"></a>
 </p>
+
+Interweb is a collection of powerful tools designed to simplify and streamline your development process for web and TypeScript projects.
+
+## Packages
+
+This monorepo contains the following packages:
+
+### [@interweb/build](./packages/build)
+
+[![npm version](https://img.shields.io/npm/v/@interweb/build.svg)](https://www.npmjs.com/package/@interweb/build)
 
 Interweb Build is a powerful wrapper around esbuild, designed to simplify and streamline your build process for Interweb projects.
 
-
-## Features
-
-- Simple API for building TypeScript projects
-- Customizable build options
-- Built-in support for common Interweb project configurations
-- Easy integration with existing projects
-
-
-## Installation
-
+#### Installation
 ```sh
 npm install @interweb/build
 ```
 
-## Usage
+[Read more about @interweb/build](./packages/build)
 
-Here's a basic example of how to use Interweb Build:
+### [@interweb/ts-json-schema](./packages/ts-json-schema)
 
-```js
-import { InterwebBuild, defaultOptions } from '@interweb/build';
+[![npm version](https://img.shields.io/npm/v/@interweb/ts-json-schema.svg)](https://www.npmjs.com/package/@interweb/ts-json-schema)
 
-// Use default options
-InterwebBuild.build();
+Interweb TS JSON Schema is a powerful wrapper around ts-json-schema-generator, designed to simplify the process of generating JSON schemas from TypeScript files in Interweb projects.
 
-// Customize options
-InterwebBuild.build({
-  entryPoints: ['src/custom-entry.ts'],
-  outfile: 'dist/custom-bundle.js',
-  minify: true,
-});
-
-// Use default options as a base for a custom configuration
-const myConfig = {
-  ...defaultOptions,
-  minify: true,
-  target: 'es2018',
-};
-InterwebBuild.build(myConfig);
+#### Installation
+```sh
+npm install @interweb/ts-json-schema
 ```
 
-## API Reference
-
-### `InterwebBuild.build(options)`
-
-Builds your project using the provided options.
-
-- `options` (optional): An object containing build options. If not provided, default options will be used.
-
-Returns a Promise that resolves to the build result.
-
-### `defaultOptions`
-
-An object containing the default build options. You can spread these into your own configuration for easy customization.
-
-## Default Configuration
-
-Interweb Build comes with the following default configuration:
-
-```ts
-{
-  bundle: true,
-  minify: false,
-  outfile: 'dist/bundle.js',
-  platform: 'node',
-  sourcemap: true,
-  target: 'ESNext',
-  logLevel: 'info',
-}
-```
+[Read more about @interweb/ts-json-schema](./packages/ts-json-schema)
 
 ## License
 
-Interweb Build is MIT licensed.
+Interweb Build is [MIT licensed](./LICENSE).

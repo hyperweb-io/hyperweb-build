@@ -3,8 +3,8 @@ import { join, resolve } from 'path';
 
 import { InterwebBuild, InterwebBuildOptions } from '../src/index';
 
-const fixtureDir = resolve(join(__dirname, '/../__fixtures__/', 'first'));
-const outputDir = resolve(join(__dirname, '/../__output__/', 'first'));
+const fixtureDir = resolve(join(__dirname, '/../../../__fixtures__/', 'first'));
+const outputDir = resolve(join(__dirname, '/../../../__output__/', 'first'));
 
 describe('InterwebBuild', () => {
   it('builds the fixture project successfully', async () => {
