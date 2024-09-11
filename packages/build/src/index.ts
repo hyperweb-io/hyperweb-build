@@ -6,14 +6,13 @@ export interface InterwebBuildOptions extends esbuild.BuildOptions {
 }
 
 export const defaultOptions: InterwebBuildOptions = {
-//   entryPoints: ['src/index.ts'],
   bundle: true,
   minify: false,
   outfile: 'dist/bundle.js',
   platform: 'node',
   sourcemap: true,
   target: 'ESNext',
-  logLevel: 'info',
+  logLevel: 'info'
 };
 
 export const InterwebBuild = {
@@ -24,7 +23,7 @@ export const InterwebBuild = {
     if (mergedOptions.customPlugins) {
       mergedOptions.plugins = [
         ...(mergedOptions.plugins || []),
-        ...mergedOptions.customPlugins,
+        ...mergedOptions.customPlugins
       ];
       delete mergedOptions.customPlugins;
     }
