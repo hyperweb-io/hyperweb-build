@@ -9,7 +9,7 @@
     <img height="20" src="https://github.com/cosmology-tech/interweb-build/actions/workflows/run-tests.yml/badge.svg" />
   </a>
   <br />
-   <a href="https://github.com/cosmology-tech/interweb-build/blob/main/LICENSE"><img height="20" src="https://img.shields.io/badge/license-MIT%20Clear-blue.svg"></a>
+   <a href="https://github.com/cosmology-tech/interweb-build/blob/main/LICENSE"><img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
    <a href="https://www.npmjs.com/package/@interweb/build"><img height="20" src="https://img.shields.io/github/package-json/v/cosmology-tech/interweb-build?filename=packages%2Fbuild%2Fpackage.json"></a>
 </p>
 
