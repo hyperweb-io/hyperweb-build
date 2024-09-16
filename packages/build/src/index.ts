@@ -9,10 +9,15 @@ export const defaultOptions: InterwebBuildOptions = {
   bundle: true,
   minify: false,
   outfile: 'dist/bundle.js',
-  platform: 'node',
+  platform: 'neutral',
   sourcemap: true,
-  target: 'ESNext',
-  logLevel: 'info'
+  target: 'es2022',
+  logLevel: 'info',
+  format: 'esm',
+  minifyIdentifiers: false,
+  minifySyntax: false,
+  minifyWhitespace: false,
+  treeShaking: false,
 };
 
 export const InterwebBuild = {

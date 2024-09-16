@@ -1,5 +1,3 @@
-"use strict";
-
 // ../../__fixtures__/first/src/greet.ts
 function greet(name) {
   return `Hello, ${name}!`;
