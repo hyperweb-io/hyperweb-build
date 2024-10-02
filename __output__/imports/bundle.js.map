@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../../__fixtures__/imports/src/greet.ts", "../../__fixtures__/imports/src/farewell.ts", "../../__fixtures__/imports/src/index.ts"],
   "sourcesContent": ["import * as yolo from '~somepackage';\n\nexport function greet(name: string): string {\n  console.log(yolo);\n  return `Hello, ${name}!`;\n}\n", "import * as yolo from 'otherpackage';\n\nexport function farewell(name: string): string {\n  myname();\n  console.log(yolo);\n  return `Goodbye, ${name}!`;\n}\n\nfunction myname() {\n  console.log('hello');\n}\n", "import { greet } from './greet';\nimport { farewell } from './farewell';\n\nfunction myname() {\n  console.log('hello');\n}\n\nconsole.log(greet('World'));\nconsole.log(farewell('World'));\nmyname();\n"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;AAAA,WAAsB;AAEf,SAAS,MAAM,MAAsB;AAC1C,UAAQ,IAAI,IAAI;AAChB,SAAO,UAAU,IAAI;AACvB;;;ACLA,IAAAA,QAAsB;AAEf,SAAS,SAAS,MAAsB;AAC7C,SAAO;AACP,UAAQ,IAAIA,KAAI;AAChB,SAAO,YAAY,IAAI;AACzB;AAEA,SAAS,SAAS;AAChB,UAAQ,IAAI,OAAO;AACrB;;;ACPA,SAASC,UAAS;AAChB,UAAQ,IAAI,OAAO;AACrB;AAEA,QAAQ,IAAI,MAAM,OAAO,CAAC;AAC1B,QAAQ,IAAI,SAAS,OAAO,CAAC;AAC7BA,QAAO;",
+  "mappings": ";AAAA,YAAY,UAAU;AAEf,SAAS,MAAM,MAAsB;AAC1C,UAAQ,IAAI,IAAI;AAChB,SAAO,UAAU,IAAI;AACvB;;;ACLA,YAAYA,WAAU;AAEf,SAAS,SAAS,MAAsB;AAC7C,SAAO;AACP,UAAQ,IAAIA,KAAI;AAChB,SAAO,YAAY,IAAI;AACzB;AAEA,SAAS,SAAS;AAChB,UAAQ,IAAI,OAAO;AACrB;;;ACPA,SAASC,UAAS;AAChB,UAAQ,IAAI,OAAO;AACrB;AAEA,QAAQ,IAAI,MAAM,OAAO,CAAC;AAC1B,QAAQ,IAAI,SAAS,OAAO,CAAC;AAC7BA,QAAO;",
   "names": ["yolo", "myname"]
 }
