@@ -1,7 +1,7 @@
 # Hyperweb Build
 
 <p align="center" width="100%">
-    <img height="90" src="https://user-images.githubusercontent.com/545047/190171432-5526db8f-9952-45ce-a745-bea4302f912b.svg" />
+    <img height="148" src="https://github.com/user-attachments/assets/f672f9b8-e59a-4f44-8f51-df3e8d2eaae5" />
 </p>
 
 <p align="center" width="100%">
@@ -22,7 +22,6 @@ Hyperweb Build is a powerful wrapper around esbuild, designed to simplify and st
 - Customizable build options
 - Built-in support for common Hyperweb project configurations
 - Easy integration with existing projects
-
 
 ## Installation
 

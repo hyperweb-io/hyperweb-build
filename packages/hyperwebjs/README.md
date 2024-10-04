@@ -1,15 +1,16 @@
 # hyperwebjs
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/545047/188804067-28e67e5e-0214-4449-ab04-2e0c564a6885.svg" width="80"><br />
-    JS client for hyperweb
+<p align="center" width="100%">
+    <img height="148" src="https://github.com/user-attachments/assets/f672f9b8-e59a-4f44-8f51-df3e8d2eaae5" />
+    JS client for Hyperweb
 </p>
 
 ## install
 
 ```sh
-npm install @hyperweb/hyperwebjs
+npm install hyperwebjs
 ```
+
 ## Table of contents
 
 - [hyperwebjs](#hyperwebjs)

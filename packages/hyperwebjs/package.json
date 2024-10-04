@@ -2,7 +2,7 @@
   "name": "hyperwebjs",
   "version": "0.0.1",
   "author": "Hyperweb <developers@hyperweb.io>",
-  "description": "JS client for hyperweb",
+  "description": "JS client for Hyperweb",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
