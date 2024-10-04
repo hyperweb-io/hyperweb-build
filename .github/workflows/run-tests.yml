@@ -1,4 +1,4 @@
-name: Run Interweb Build Tests 🧪
+name: Run Hyperweb Build Tests 🧪
 
 on:
   push:
@@ -31,9 +31,9 @@ jobs:
           yarn build
           yarn symlink
 
-      - name: Test @interweb/build 🔍
+      - name: Test @hyperweb/build 🔍
         run: cd packages/build && yarn test
       
-      - name: Test @interweb/ts-json-schema 🔍
+      - name: Test @hyperweb/ts-json-schema 🔍
         run: cd packages/ts-json-schema && yarn test
       

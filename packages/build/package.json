@@ -1,12 +1,12 @@
 {
-  "name": "@interweb/build",
-  "version": "0.0.5",
-  "author": "Dan Lynch <pyramation@gmail.com>",
-  "description": "build tools for interweb",
+  "name": "@hyperweb/build",
+  "version": "0.0.1",
+  "author": "Hyperweb <developers@hyperweb.io>",
+  "description": "build tools for hyperweb",
   "main": "index.js",
   "module": "esm/index.js",
   "types": "index.d.ts",
-  "homepage": "https://github.com/cosmology-tech/interweb-build",
+  "homepage": "https://github.com/hyperweb-io/hyperweb-build",
   "license": "SEE LICENSE IN LICENSE",
   "publishConfig": {
     "access": "public",
@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cosmology-tech/interweb-build"
+    "url": "https://github.com/hyperweb-io/hyperweb-build"
   },
   "bugs": {
-    "url": "https://github.com/cosmology-tech/interweb-build/issues"
+    "url": "https://github.com/hyperweb-io/hyperweb-build/issues"
   },
   "scripts": {
     "copy": "copyfiles -f ../../LICENSE README.md package.json dist",

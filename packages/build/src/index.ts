@@ -1,11 +1,11 @@
 import esbuild from 'esbuild';
 
-export interface InterwebBuildOptions extends esbuild.BuildOptions {
-  // Add any Interweb-specific options here
+export interface HyperwebBuildOptions extends esbuild.BuildOptions {
+  // Add any Hyperweb-specific options here
   customPlugins?: esbuild.Plugin[];
 }
 
-export const defaultOptions: InterwebBuildOptions = {
+export const defaultOptions: HyperwebBuildOptions = {
   bundle: true,
   minify: false,
   outfile: 'dist/bundle.js',
@@ -20,9 +20,9 @@ export const defaultOptions: InterwebBuildOptions = {
   treeShaking: false,
 };
 
-export const InterwebBuild = {
-  async build(options: Partial<InterwebBuildOptions> = {}): Promise<esbuild.BuildResult> {
-    const mergedOptions: InterwebBuildOptions = { ...defaultOptions, ...options };
+export const HyperwebBuild = {
+  async build(options: Partial<HyperwebBuildOptions> = {}): Promise<esbuild.BuildResult> {
+    const mergedOptions: HyperwebBuildOptions = { ...defaultOptions, ...options };
 
     // Apply custom plugins if any
     if (mergedOptions.customPlugins) {

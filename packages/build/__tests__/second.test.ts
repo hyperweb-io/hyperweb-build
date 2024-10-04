@@ -1,22 +1,22 @@
 import fs from 'fs/promises';
 import { join, resolve } from 'path';
 
-import { InterwebBuild, InterwebBuildOptions } from '../src/index';
+import { HyperwebBuild, HyperwebBuildOptions } from '../src/index';
 
 const fixtureDir = resolve(join(__dirname, '/../../../__fixtures__/', 'imports'));
 const outputDir = resolve(join(__dirname, '/../../../__output__/', 'imports'));
 
-describe('InterwebBuild', () => {
+describe('HyperwebBuild', () => {
   it('builds the fixture project successfully', async () => {
     const outfile = join(outputDir, 'bundle.js');
     
-    const options: Partial<InterwebBuildOptions> = {
+    const options: Partial<HyperwebBuildOptions> = {
       entryPoints: [join(fixtureDir, 'src/index.ts')],
       outfile,
       external: ['otherpackage', '~somepackage']
     };
 
-    await InterwebBuild.build(options);
+    await HyperwebBuild.build(options);
 
     // Check if the output file exists
     const outfileExists = await fs.access(outfile)

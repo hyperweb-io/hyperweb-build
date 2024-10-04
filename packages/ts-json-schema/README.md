@@ -1,38 +1,38 @@
-# @interweb/ts-json-schema
+# @hyperweb/ts-json-schema
 
 <p align="center" width="100%">
     <img height="90" src="https://user-images.githubusercontent.com/545047/190171432-5526db8f-9952-45ce-a745-bea4302f912b.svg" />
 </p>
 
 <p align="center" width="100%">
-  <a href="https://github.com/cosmology-tech/interweb-build/actions/workflows/run-tests.yml">
-    <img height="20" src="https://github.com/cosmology-tech/interweb-build/actions/workflows/run-tests.yml/badge.svg" />
+  <a href="https://github.com/hyperweb-io/hyperweb-build/actions/workflows/run-tests.yml">
+    <img height="20" src="https://github.com/hyperweb-io/hyperweb-build/actions/workflows/run-tests.yml/badge.svg" />
   </a>
   <br />
-   <a href="https://github.com/cosmology-tech/interweb-build/blob/main/LICENSE"><img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-   <a href="https://www.npmjs.com/package/@interweb/ts-json-schema"><img height="20" src="https://img.shields.io/github/package-json/v/cosmology-tech/interweb-build?filename=packages%2Fts-json-schema%2Fpackage.json"></a>
+   <a href="https://github.com/hyperweb-io/hyperweb-build/blob/main/LICENSE"><img height="20" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
+   <a href="https://www.npmjs.com/package/@hyperweb/ts-json-schema"><img height="20" src="https://img.shields.io/github/package-json/v/hyperweb-io/hyperweb-build?filename=packages%2Fts-json-schema%2Fpackage.json"></a>
 </p>
 
-`@interweb/ts-json-schema` is a wrapper around ts-json-schema-generator, designed to simplify the process of generating JSON schemas from TypeScript files in Interweb projects.
+`@hyperweb/ts-json-schema` is a wrapper around ts-json-schema-generator, designed to simplify the process of generating JSON schemas from TypeScript files in Hyperweb projects.
 
 ## Features
 
 - Simple API for generating JSON schemas from TypeScript
 - Customizable schema generation options
-- Built-in support for common Interweb project configurations
+- Built-in support for common Hyperweb project configurations
 
 ## Installation
 
 ```sh
-npm install @interweb/ts-json-schema
+npm install @hyperweb/ts-json-schema
 ```
 
 ## Usage
 
-Here's a basic example of how to use Interweb TS JSON Schema:
+Here's a basic example of how to use Hyperweb TS JSON Schema:
 
 ```ts
-import { generateSchema } from '@interweb/ts-json-schema';
+import { generateSchema } from '@hyperweb/ts-json-schema';
 
 // Generate schema for all types in a file
 await generateSchema({
@@ -66,7 +66,7 @@ Returns a Promise that resolves when the schema has been generated and saved.
 
 ## Configuration
 
-Interweb TS JSON Schema uses the following configuration by default:
+Hyperweb TS JSON Schema uses the following configuration by default:
 
 ```ts
 {
@@ -80,10 +80,10 @@ These options are passed to the underlying `ts-json-schema-generator`. You can c
 
 ## Example
 
-Here's an example of how you might use Interweb TS JSON Schema in a project:
+Here's an example of how you might use Hyperweb TS JSON Schema in a project:
 
 ```ts
-import { generateSchema } from '@interweb/ts-json-schema';
+import { generateSchema } from '@hyperweb/ts-json-schema';
 import { join } from 'path';
 
 const sourcePath = join(__dirname, 'src/types.ts');
@@ -108,4 +108,4 @@ generateProjectSchema();
 
 ## License
 
-Interweb TS JSON Schema is MIT licensed.
+Hyperweb TS JSON Schema is MIT licensed.

@@ -5,4 +5,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## 0.0.2 (2024-09-11)
 
-**Note:** Version bump only for package @interweb/ts-json-schema
+**Note:** Version bump only for package @hyperweb/ts-json-schema
