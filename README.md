@@ -1,7 +1,7 @@
 # Hyperweb Build Tools
 
 <p align="center" width="100%">
-    <img height="90" src="https://user-images.githubusercontent.com/545047/190171432-5526db8f-9952-45ce-a745-bea4302f912b.svg" />
+    <img height="148" src="https://github.com/user-attachments/assets/f672f9b8-e59a-4f44-8f51-df3e8d2eaae5" />
 </p>
 
 <p align="center" width="100%">
@@ -17,6 +17,7 @@ Hyperweb is a collection of powerful tools designed to simplify and streamline y
 - [Packages](#packages)
   - [@hyperweb/build](#hyperwebbuild)
   - [@hyperweb/ts-json-schema](#hyperwebts-json-schema)
+  - [hyperwebjs](#hyperwebjs)
 - [Development](#development)
   - [Project Setup](#project-setup)
   - [Running Tests](#running-tests)
@@ -27,6 +28,19 @@ Hyperweb is a collection of powerful tools designed to simplify and streamline y
 ## Packages
 
 This monorepo contains the following packages:
+
+### [hyperwebjs](./packages/hyperwebjs)
+
+[![npm version](https://img.shields.io/npm/v/hyperwebjs.svg)](https://www.npmjs.com/package/hyperwebjs)
+
+HyperwebJS is a library for working with the Hyperweb blockchain.
+
+#### Installation
+```sh
+npm install hyperwebjs
+```
+
+[Read more about @hyperweb/ts-json-schema](./packages/hyperwebjs)
 
 ### [@hyperweb/build](./packages/build)
 
