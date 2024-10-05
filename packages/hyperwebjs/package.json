@@ -25,9 +25,11 @@
     "prepare": "npm run build",
     "codegen": "ts-node scripts/codegen.ts",
     "build": "npm run clean; tsc; tsc -p tsconfig.esm.json; npm run copy",
+    "build:dev": "npm run clean; tsc --declarationMap; tsc -p tsconfig.esm.json; npm run copy",
     "lint": "eslint . --fix",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "pub": "npm run codegen && npm run build && npm publish --access public"
   },
   "devDependencies": {
     "@cosmology/telescope": "^1.10.0"
