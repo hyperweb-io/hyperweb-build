@@ -43,5 +43,6 @@
     "@cosmjs/stargate": "0.32.3",
     "@cosmology/lcd": "^0.14.0"
   },
-  "keywords": []
+  "keywords": [],
+  "gitHead": "6941f0f94c741b25c3ad79d1c4c758065f1e36d9"
 }
