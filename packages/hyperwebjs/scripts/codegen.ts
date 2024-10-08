@@ -4,7 +4,7 @@ import { join } from 'path';
 import { rimrafSync as rimraf } from 'rimraf';
 
 const protoDirs = [join(__dirname, '../jsd/proto'), join(__dirname, '../cosmos-sdk/proto'), join(__dirname, '../proto')];
-const outPath = join(__dirname, '../src/codegen');
+const outPath = join(__dirname, '../src');
 rimraf(outPath);
 
 export const options: TelescopeInput = {
