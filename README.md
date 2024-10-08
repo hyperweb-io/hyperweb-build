@@ -84,6 +84,17 @@ yarn symlink
 
 This will install dependencies, build all packages, and create symlinks between them.
 
+
+### Initialize Submodules
+
+Before proceeding, make sure to initialize and update the submodules:
+
+```sh
+git submodule update --init --recursive
+```
+
+This command will initialize and fetch the submodules defined in the project.
+
 ### Running Tests
 
 To run tests for a specific package, navigate to the package directory and use the `test:watch` script. For example, to run tests for `@hyperweb/build`:
