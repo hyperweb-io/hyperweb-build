@@ -1,6 +1,4 @@
 // ../../__fixtures__/decorators/src/class.ts
-var admin = (target, propertyKey, descriptor) => descriptor;
-var creator = (target, propertyKey, descriptor) => descriptor;
 var Counter = class {
   state;
   constructor(initialState) {
@@ -51,8 +49,6 @@ var MyClass = class {
 };
 export {
   Counter,
-  admin,
-  creator,
   start
 };
 //# sourceMappingURL=bundle.js.map

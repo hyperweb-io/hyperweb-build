@@ -1,8 +1,5 @@
-import { BigNumber } from "jsd-std";
-
-// Permission decorators
-export const admin = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => descriptor;
-export const creator = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => descriptor;
+import { admin, creator } from '@hyperweb/decorators';
+import { BigNumber } from 'jsd-std';
 
 export interface State {
     count: BigNumber;
@@ -30,7 +27,7 @@ export class Counter {
   @creator
   public decrement(amount: BigNumber): void {
     if (this.state.count.lt(amount)) {
-      throw new Error("Count cannot be negative");
+      throw new Error('Count cannot be negative');
     }
     this.state.count = this.state.count.sub(amount);
   }
