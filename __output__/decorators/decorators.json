@@ -1,0 +1,18 @@
+{
+  "../../__fixtures__/decorators/src/index.ts": [
+    {
+      "name": "log",
+      "args": [
+        "debug"
+      ],
+      "targetName": "fetchData",
+      "targetType": "method"
+    },
+    {
+      "name": "performance",
+      "args": [],
+      "targetName": "fetchData",
+      "targetType": "method"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../__fixtures__/decorators/src/index.ts"],
+  "sourcesContent": ["class MyClass {\n  async fetchData() {\n    // ... method implementation\n  }\n}"],
+  "mappings": ";AAAA,IAAM,UAAN,MAAc;AAAA,EACZ,MAAM,YAAY;AAAA,EAElB;AACF;",
+  "names": []
+}
