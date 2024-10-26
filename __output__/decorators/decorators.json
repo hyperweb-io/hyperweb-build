@@ -14,5 +14,19 @@
       "targetName": "fetchData",
       "targetType": "method"
     }
+  ],
+  "../../__fixtures__/decorators/src/class.ts": [
+    {
+      "name": "admin",
+      "args": [],
+      "targetName": "increment",
+      "targetType": "method"
+    },
+    {
+      "name": "creator",
+      "args": [],
+      "targetName": "decrement",
+      "targetType": "method"
+    }
   ]
 }
