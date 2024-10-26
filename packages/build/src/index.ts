@@ -1,8 +1,8 @@
 import esbuild from 'esbuild';
 
 export interface HyperwebBuildOptions extends esbuild.BuildOptions {
-  // Add any Hyperweb-specific options here
-  customPlugins?: esbuild.Plugin[];
+  // Allow plugins to be either direct Plugin objects or functions that receive options
+  customPlugins?: (esbuild.Plugin | ((options: HyperwebBuildOptions) => esbuild.Plugin))[];
 }
 
 export const defaultOptions: HyperwebBuildOptions = {
@@ -24,11 +24,17 @@ export const HyperwebBuild = {
   async build(options: Partial<HyperwebBuildOptions> = {}): Promise<esbuild.BuildResult> {
     const mergedOptions: HyperwebBuildOptions = { ...defaultOptions, ...options };
 
-    // Apply custom plugins if any
+    // Apply custom plugins if any, passing the merged options
     if (mergedOptions.customPlugins) {
       mergedOptions.plugins = [
         ...(mergedOptions.plugins || []),
-        ...mergedOptions.customPlugins
+        ...mergedOptions.customPlugins.map(plugin => {
+          // If plugin is a function that accepts options, call it with options
+          if (typeof plugin === 'function') {
+            return plugin(mergedOptions);
+          }
+          return plugin;
+        })
       ];
       delete mergedOptions.customPlugins;
     }
