@@ -11,7 +11,7 @@ interface DecoratorInfo {
   name: string;
   args: any[];
   targetName: string;
-  targetType: 'method' | 'function';
+  targetType?: 'method' | 'function';
   location?: {
     file: string;
     line: number;
@@ -102,7 +102,7 @@ export const createDecoratorExtractorPlugin = (
               ? (parent.key as t.Identifier).name
               : (parent as t.FunctionDeclaration).id?.name || 'anonymous',
             // @ts-ignore
-            targetType: t.isClassMethod(parent) ? 'method' : 'function',
+            // targetType: t.isClassMethod(parent) ? 'method' : 'function',
             
             // location: {
             //   file: normalizedPath,

@@ -1,4 +1,4 @@
-import { admin, creator } from '@hyperweb/decorators';
+import { admin, creator, external, internal } from '@hyperweb/decorators';
 import { BigNumber } from 'jsd-std';
 
 export interface State {
@@ -13,11 +13,14 @@ export class Counter {
   }
 
   // Public by default (no decorator needed)
+  @external
+  @admin
   public getCount(): BigNumber {
     return this.state.count;
   }
-
+  
   // Only admin and creator can increment
+  @internal
   @admin
   public increment(amount: BigNumber): void {
     this.state.count = this.state.count.add(amount);

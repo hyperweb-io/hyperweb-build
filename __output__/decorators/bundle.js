@@ -47,8 +47,11 @@ var MyClass = class {
   async fetchData() {
   }
 };
+var src_default = MyClass;
 export {
   Counter,
+  MyClass,
+  src_default as default,
   start
 };
 //# sourceMappingURL=bundle.js.map

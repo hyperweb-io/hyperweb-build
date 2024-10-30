@@ -1,32 +1,44 @@
 {
   "../../__fixtures__/decorators/src/index.ts": [
     {
-      "name": "log",
+      "name": "permission",
       "args": [
-        "debug"
+        "debug",
+        "level"
       ],
-      "targetName": "fetchData",
-      "targetType": "method"
+      "targetName": "fetchData"
     },
     {
       "name": "performance",
       "args": [],
-      "targetName": "fetchData",
-      "targetType": "method"
+      "targetName": "fetchData"
     }
   ],
   "../../__fixtures__/decorators/src/class.ts": [
     {
+      "name": "external",
+      "args": [],
+      "targetName": "getCount"
+    },
+    {
       "name": "admin",
       "args": [],
-      "targetName": "increment",
-      "targetType": "method"
+      "targetName": "getCount"
+    },
+    {
+      "name": "internal",
+      "args": [],
+      "targetName": "increment"
+    },
+    {
+      "name": "admin",
+      "args": [],
+      "targetName": "increment"
     },
     {
       "name": "creator",
       "args": [],
-      "targetName": "decrement",
-      "targetType": "method"
+      "targetName": "decrement"
     }
   ]
 }

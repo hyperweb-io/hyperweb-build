@@ -1,9 +1,12 @@
 export * from './class';
 export * from './object';
 class MyClass {
-  @log('debug')
+  @permission('debug', 'level')
   @performance
   async fetchData() {
     // ... method implementation
   }
 }
+
+export default MyClass;
+export {MyClass};
