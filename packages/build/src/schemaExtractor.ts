@@ -32,17 +32,16 @@ export const createSchemaExtractorPlugin = (
 
       const source = await fs.readFile(args.path, 'utf8');
       const ast = parser.parse(source, { sourceType: 'module', plugins: ['typescript'] });
-      const normalizedPath = normalizeFilePath(args.path);
 
       traverse(ast, {
         TSInterfaceDeclaration(path) {
           if (path.node.id.name === 'State') {
-            schemaData.state[normalizedPath] = extractStateSchema(path.node);
+            schemaData.state = extractStateSchema(path.node);
           }
         },
         ClassDeclaration(path) {
           if (path.node.id?.name === 'Contract') {
-            schemaData.methods[normalizedPath] = extractPublicMethods(path.node);
+            schemaData.methods = extractPublicMethods(path.node);
           }
         }
       });
@@ -57,12 +56,6 @@ export const createSchemaExtractorPlugin = (
     });
   }
 });
-
-// Helper function to normalize paths
-function normalizeFilePath(filePath: string, rootDir?: string): string {
-  const projectRoot = rootDir || process.cwd();
-  return path.relative(projectRoot, filePath).replace(/\\/g, '/').replace(/^\.\//, '');
-}
 
 // Extracts schema from State interface
 function extractStateSchema(interfaceNode: t.TSInterfaceDeclaration): Record<string, any> {
