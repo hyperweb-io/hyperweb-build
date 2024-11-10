@@ -1,5 +1,4 @@
 import esbuild from 'esbuild';
-import { createSchemaExtractorPlugin } from "./schemaExtractor";
 
 export interface HyperwebBuildOptions extends esbuild.BuildOptions {
   // Add any Hyperweb-specific options here
@@ -30,13 +29,13 @@ export const HyperwebBuild = {
       mergedOptions.plugins = [
         ...(mergedOptions.plugins || []),
         ...mergedOptions.customPlugins,
-        createSchemaExtractorPlugin({ outputPath: `${mergedOptions.outfile}.schema.json` }, mergedOptions),
       ];
-      delete mergedOptions.customPlugins;
+      //delete mergedOptions.customPlugins;
     }
 
-    // @ts-ignore
-    return esbuild.build(mergedOptions);
-  }
-};
+    // Exclude customPlugins before passing to esbuild.build
+    const { customPlugins, ...buildOptions } = mergedOptions;
 
+    return esbuild.build(buildOptions);
+  },
+};

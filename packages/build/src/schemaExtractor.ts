@@ -1,99 +1,247 @@
-import * as parser from '@babel/parser';
-import traverse from '@babel/traverse';
-import generate from '@babel/generator';
-import * as t from '@babel/types';
+import * as ts from 'typescript';
+import { promises as fs } from 'fs';
 import * as path from 'path';
 import { Plugin } from 'esbuild';
-import { HyperwebBuildOptions } from './build';
-import { promises as fs } from 'fs';
+import {HyperwebBuildOptions} from "./build";
 
 interface SchemaExtractorOptions {
   outputPath?: string;
+  baseDir?: string;
   include?: RegExp[];
   exclude?: RegExp[];
 }
 
-const schemaData: Record<string, any> = { state: {}, methods: {} };
-
-export const createSchemaExtractorPlugin = (
-  pluginOptions: SchemaExtractorOptions = {},
-  hyperwebOptions?: HyperwebBuildOptions
+export const schemaExtractorPlugin = (
+  pluginOptions: SchemaExtractorOptions = {}
 ): Plugin => ({
   name: 'schema-extractor',
 
   setup(build) {
-    const filter = {
-      include: pluginOptions.include || [/\.[jt]sx?$/],
-      exclude: pluginOptions.exclude || [/node_modules/],
-    };
+    const hyperwebBuildOptions = build.initialOptions;
 
-    build.onLoad({ filter: new RegExp(filter.include.map(r => r.source).join('|')) }, async (args) => {
-      if (filter.exclude.some(pattern => pattern.test(args.path))) return null;
+    build.onEnd(async () => {
+      const baseDir = pluginOptions.baseDir || process.cwd();
+      const sourceFiles = getSourceFiles(
+        pluginOptions,
+        hyperwebBuildOptions,
+        baseDir
+      );
 
-      const source = await fs.readFile(args.path, 'utf8');
-      const ast = parser.parse(source, { sourceType: 'module', plugins: ['typescript'] });
+      if (!sourceFiles.length) {
+        console.error(
+          'No entry files provided or matched for schema extraction.'
+        );
+        return;
+      }
 
-      traverse(ast, {
-        TSInterfaceDeclaration(path) {
-          if (path.node.id.name === 'State') {
-            schemaData.state = extractStateSchema(path.node);
+      const program = ts.createProgram(sourceFiles, {
+        target: ts.ScriptTarget.ESNext,
+        module: ts.ModuleKind.CommonJS,
+        strict: true,
+      });
+
+      const checker = program.getTypeChecker();
+
+      const schemaData: Record<string, any> = { state: {}, methods: {} };
+
+      const interfacesToExtract = ['State'];
+
+      interfacesToExtract.forEach((interfaceName) => {
+        const sourceFile = program.getSourceFiles().find((file) =>
+          file.statements.some(
+            (stmt) =>
+              ts.isInterfaceDeclaration(stmt) &&
+              stmt.name.text === interfaceName
+          )
+        );
+
+        if (sourceFile) {
+          const interfaceNode = sourceFile.statements.find(
+            (stmt): stmt is ts.InterfaceDeclaration =>
+              ts.isInterfaceDeclaration(stmt) &&
+              stmt.name.text === interfaceName
+          );
+
+          if (interfaceNode) {
+            console.log(`Extracting schema for interface: ${interfaceName}`);
+            schemaData[interfaceName.toLowerCase()] = serializeType(
+              checker.getTypeAtLocation(interfaceNode),
+              checker
+            );
           }
-        },
-        ClassDeclaration(path) {
-          if (path.node.id?.name === 'Contract') {
-            schemaData.methods = extractPublicMethods(path.node);
-          }
+        } else {
+          console.warn(`Interface ${interfaceName} not found.`);
         }
       });
 
-      return null;
-    });
+      const outputPath =
+        pluginOptions.outputPath || path.join(baseDir, 'dist/schema.json');
+      console.log('Writing schema data to:', outputPath);
 
-    build.onEnd(async () => {
-      const bundlePath = hyperwebOptions?.outfile || 'dist/bundle.js';
-      const schemaJsonPath = `${bundlePath}.schema.json`;
-      await fs.writeFile(schemaJsonPath, JSON.stringify(schemaData, null, 2), 'utf8');
+      try {
+        await fs.writeFile(
+          outputPath,
+          JSON.stringify(schemaData, null, 2),
+          'utf8'
+        );
+        console.log(`Schema successfully written to ${outputPath}`);
+      } catch (error) {
+        console.error('Error writing schema data:', error);
+      }
     });
-  }
+  },
 });
 
-// Extracts schema from State interface
-function extractStateSchema(interfaceNode: t.TSInterfaceDeclaration): Record<string, any> {
-  const schema: Record<string, any> = { type: 'object', properties: {} };
-  interfaceNode.body.body.forEach(member => {
-    if (t.isTSPropertySignature(member) && member.key) {
-      const propName = (member.key as t.Identifier).name;
-      schema.properties[propName] = parseType(member.typeAnnotation?.typeAnnotation);
-    }
+function getSourceFiles(
+  pluginOptions: SchemaExtractorOptions,
+  hyperwebBuildOptions: HyperwebBuildOptions,
+  baseDir: string
+): string[] {
+  const includePatterns = pluginOptions.include || [/\.tsx?$/];
+  const excludePatterns = pluginOptions.exclude || [/node_modules/];
+
+  // Log the entryPoints for debugging purposes
+  console.log('Debug - entryPoints value:', hyperwebBuildOptions.entryPoints);
+
+  if (!hyperwebBuildOptions.entryPoints) {
+    throw new Error('No entryPoints provided in build options.');
+  }
+
+  let resolvedFiles: string[] = [];
+
+  if (Array.isArray(hyperwebBuildOptions.entryPoints)) {
+    resolvedFiles = hyperwebBuildOptions.entryPoints.map((entry) => {
+      if (typeof entry === 'string') {
+        return path.resolve(baseDir, entry);
+      } else {
+        throw new Error('Invalid entryPoints array item: expected string');
+      }
+    });
+  } else if (typeof hyperwebBuildOptions.entryPoints === 'object') {
+    resolvedFiles = Object.values(hyperwebBuildOptions.entryPoints).map(
+      (file) => path.resolve(baseDir, file)
+    );
+  } else {
+    throw new Error(
+      'Invalid entryPoints format: expected string[] or Record<string, string>'
+    );
+  }
+
+  return resolvedFiles.filter((fileName) => {
+    const relativeFileName = path.relative(baseDir, fileName);
+    console.log('Checking file:', relativeFileName)
+    const matchesInclude = includePatterns.some((pattern) =>
+      pattern.test(relativeFileName)
+    );
+    const matchesExclude = excludePatterns.some((pattern) =>
+      pattern.test(relativeFileName)
+    );
+    return matchesInclude && !matchesExclude;
   });
-  return schema;
 }
 
-// Extracts public methods from the Contract class
-function extractPublicMethods(classNode: t.ClassDeclaration): Record<string, any>[] {
-  return classNode.body.body
-    .filter((member): member is t.ClassMethod => t.isClassMethod(member) && member.accessibility === 'public')
-    .map(member => ({
-      functionName: (member.key as t.Identifier).name,
-      parameters: member.params.map(param => {
-        if (t.isIdentifier(param)) {
-          return { name: param.name, type: 'unknown' };
-        } else if (t.isAssignmentPattern(param) && t.isIdentifier(param.left)) {
-          // Handle parameters with default values (AssignmentPattern)
-          return { name: param.left.name, type: 'unknown' };
-        } else if (t.isRestElement(param) && t.isIdentifier(param.argument)) {
-          // Handle rest parameters (RestElement)
-          return { name: param.argument.name, type: 'unknown' };
-        }
-        return { name: 'unknown', type: 'unknown' }; // Fallback for unsupported patterns
-      })
-    }));
+function serializeType(
+  type: ts.Type,
+  checker: ts.TypeChecker,
+  typeStack: ts.Type[] = []
+): any {
+  const typeString = checker.typeToString(type);
+  const isPrimitive = ['string', 'number', 'boolean', 'null', 'undefined', 'any'].includes(typeString);
+
+  if (typeStack.includes(type)) {
+    // Circular reference detected
+    return { $ref: typeString };
+  }
+
+  // Add the current type to the stack
+  const newTypeStack = [...typeStack, type];
+
+  // Handle primitive types directly
+  if (type.isStringLiteral()) {
+    return { type: 'string', enum: [type.value] };
+  }
+  if (type.isNumberLiteral()) {
+    return { type: 'number', enum: [type.value] };
+  }
+  if (typeString === 'string') {
+    return { type: 'string' };
+  }
+  if (typeString === 'number') {
+    return { type: 'number' };
+  }
+  if (typeString === 'boolean') {
+    return { type: 'boolean' };
+  }
+  if (typeString === 'null') {
+    return { type: 'null' };
+  }
+  if (typeString === 'undefined') {
+    return { type: 'undefined' };
+  }
+  if (typeString === 'any') {
+    return { type: 'any' };
+  }
+
+  if (checker.isArrayType(type)) {
+    const typeReference = type as ts.TypeReference;
+    const typeArguments = checker.getTypeArguments(typeReference);
+    const elementType = typeArguments[0] || checker.getAnyType();
+
+    return {
+      type: 'array',
+      items: serializeType(elementType, checker, newTypeStack),
+    };
+  }
+
+  if (checker.isTupleType(type)) {
+    const typeArguments = checker.getTypeArguments(type as ts.TypeReference);
+    return {
+      type: 'array',
+      items: typeArguments.map((elementType) =>
+        serializeType(elementType, checker, newTypeStack)
+      ),
+    };
+  }
+
+  if (type.isUnion()) {
+    return {
+      anyOf: type.types.map((subType) =>
+        serializeType(subType, checker, newTypeStack)
+      ),
+    };
+  }
+
+  if (type.isIntersection()) {
+    return {
+      allOf: type.types.map((subType) =>
+        serializeType(subType, checker, newTypeStack)
+      ),
+    };
+  }
+
+  if (type.getCallSignatures().length) {
+    // Function type
+    return { type: 'function' };
+  }
+
+  const properties = checker.getPropertiesOfType(type);
+  if (properties.length) {
+    const result: Record<string, any> = {};
+    properties.forEach((prop) => {
+      const propType = checker.getTypeOfSymbolAtLocation(
+        prop,
+        prop.valueDeclaration || prop.declarations[0]
+      );
+      result[prop.getName()] = serializeType(
+        propType,
+        checker,
+        newTypeStack
+      );
+    });
+    return { type: 'object', properties: result };
+  }
+
+  // If none of the above, return any
+  return { type: 'any' };
 }
 
-// Parses type nodes to schema-compatible format
-function parseType(typeNode: t.TSType): Record<string, any> {
-  if (t.isTSNumberKeyword(typeNode)) return { type: 'number' };
-  if (t.isTSStringKeyword(typeNode)) return { type: 'string' };
-  if (t.isTSBooleanKeyword(typeNode)) return { type: 'boolean' };
-  return { type: 'unknown' };
-}
