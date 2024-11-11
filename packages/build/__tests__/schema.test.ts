@@ -48,5 +48,7 @@ describe('HyperwebBuild', () => {
     expect(schemaData).toHaveProperty('state');
     expect(schemaData.state).toHaveProperty('type', 'object');
     expect(schemaData.state).toHaveProperty('properties');
+
+    expect(schemaData).toMatchSnapshot();
   });
 });

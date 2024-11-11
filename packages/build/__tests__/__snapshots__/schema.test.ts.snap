@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HyperwebBuild builds the fixture project successfully 1`] = `
+{
+  "methods": {},
+  "state": {
+    "properties": {
+      "count": {
+        "type": "number",
+      },
+      "startCoin": {
+        "properties": {
+          "amount": {
+            "type": "string",
+          },
+          "denom": {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "tokens": {
+        "items": {
+          "properties": {
+            "amount": {
+              "type": "string",
+            },
+            "denom": {
+              "type": "string",
+            },
+          },
+          "type": "object",
+        },
+        "type": "array",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
