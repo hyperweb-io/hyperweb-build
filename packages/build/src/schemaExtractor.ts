@@ -1,8 +1,9 @@
-import * as ts from 'typescript';
+import { Plugin } from 'esbuild';
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { Plugin } from 'esbuild';
-import {HyperwebBuildOptions} from "./build";
+import * as ts from 'typescript';
+
+import { HyperwebBuildOptions } from './build';
 
 interface SchemaExtractorOptions {
   outputPath?: string;
@@ -129,7 +130,7 @@ function getSourceFiles(
 
   return resolvedFiles.filter((fileName) => {
     const relativeFileName = path.relative(baseDir, fileName);
-    console.log('Checking file:', relativeFileName)
+    console.log('Checking file:', relativeFileName);
     const matchesInclude = includePatterns.some((pattern) =>
       pattern.test(relativeFileName)
     );
