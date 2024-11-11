@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import { join, resolve } from 'path';
+
 import { HyperwebBuild, HyperwebBuildOptions, schemaExtractorPlugin } from '../src';
 
 const outputDir = resolve(join(__dirname, '/../../../__output__/schema-data'));

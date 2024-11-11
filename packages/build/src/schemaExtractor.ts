@@ -1,7 +1,8 @@
-import * as ts from 'typescript';
+import { Plugin } from 'esbuild';
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import { Plugin } from 'esbuild';
+import * as ts from 'typescript';
+
 import { HyperwebBuildOptions } from './build';
 
 interface SchemaExtractorOptions {
@@ -154,7 +155,7 @@ function hasModifiers(node: ts.Node): node is ts.ClassElement | ts.MethodDeclara
 // Helper function to check if a declaration has public visibility
 function isPublicDeclaration(node: ts.Node): boolean {
   // Check if the node has modifiers and is of a type that may include them
-  if ("modifiers" in node && Array.isArray(node.modifiers)) {
+  if ('modifiers' in node && Array.isArray(node.modifiers)) {
     return !node.modifiers.some(
       (mod: ts.Modifier) =>
         mod.kind === ts.SyntaxKind.PrivateKeyword ||
