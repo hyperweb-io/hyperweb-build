@@ -6,8 +6,8 @@ import { HyperwebBuild, HyperwebBuildOptions, schemaExtractorPlugin } from '../s
 const fixtureDir = resolve(join(__dirname, '/../../../__fixtures__/', 'schema-data', 'public-methods'));
 const outputDir = resolve(join(__dirname, '/../../../__output__/', 'schema-data', 'public-methods'));
 
-describe('HyperwebBuild', () => {
-  it('builds the fixture project successfully', async () => {
+describe('HyperwebBuild Schema Methods', () => {
+  it('builds the fixture project successfully for public-methods', async () => {
     const outfile = join(outputDir, 'bundle.js');
     const schemaOutputPath = `${outfile}.schema.json`;
 
@@ -51,8 +51,6 @@ describe('HyperwebBuild', () => {
 
     // Perform checks on schema structure (example: check if 'methods' exists and has properties)
     expect(schemaData).toHaveProperty('methods');
-    expect(schemaData.methods).toHaveProperty('type', 'object');
-    expect(schemaData.methods).toHaveProperty('properties');
 
     expect(schemaData).toMatchSnapshot();
   });

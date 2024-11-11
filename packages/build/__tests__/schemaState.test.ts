@@ -6,7 +6,7 @@ import { HyperwebBuild, HyperwebBuildOptions, schemaExtractorPlugin } from '../s
 const fixtureDir = resolve(join(__dirname, '/../../../__fixtures__/', 'schema-data', 'state-export'));
 const outputDir = resolve(join(__dirname, '/../../../__output__/', 'schema-data', 'state-export'));
 
-describe('HyperwebBuild', () => {
+describe('HyperwebBuild Schema State', () => {
   it('builds the fixture project successfully', async () => {
     const outfile = join(outputDir, 'bundle.js');
     const schemaOutputPath = `${outfile}.schema.json`;

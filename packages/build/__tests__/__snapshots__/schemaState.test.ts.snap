@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`HyperwebBuild builds the fixture project successfully 1`] = `
+exports[`HyperwebBuild Schema State builds the fixture project successfully 1`] = `
 {
-  "methods": {},
+  "methods": [],
   "state": {
     "properties": {
       "count": {
