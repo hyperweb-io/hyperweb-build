@@ -30,4 +30,4 @@ var public_methods_default = MyContract;
 export {
   public_methods_default as default
 };
-//# sourceMappingURL=bundle.js.map
+//# sourceMappingURL=public-methods.bundle.js.map
