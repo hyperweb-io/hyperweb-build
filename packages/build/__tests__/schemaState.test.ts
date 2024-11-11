@@ -4,7 +4,7 @@ import { join, resolve } from 'path';
 import { HyperwebBuild, HyperwebBuildOptions, schemaExtractorPlugin } from '../src';
 
 const fixtureDir = resolve(join(__dirname, '/../../../__fixtures__/', 'schema-data', 'state-export'));
-const outputDir = resolve(join(__dirname, '/../../../__output__/', 'schema-data'));
+const outputDir = resolve(join(__dirname, '/../../../__output__/', 'schema-data', 'state-export'));
 
 describe('HyperwebBuild', () => {
   it('builds the fixture project successfully', async () => {

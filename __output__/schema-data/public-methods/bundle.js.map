@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../__fixtures__/schema-data/public-methods/contract.ts", "../../../__fixtures__/schema-data/public-methods/index.ts"],
+  "sourcesContent": ["import { State } from './state';\n\nexport class MyContract {\n  private state: State;\n\n  constructor() {\n    this.state = {\n      count: 0,\n      startCoin: {\n        denom: 'uatom',\n        amount: '1000'\n      },\n      tokens: []\n    };\n  }\n\n  public increment() {\n    this.state.count++;\n  }\n\n  private reset() {\n    this.state.count = 0;\n  }\n\n  public addToken(denom: string, amount: string) {\n    this.state.tokens.push({ denom, amount });\n  }\n\n  public removeToken(index: number) {\n    this.state.tokens.splice(index, 1);\n  }\n}", "import { MyContract } from \"./contract\";\nimport  { State } from './state';\n\nexport default MyContract;\n"],
+  "mappings": ";AAEO,IAAM,aAAN,MAAiB;AAAA,EACd;AAAA,EAER,cAAc;AACZ,SAAK,QAAQ;AAAA,MACX,OAAO;AAAA,MACP,WAAW;AAAA,QACT,OAAO;AAAA,QACP,QAAQ;AAAA,MACV;AAAA,MACA,QAAQ,CAAC;AAAA,IACX;AAAA,EACF;AAAA,EAEO,YAAY;AACjB,SAAK,MAAM;AAAA,EACb;AAAA,EAEQ,QAAQ;AACd,SAAK,MAAM,QAAQ;AAAA,EACrB;AAAA,EAEO,SAAS,OAAe,QAAgB;AAC7C,SAAK,MAAM,OAAO,KAAK,EAAE,OAAO,OAAO,CAAC;AAAA,EAC1C;AAAA,EAEO,YAAY,OAAe;AAChC,SAAK,MAAM,OAAO,OAAO,OAAO,CAAC;AAAA,EACnC;AACF;;;AC5BA,IAAO,yBAAQ;",
+  "names": []
+}

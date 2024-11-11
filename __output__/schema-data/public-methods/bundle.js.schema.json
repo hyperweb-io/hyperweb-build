@@ -1,0 +1,53 @@
+{
+  "state": {},
+  "methods": [
+    {
+      "functionName": "increment",
+      "parameters": [],
+      "returnType": {
+        "type": "any"
+      }
+    },
+    {
+      "functionName": "reset",
+      "parameters": [],
+      "returnType": {
+        "type": "any"
+      }
+    },
+    {
+      "functionName": "addToken",
+      "parameters": [
+        {
+          "name": "denom",
+          "type": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "amount",
+          "type": {
+            "type": "string"
+          }
+        }
+      ],
+      "returnType": {
+        "type": "any"
+      }
+    },
+    {
+      "functionName": "removeToken",
+      "parameters": [
+        {
+          "name": "index",
+          "type": {
+            "type": "number"
+          }
+        }
+      ],
+      "returnType": {
+        "type": "any"
+      }
+    }
+  ]
+}
