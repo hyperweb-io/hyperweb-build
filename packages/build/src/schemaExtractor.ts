@@ -1,8 +1,7 @@
-import { Plugin } from 'esbuild';
+import * as ts from 'typescript';
 import { promises as fs } from 'fs';
 import * as path from 'path';
-import * as ts from 'typescript';
-
+import { Plugin } from 'esbuild';
 import { HyperwebBuildOptions } from './build';
 
 interface SchemaExtractorOptions {
@@ -42,36 +41,41 @@ export const schemaExtractorPlugin = (
       });
 
       const checker = program.getTypeChecker();
+      const schemaData: Record<string, any> = { state: {}, methods: [] };
 
-      const schemaData: Record<string, any> = { state: {}, methods: {} };
+      // Extract state and methods from the contract's default export
+      program.getSourceFiles().forEach((sourceFile) => {
+        if (sourceFile.isDeclarationFile) return;
 
-      const interfacesToExtract = ['State'];
+        const defaultExport = sourceFile.statements.find((stmt) =>
+          ts.isExportAssignment(stmt) && !stmt.isExportEquals
+        ) as ts.ExportAssignment | undefined;
 
-      interfacesToExtract.forEach((interfaceName) => {
-        const sourceFile = program.getSourceFiles().find((file) =>
-          file.statements.some(
-            (stmt) =>
-              ts.isInterfaceDeclaration(stmt) &&
-              stmt.name.text === interfaceName
-          )
+        if (defaultExport && defaultExport.expression) {
+          console.log(`Found default export in file: ${sourceFile.fileName}`);
+
+          const contractSymbol = checker.getSymbolAtLocation(defaultExport.expression);
+
+          if (contractSymbol) {
+            console.log(`Extracting methods from contract symbol: ${contractSymbol.getName()}`);
+            extractPublicMethods(contractSymbol, checker, schemaData);
+          } else {
+            console.warn(`No symbol found for default export in ${sourceFile.fileName}`);
+          }
+        }
+
+        // Extract the State interface
+        const stateInterface = sourceFile.statements.find(
+          (stmt): stmt is ts.InterfaceDeclaration =>
+            ts.isInterfaceDeclaration(stmt) && stmt.name.text === 'State'
         );
 
-        if (sourceFile) {
-          const interfaceNode = sourceFile.statements.find(
-            (stmt): stmt is ts.InterfaceDeclaration =>
-              ts.isInterfaceDeclaration(stmt) &&
-              stmt.name.text === interfaceName
+        if (stateInterface) {
+          console.log("Extracting schema for 'State' interface");
+          schemaData.state = serializeType(
+            checker.getTypeAtLocation(stateInterface),
+            checker
           );
-
-          if (interfaceNode) {
-            console.log(`Extracting schema for interface: ${interfaceName}`);
-            schemaData[interfaceName.toLowerCase()] = serializeType(
-              checker.getTypeAtLocation(interfaceNode),
-              checker
-            );
-          }
-        } else {
-          console.warn(`Interface ${interfaceName} not found.`);
         }
       });
 
@@ -101,9 +105,6 @@ function getSourceFiles(
   const includePatterns = pluginOptions.include || [/\.tsx?$/];
   const excludePatterns = pluginOptions.exclude || [/node_modules/];
 
-  // Log the entryPoints for debugging purposes
-  console.log('Debug - entryPoints value:', hyperwebBuildOptions.entryPoints);
-
   if (!hyperwebBuildOptions.entryPoints) {
     throw new Error('No entryPoints provided in build options.');
   }
@@ -130,7 +131,6 @@ function getSourceFiles(
 
   return resolvedFiles.filter((fileName) => {
     const relativeFileName = path.relative(baseDir, fileName);
-    console.log('Checking file:', relativeFileName);
     const matchesInclude = includePatterns.some((pattern) =>
       pattern.test(relativeFileName)
     );
@@ -141,23 +141,92 @@ function getSourceFiles(
   });
 }
 
+function hasModifiers(node: ts.Node): node is ts.ClassElement | ts.MethodDeclaration {
+  return (
+    ts.isClassElement(node) ||
+    ts.isMethodDeclaration(node) ||
+    ts.isPropertyDeclaration(node) ||
+    ts.isGetAccessorDeclaration(node) ||
+    ts.isSetAccessorDeclaration(node)
+  );
+}
+
+// Helper function to check if a declaration has public visibility
+function isPublicDeclaration(node: ts.Node): boolean {
+  // Check if the node has modifiers and is of a type that may include them
+  if ("modifiers" in node && Array.isArray(node.modifiers)) {
+    return !node.modifiers.some(
+      (mod: ts.Modifier) =>
+        mod.kind === ts.SyntaxKind.PrivateKeyword ||
+        mod.kind === ts.SyntaxKind.ProtectedKeyword
+    );
+  }
+  // If no modifiers exist, assume the node is public
+  return true;
+}
+
+// Extract only public methods from the contract and add them to schemaData
+function extractPublicMethods(
+  symbol: ts.Symbol,
+  checker: ts.TypeChecker,
+  schemaData: Record<string, any>
+) {
+  const type = checker.getDeclaredTypeOfSymbol(symbol);
+  const properties = checker.getPropertiesOfType(type);
+
+  properties.forEach((prop) => {
+    const propType = checker.getTypeOfSymbolAtLocation(
+      prop,
+      prop.valueDeclaration || prop.declarations[0]
+    );
+
+    // Check if the property is a method and explicitly public
+    if (propType.getCallSignatures().length && prop.valueDeclaration) {
+      // Check if the declaration is public
+      const isPublic = isPublicDeclaration(prop.valueDeclaration);
+
+      if (isPublic) {
+        const methodSchema = {
+          functionName: prop.getName(),
+          parameters: [] as { name: string; type: any }[],
+          returnType: serializeType(
+            propType.getCallSignatures()[0].getReturnType(),
+            checker
+          ),
+        };
+
+        // Get parameter types for the method
+        propType.getCallSignatures()[0].parameters.forEach((param) => {
+          const paramType = checker.getTypeOfSymbolAtLocation(
+            param,
+            param.valueDeclaration || param.declarations[0]
+          );
+          methodSchema.parameters.push({
+            name: param.getName(),
+            type: serializeType(paramType, checker),
+          });
+        });
+
+        schemaData.methods.push(methodSchema);
+        console.log(`Extracted public method: ${methodSchema.functionName}`);
+      }
+    }
+  });
+}
+
 function serializeType(
   type: ts.Type,
   checker: ts.TypeChecker,
   typeStack: ts.Type[] = []
 ): any {
   const typeString = checker.typeToString(type);
-  const isPrimitive = ['string', 'number', 'boolean', 'null', 'undefined', 'any'].includes(typeString);
 
   if (typeStack.includes(type)) {
-    // Circular reference detected
     return { $ref: typeString };
   }
 
-  // Add the current type to the stack
   const newTypeStack = [...typeStack, type];
 
-  // Handle primitive types directly
   if (type.isStringLiteral()) {
     return { type: 'string', enum: [type.value] };
   }
@@ -187,20 +256,9 @@ function serializeType(
     const typeReference = type as ts.TypeReference;
     const typeArguments = checker.getTypeArguments(typeReference);
     const elementType = typeArguments[0] || checker.getAnyType();
-
     return {
       type: 'array',
       items: serializeType(elementType, checker, newTypeStack),
-    };
-  }
-
-  if (checker.isTupleType(type)) {
-    const typeArguments = checker.getTypeArguments(type as ts.TypeReference);
-    return {
-      type: 'array',
-      items: typeArguments.map((elementType) =>
-        serializeType(elementType, checker, newTypeStack)
-      ),
     };
   }
 
@@ -220,11 +278,6 @@ function serializeType(
     };
   }
 
-  if (type.getCallSignatures().length) {
-    // Function type
-    return { type: 'function' };
-  }
-
   const properties = checker.getPropertiesOfType(type);
   if (properties.length) {
     const result: Record<string, any> = {};
@@ -242,7 +295,5 @@ function serializeType(
     return { type: 'object', properties: result };
   }
 
-  // If none of the above, return any
   return { type: 'any' };
 }
-

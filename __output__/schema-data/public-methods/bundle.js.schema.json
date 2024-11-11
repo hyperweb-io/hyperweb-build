@@ -1,15 +1,40 @@
 {
-  "state": {},
+  "state": {
+    "type": "object",
+    "properties": {
+      "count": {
+        "type": "number"
+      },
+      "startCoin": {
+        "type": "object",
+        "properties": {
+          "denom": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string"
+          }
+        }
+      },
+      "tokens": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "denom": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
   "methods": [
     {
       "functionName": "increment",
-      "parameters": [],
-      "returnType": {
-        "type": "any"
-      }
-    },
-    {
-      "functionName": "reset",
       "parameters": [],
       "returnType": {
         "type": "any"

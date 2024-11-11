@@ -1,4 +1,4 @@
 import { MyContract } from "./contract";
-import  { State } from './state';
+export type { State } from "./state";
 
 export default MyContract;
