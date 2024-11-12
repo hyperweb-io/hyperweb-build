@@ -33,7 +33,7 @@ export const schemaExtractorPlugin = (
       const checker = program.getTypeChecker();
       const schemaData: Record<string, any> = { state: {}, methods: [] };
 
-      // Extract state, methods, and decorators from the contract's default export
+      // Extract state and methods from the contract's default export
       program.getSourceFiles().forEach((sourceFile) => {
         if (sourceFile.isDeclarationFile) return;
 
