@@ -39,6 +39,35 @@ exports[`schemaExtractorPlugin should extract a basic contract with public and p
 }
 `;
 
+exports[`schemaExtractorPlugin should extract methods and state from classes inheritance-contract 1`] = `
+{
+  "methods": [
+    {
+      "functionName": "increment",
+      "parameters": [],
+      "returnType": {
+        "type": "any",
+      },
+    },
+    {
+      "functionName": "baseMethod",
+      "parameters": [],
+      "returnType": {
+        "type": "any",
+      },
+    },
+  ],
+  "state": {
+    "properties": {
+      "count": {
+        "type": "number",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
 exports[`schemaExtractorPlugin should extract methods from classes public methods 1`] = `
 {
   "methods": [

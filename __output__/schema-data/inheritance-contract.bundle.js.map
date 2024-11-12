@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../__fixtures__/schema-data/inheritance-contract/contract.ts", "../../__fixtures__/schema-data/inheritance-contract/index.ts"],
+  "sourcesContent": ["import { State } from './state';\n\nclass BaseContract {\n  protected state: State = { count: 0 };\n\n  public baseMethod() {\n    console.log('baseMethod');\n  }\n}\n\nexport class InheritedContract extends BaseContract {\n  public increment() {\n    this.state.count += 1;\n  }\n\n  private reset() {\n    this.state.count = 0;\n  }\n}\n", "import { InheritedContract } from './contract';\nexport { State } from './state';\n\nexport default InheritedContract;\n"],
+  "mappings": ";AAEA,IAAM,eAAN,MAAmB;AAAA,EACP,QAAe,EAAE,OAAO,EAAE;AAAA,EAE7B,aAAa;AAClB,YAAQ,IAAI,YAAY;AAAA,EAC1B;AACF;AAEO,IAAM,oBAAN,cAAgC,aAAa;AAAA,EAC3C,YAAY;AACjB,SAAK,MAAM,SAAS;AAAA,EACtB;AAAA,EAEQ,QAAQ;AACd,SAAK,MAAM,QAAQ;AAAA,EACrB;AACF;;;ACfA,IAAO,+BAAQ;",
+  "names": []
+}
