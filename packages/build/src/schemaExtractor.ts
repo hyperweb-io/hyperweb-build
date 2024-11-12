@@ -22,18 +22,7 @@ export const schemaExtractorPlugin = (
 
     build.onEnd(async () => {
       const baseDir = pluginOptions.baseDir || process.cwd();
-      const sourceFiles = getSourceFiles(
-        pluginOptions,
-        hyperwebBuildOptions,
-        baseDir
-      );
-
-      if (!sourceFiles.length) {
-        console.error(
-          'No entry files provided or matched for schema extraction.'
-        );
-        return;
-      }
+      const sourceFiles = hyperwebBuildOptions.entryPoints as string[];
 
       const program = ts.createProgram(sourceFiles, {
         target: ts.ScriptTarget.ESNext,
@@ -97,60 +86,6 @@ export const schemaExtractorPlugin = (
     });
   },
 });
-
-function getSourceFiles(
-  pluginOptions: SchemaExtractorOptions,
-  hyperwebBuildOptions: HyperwebBuildOptions,
-  baseDir: string
-): string[] {
-  const includePatterns = pluginOptions.include || [/\.tsx?$/];
-  const excludePatterns = pluginOptions.exclude || [/node_modules/];
-
-  if (!hyperwebBuildOptions.entryPoints) {
-    throw new Error('No entryPoints provided in build options.');
-  }
-
-  let resolvedFiles: string[] = [];
-
-  if (Array.isArray(hyperwebBuildOptions.entryPoints)) {
-    resolvedFiles = hyperwebBuildOptions.entryPoints.map((entry) => {
-      if (typeof entry === 'string') {
-        return path.resolve(baseDir, entry);
-      } else {
-        throw new Error('Invalid entryPoints array item: expected string');
-      }
-    });
-  } else if (typeof hyperwebBuildOptions.entryPoints === 'object') {
-    resolvedFiles = Object.values(hyperwebBuildOptions.entryPoints).map(
-      (file) => path.resolve(baseDir, file)
-    );
-  } else {
-    throw new Error(
-      'Invalid entryPoints format: expected string[] or Record<string, string>'
-    );
-  }
-
-  return resolvedFiles.filter((fileName) => {
-    const relativeFileName = path.relative(baseDir, fileName);
-    const matchesInclude = includePatterns.some((pattern) =>
-      pattern.test(relativeFileName)
-    );
-    const matchesExclude = excludePatterns.some((pattern) =>
-      pattern.test(relativeFileName)
-    );
-    return matchesInclude && !matchesExclude;
-  });
-}
-
-function hasModifiers(node: ts.Node): node is ts.ClassElement | ts.MethodDeclaration {
-  return (
-    ts.isClassElement(node) ||
-    ts.isMethodDeclaration(node) ||
-    ts.isPropertyDeclaration(node) ||
-    ts.isGetAccessorDeclaration(node) ||
-    ts.isSetAccessorDeclaration(node)
-  );
-}
 
 // Helper function to check if a declaration has public visibility
 function isPublicDeclaration(node: ts.Node): boolean {
