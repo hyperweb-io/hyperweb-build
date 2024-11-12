@@ -18,7 +18,7 @@ export const schemaExtractorPlugin = (
   name: 'schema-extractor',
 
   setup(build) {
-    const hyperwebBuildOptions = build.initialOptions;
+    const hyperwebBuildOptions: HyperwebBuildOptions = build.initialOptions;
 
     build.onEnd(async () => {
       const baseDir = pluginOptions.baseDir || process.cwd();
