@@ -33,40 +33,12 @@ export const schemaExtractorPlugin = (
       const checker = program.getTypeChecker();
       const schemaData: Record<string, any> = { state: {}, methods: [] };
 
-      // Extract state and methods from the contract's default export
+      // Extract state, methods, and decorators from the contract's default export
       program.getSourceFiles().forEach((sourceFile) => {
         if (sourceFile.isDeclarationFile) return;
 
-        const defaultExport = sourceFile.statements.find((stmt) =>
-          ts.isExportAssignment(stmt) && !stmt.isExportEquals
-        ) as ts.ExportAssignment | undefined;
-
-        if (defaultExport && defaultExport.expression) {
-          console.log(`Found default export in file: ${sourceFile.fileName}`);
-
-          const contractSymbol = checker.getSymbolAtLocation(defaultExport.expression);
-
-          if (contractSymbol) {
-            console.log(`Extracting methods from contract symbol: ${contractSymbol.getName()}`);
-            extractPublicMethods(contractSymbol, checker, schemaData);
-          } else {
-            console.warn(`No symbol found for default export in ${sourceFile.fileName}`);
-          }
-        }
-
-        // Extract the State interface
-        const stateInterface = sourceFile.statements.find(
-          (stmt): stmt is ts.InterfaceDeclaration =>
-            ts.isInterfaceDeclaration(stmt) && stmt.name.text === 'State'
-        );
-
-        if (stateInterface) {
-          console.log("Extracting schema for 'State' interface");
-          schemaData.state = serializeType(
-            checker.getTypeAtLocation(stateInterface),
-            checker
-          );
-        }
+        extractDefaultExport(sourceFile, checker, schemaData);
+        extractStateInterface(sourceFile, checker, schemaData);
       });
 
       const outputPath =
@@ -99,6 +71,29 @@ function isPublicDeclaration(node: ts.Node): boolean {
   }
   // If no modifiers exist, assume the node is public
   return true;
+}
+
+function extractDefaultExport(
+  sourceFile: ts.SourceFile,
+  checker: ts.TypeChecker,
+  schemaData: Record<string, any>
+) {
+  const defaultExport = sourceFile.statements.find((stmt) =>
+    ts.isExportAssignment(stmt) && !stmt.isExportEquals
+  ) as ts.ExportAssignment | undefined;
+
+  if (defaultExport && defaultExport.expression) {
+    console.log(`Found default export in file: ${sourceFile.fileName}`);
+
+    const contractSymbol = checker.getSymbolAtLocation(defaultExport.expression);
+
+    if (contractSymbol) {
+      console.log(`Extracting methods from contract symbol: ${contractSymbol.getName()}`);
+      extractPublicMethods(contractSymbol, checker, schemaData);
+    } else {
+      console.warn(`No symbol found for default export in ${sourceFile.fileName}`);
+    }
+  }
 }
 
 // Extract only public methods from the contract and add them to schemaData
@@ -148,6 +143,25 @@ function extractPublicMethods(
       }
     }
   });
+}
+
+function extractStateInterface(
+  sourceFile: ts.SourceFile,
+  checker: ts.TypeChecker,
+  schemaData: Record<string, any>
+) {
+  const stateInterface = sourceFile.statements.find(
+    (stmt): stmt is ts.InterfaceDeclaration =>
+      ts.isInterfaceDeclaration(stmt) && stmt.name.text === 'State'
+  );
+
+  if (stateInterface) {
+    console.log("Extracting schema for 'State' interface");
+    schemaData.state = serializeType(
+      checker.getTypeAtLocation(stateInterface),
+      checker
+    );
+  }
 }
 
 function serializeType(
