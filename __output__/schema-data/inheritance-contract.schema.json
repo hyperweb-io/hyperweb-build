@@ -9,14 +9,14 @@
   },
   "methods": [
     {
-      "functionName": "increment",
+      "name": "increment",
       "parameters": [],
       "returnType": {
         "type": "any"
       }
     },
     {
-      "functionName": "baseMethod",
+      "name": "baseMethod",
       "parameters": [],
       "returnType": {
         "type": "any"

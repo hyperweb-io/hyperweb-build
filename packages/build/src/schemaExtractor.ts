@@ -123,7 +123,7 @@ function extractPublicMethods(
 
       if (isPublic) {
         const methodSchema = {
-          functionName: prop.getName(),
+          name: prop.getName(),
           parameters: [] as { name: string; type: any }[],
           returnType: serializeType(
             propType.getCallSignatures()[0].getReturnType(),
@@ -144,7 +144,7 @@ function extractPublicMethods(
         });
 
         schemaData.methods.push(methodSchema);
-        console.log(`Extracted public method: ${methodSchema.functionName}`);
+        console.log(`Extracted public method: ${methodSchema.name}`);
       }
     }
   });

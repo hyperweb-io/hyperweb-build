@@ -43,14 +43,14 @@ exports[`schemaExtractorPlugin should extract methods and state from classes inh
 {
   "methods": [
     {
-      "functionName": "increment",
+      "name": "increment",
       "parameters": [],
       "returnType": {
         "type": "any",
       },
     },
     {
-      "functionName": "baseMethod",
+      "name": "baseMethod",
       "parameters": [],
       "returnType": {
         "type": "any",
@@ -72,14 +72,14 @@ exports[`schemaExtractorPlugin should extract methods from classes public method
 {
   "methods": [
     {
-      "functionName": "increment",
+      "name": "increment",
       "parameters": [],
       "returnType": {
         "type": "any",
       },
     },
     {
-      "functionName": "addToken",
+      "name": "addToken",
       "parameters": [
         {
           "name": "denom",
@@ -99,7 +99,7 @@ exports[`schemaExtractorPlugin should extract methods from classes public method
       },
     },
     {
-      "functionName": "removeToken",
+      "name": "removeToken",
       "parameters": [
         {
           "name": "index",

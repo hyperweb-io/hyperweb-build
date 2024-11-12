@@ -48,7 +48,7 @@ describe('schemaExtractorPlugin', () => {
     expect(schemaData.state).toHaveProperty('type', 'object');
     expect(schemaData.state).toHaveProperty('properties');
 
-    const methodNames = schemaData.methods.map((method: any) => method.functionName);
+    const methodNames = schemaData.methods.map((method: any) => method.name);
     expect(methodNames).toContain('addToken');
     expect(methodNames).toContain('increment');
     expect(methodNames).toContain('removeToken');
@@ -64,7 +64,7 @@ describe('schemaExtractorPlugin', () => {
     expect(schemaData.state).toHaveProperty('type', 'object');
     expect(schemaData.state).toHaveProperty('properties');
 
-    const methodNames = schemaData.methods.map((method: any) => method.functionName);
+    const methodNames = schemaData.methods.map((method: any) => method.name);
     expect(methodNames).toContain('baseMethod');
     expect(methodNames).toContain('increment');
     expect(methodNames).not.toContain('reset');
