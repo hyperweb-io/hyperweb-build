@@ -1,0 +1,26 @@
+{
+  "state": {
+    "type": "object",
+    "properties": {
+      "count": {
+        "type": "number"
+      }
+    }
+  },
+  "methods": [
+    {
+      "name": "increment",
+      "parameters": [],
+      "returnType": {
+        "type": "any"
+      }
+    },
+    {
+      "name": "baseMethod",
+      "parameters": [],
+      "returnType": {
+        "type": "any"
+      }
+    }
+  ]
+}
