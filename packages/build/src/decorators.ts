@@ -1,17 +1,11 @@
-import generate from '@babel/generator';
-import * as parser from '@babel/parser';
-import traverse from '@babel/traverse';
-import * as t from '@babel/types';
-import { Plugin } from 'esbuild';
+import * as ts from 'typescript';
 import * as path from 'path';
 
-import { HyperwebBuildOptions } from './index';
-
-interface DecoratorInfo {
+export interface DecoratorInfo {
   name: string;
   args: any[];
   targetName: string;
-  targetType?: 'method' | 'function';
+  targetType?: 'class' | 'method' | 'property' | 'parameter' | 'function' | 'unknown';
   location?: {
     file: string;
     line: number;
@@ -19,132 +13,87 @@ interface DecoratorInfo {
   };
 }
 
-interface DecoratorExtractorOptions {
-  outputPath?: string;  // Where to save the decorator metadata
-  include?: RegExp[];   // Patterns for files to process
-  exclude?: RegExp[];   // Patterns for files to ignore
+// Extract decorators using TypeScript AST
+export function extractDecoratorsFromSourceFile(
+  sourceFile: ts.SourceFile,
+  checker: ts.TypeChecker,
+  schemaData: Record<string, any>,
+  baseDir: string
+) {
+  const decorators: DecoratorInfo[] = [];
+
+  const visitNode = (node: ts.Node) => {
+    if (ts.canHaveDecorators(node)) {
+      const nodeDecorators = ts.getDecorators(node);
+      if (nodeDecorators) {
+        nodeDecorators.forEach((decorator) => {
+          const decoratorInfo = extractDecoratorInfo(decorator, node, sourceFile, baseDir);
+          if (decoratorInfo) {
+            decorators.push(decoratorInfo);
+          }
+        });
+      }
+    }
+
+    ts.forEachChild(node, visitNode);
+  };
+
+  visitNode(sourceFile);
+  schemaData.decorators.push(...decorators);
 }
 
-const decoratorMetadata: Record<string, DecoratorInfo[]> = {};
+// Extract detailed decorator information
+function extractDecoratorInfo(
+  decorator: ts.Decorator,
+  targetNode: ts.Node,
+  sourceFile: ts.SourceFile,
+  baseDir: string
+): DecoratorInfo | null {
+  const decoratorExpression = decorator.expression;
 
+  let decoratorName = 'unknown';
+  let decoratorArgs: any[] = [];
 
-function normalizeFilePath(filePath: string, rootDir?: string): string {
-    const projectRoot = rootDir || process.cwd();
-    const relativePath = path.relative(projectRoot, filePath);
-    return relativePath
-      .replace(/\\/g, '/')
-      .replace(/^\.\//, '');
+  if (ts.isIdentifier(decoratorExpression)) {
+    decoratorName = decoratorExpression.text;
+  } else if (ts.isCallExpression(decoratorExpression)) {
+    if (ts.isIdentifier(decoratorExpression.expression)) {
+      decoratorName = decoratorExpression.expression.text;
+    }
+    decoratorArgs = decoratorExpression.arguments.map((arg) =>
+      ts.isStringLiteral(arg) || ts.isNumericLiteral(arg)
+        ? arg.text
+        : 'complex'
+    );
   }
 
-export const createDecoratorExtractorPlugin = (
-  pluginOptions: DecoratorExtractorOptions = {},
-  hyperwebOptions?: HyperwebBuildOptions
-): Plugin => ({
-  name: 'decorator-extractor',
-  
-  setup(build) {
+  const targetName = (ts.isClassDeclaration(targetNode) && targetNode.name?.text) ||
+    (ts.isMethodDeclaration(targetNode) && targetNode.name.getText()) ||
+    (ts.isPropertyDeclaration(targetNode) && targetNode.name.getText()) ||
+    (ts.isParameter(targetNode) && `parameter_${targetNode.getStart()}`) ||
+    'unknown';
 
-    // Set up the file filter
-    const filter = {
-      include: pluginOptions.include || [/\.[jt]sx?$/],
-      exclude: pluginOptions.exclude || [/node_modules/],
-    };
+  const targetType = ts.isClassDeclaration(targetNode)
+    ? 'class'
+    : ts.isMethodDeclaration(targetNode)
+      ? 'method'
+      : ts.isPropertyDeclaration(targetNode)
+        ? 'property'
+        : ts.isParameter(targetNode)
+          ? 'parameter'
+          : 'unknown';
 
-    build.onLoad({ filter: new RegExp(filter.include.map(r => r.source).join('|')) }, async (args) => {
-      // Skip excluded files
-      if (filter.exclude.some(pattern => pattern.test(args.path))) {
-        return null;
-      }
+  const { line, character } = sourceFile.getLineAndCharacterOfPosition(decorator.getStart());
 
-      // Read the file
-      const source = await require('fs').promises.readFile(args.path, 'utf8');
-      
-      // Parse the code with babel
-      const ast = parser.parse(source, {
-        sourceType: 'module',
-        plugins: ['typescript', 'decorators-legacy'],
-      });
-
-      // Track if we made any modifications
-      let modified = false;
-
-      // Traverse the AST
-      traverse(ast, {
-        Decorator(path) {
-          const decorator = path.node;
-          const parent = path.parent;
-
-          // Only process method or function decorators
-          if (!t.isClassMethod(parent as any) && !t.isFunctionDeclaration(parent as any)) {
-            return;
-          }
-
-          const rootDir = hyperwebOptions?.absWorkingDir || process.cwd();
-          const normalizedPath = normalizeFilePath(args.path, rootDir);
-
-          // Get decorator information
-          const decoratorInfo: DecoratorInfo = {
-            // @ts-ignore
-            name: t.isIdentifier(decorator.expression) 
-              ? decorator.expression.name 
-            // @ts-ignore
-              : t.isCallExpression(decorator.expression)
-                ? (decorator.expression.callee as t.Identifier).name
-                : 'unknown',
-            // @ts-ignore
-            args: t.isCallExpression(decorator.expression)
-              ? decorator.expression.arguments.map(arg => 
-                // @ts-ignore
-                t.isLiteral(arg) ? (arg as any).value : null)
-              : [],
-            // @ts-ignore
-            targetName: t.isClassMethod(parent) 
-              ? (parent.key as t.Identifier).name
-              : (parent as t.FunctionDeclaration).id?.name || 'anonymous',
-            // @ts-ignore
-            // targetType: t.isClassMethod(parent) ? 'method' : 'function',
-            
-            // location: {
-            //   file: normalizedPath,
-            //   line: decorator.loc?.start.line || 0,
-            //   column: decorator.loc?.start.column || 0,
-            // }
-          };
-
-          // Store the metadata
-          if (!decoratorMetadata[normalizedPath]) {
-            decoratorMetadata[normalizedPath] = [];
-          }
-          decoratorMetadata[normalizedPath].push(decoratorInfo);
-
-          // Remove the decorator
-          path.remove();
-          modified = true;
-        }
-      });
-
-      // If we made modifications, generate new code
-      if (modified) {
-        const output = generate(ast, {}, source);
-        
-        return {
-          contents: output.code,
-          loader: args.path.endsWith('.ts') ? 'ts' : 'js',
-        };
-      }
-
-      return null;
-    });
-
-    build.onEnd(async () => {
-      if (pluginOptions.outputPath) {
-        // Save the metadata to the specified file
-        await require('fs').promises.writeFile(
-          pluginOptions.outputPath,
-          JSON.stringify(decoratorMetadata, null, 2),
-          'utf8'
-        );
-      }
-    });
-  }
-});
+  return {
+    name: decoratorName,
+    args: decoratorArgs,
+    targetName: targetName || 'unknown',
+    targetType,
+    location: {
+      file: path.relative(baseDir, sourceFile.fileName),
+      line: line + 1,
+      column: character + 1,
+    },
+  };
+}

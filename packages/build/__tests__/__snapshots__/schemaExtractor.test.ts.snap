@@ -2,6 +2,7 @@
 
 exports[`schemaExtractorPlugin should extract a basic contract with public and private methods 1`] = `
 {
+  "decorators": [],
   "methods": [],
   "state": {
     "properties": {
@@ -39,8 +40,127 @@ exports[`schemaExtractorPlugin should extract a basic contract with public and p
 }
 `;
 
+exports[`schemaExtractorPlugin should extract decorators and state from source 1`] = `
+{
+  "decorators": [
+    {
+      "args": [],
+      "location": {
+        "column": 3,
+        "file": "class.ts",
+        "line": 16,
+      },
+      "name": "external",
+      "targetName": "getCount",
+      "targetType": "method",
+    },
+    {
+      "args": [],
+      "location": {
+        "column": 3,
+        "file": "class.ts",
+        "line": 17,
+      },
+      "name": "admin",
+      "targetName": "getCount",
+      "targetType": "method",
+    },
+    {
+      "args": [],
+      "location": {
+        "column": 3,
+        "file": "class.ts",
+        "line": 23,
+      },
+      "name": "internal",
+      "targetName": "increment",
+      "targetType": "method",
+    },
+    {
+      "args": [],
+      "location": {
+        "column": 3,
+        "file": "class.ts",
+        "line": 24,
+      },
+      "name": "admin",
+      "targetName": "increment",
+      "targetType": "method",
+    },
+    {
+      "args": [],
+      "location": {
+        "column": 3,
+        "file": "class.ts",
+        "line": 30,
+      },
+      "name": "creator",
+      "targetName": "decrement",
+      "targetType": "method",
+    },
+    {
+      "args": [
+        "debug",
+        "level",
+      ],
+      "location": {
+        "column": 3,
+        "file": "index.ts",
+        "line": 4,
+      },
+      "name": "permission",
+      "targetName": "fetchData",
+      "targetType": "method",
+    },
+    {
+      "args": [],
+      "location": {
+        "column": 3,
+        "file": "index.ts",
+        "line": 5,
+      },
+      "name": "performance",
+      "targetName": "fetchData",
+      "targetType": "method",
+    },
+  ],
+  "methods": [
+    {
+      "name": "fetchData",
+      "parameters": [],
+      "returnType": {
+        "properties": {
+          "__@toStringTag@159": {
+            "type": "string",
+          },
+          "catch": {
+            "type": "any",
+          },
+          "finally": {
+            "type": "any",
+          },
+          "then": {
+            "type": "any",
+          },
+        },
+        "type": "object",
+      },
+    },
+  ],
+  "state": {
+    "properties": {
+      "count": {
+        "type": "any",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
 exports[`schemaExtractorPlugin should extract methods and state from classes inheritance-contract 1`] = `
 {
+  "decorators": [],
   "methods": [
     {
       "name": "increment",
@@ -70,6 +190,7 @@ exports[`schemaExtractorPlugin should extract methods and state from classes inh
 
 exports[`schemaExtractorPlugin should extract methods from classes public methods 1`] = `
 {
+  "decorators": [],
   "methods": [
     {
       "name": "increment",
