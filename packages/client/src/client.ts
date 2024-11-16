@@ -1,9 +1,7 @@
-import chalk from 'chalk';
 import deepmerge from 'deepmerge';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import * as yaml from 'js-yaml';
 import { mkdirp } from 'mkdirp';
-import * as os from 'os';
 import { dirname, resolve } from 'path';
 import * as shell from 'shelljs';
 
@@ -31,7 +29,7 @@ export interface HyperwebClientI {
 export class HyperwebClient implements HyperwebClientI {
   ctx: HyperwebContext;
   version: string;
-  config: HyperwebConfig
+  config: HyperwebConfig;
 
   constructor(ctx: HyperwebContext) {
     this.ctx = deepmerge(defaultStarshipContext, ctx);
