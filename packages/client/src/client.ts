@@ -10,13 +10,15 @@ import { readAndParsePackageJson } from './package';
 
 export interface HyperwebContext {
   name?: string;
+  rpc?: string;
   config?: string;
   verbose?: boolean;
   timeout?: string;
 }
 
-export const defaultStarshipContext: Partial<HyperwebContext> = {
+export const defaultHyperwebContext: Partial<HyperwebContext> = {
   name: '',
+  rpc: 'http://localhost:26657',
   verbose: false,
 };
 
@@ -32,7 +34,7 @@ export class HyperwebClient implements HyperwebClientI {
   config: HyperwebConfig;
 
   constructor(ctx: HyperwebContext) {
-    this.ctx = deepmerge(defaultStarshipContext, ctx);
+    this.ctx = deepmerge(defaultHyperwebContext, ctx);
     // TODO add semver check against net
     this.version = readAndParsePackageJson().version;
   }
