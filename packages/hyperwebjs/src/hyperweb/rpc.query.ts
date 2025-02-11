@@ -9,8 +9,8 @@ export const createRPCQueryClient = async ({
   const tmClient = await connectComet(rpcEndpoint);
   const client = new QueryClient(tmClient);
   return {
-    jsd: {
-      jsd: (await import("./jsd/query.rpc.Query")).createRpcQueryExtension(client)
+    hyperweb: {
+      hvm: (await import("./hvm/query.rpc.Query")).createRpcQueryExtension(client)
     },
     cosmos: {
       app: {

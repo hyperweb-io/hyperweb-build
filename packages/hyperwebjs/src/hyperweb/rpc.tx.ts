@@ -4,8 +4,8 @@ export const createRPCMsgClient = async ({
 }: {
   rpc: Rpc;
 }) => ({
-  jsd: {
-    jsd: new (await import("./jsd/tx.rpc.msg")).MsgClientImpl(rpc)
+  hyperweb: {
+    hvm: new (await import("./hvm/tx.rpc.msg")).MsgClientImpl(rpc)
   },
   cosmos: {
     auth: {

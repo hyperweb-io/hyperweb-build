@@ -8,8 +8,8 @@ export const createLCDClient = async ({
     restEndpoint
   });
   return {
-    jsd: {
-      jsd: new (await import("./jsd/query.lcd")).LCDQueryClient({
+    hyperweb: {
+      hvm: new (await import("./hvm/query.lcd")).LCDQueryClient({
         requestClient
       })
     },

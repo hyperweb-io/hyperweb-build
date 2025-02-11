@@ -4,8 +4,8 @@
     * and run the transpile command or npm scripts command that is used to regenerate this bundle.
   */
  
-export * from "./jsd/bundle";
-export * from "./jsd/client";
+export * from "./hyperweb/bundle";
+export * from "./hyperweb/client";
 export * from "./amino/bundle";
 export * from "./cosmos/bundle";
 export * from "./cosmos/client";

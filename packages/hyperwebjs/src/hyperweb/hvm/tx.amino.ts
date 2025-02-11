@@ -1,18 +1,19 @@
 import { Params, ParamsSDKType } from "./params";
+import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../google/protobuf/any";
 import { MsgUpdateParams, MsgUpdateParamsSDKType, MsgInstantiate, MsgInstantiateSDKType, MsgEval, MsgEvalSDKType } from "./tx";
 export const AminoConverter = {
-  "/jsd.jsd.MsgUpdateParams": {
-    aminoType: "jsd/x/jsd/MsgUpdateParams",
+  "/hyperweb.hvm.MsgUpdateParams": {
+    aminoType: "hvm/x/hvm/MsgUpdateParams",
     toAmino: MsgUpdateParams.toAmino,
     fromAmino: MsgUpdateParams.fromAmino
   },
-  "/jsd.jsd.MsgInstantiate": {
-    aminoType: "/jsd.jsd.MsgInstantiate",
+  "/hyperweb.hvm.MsgInstantiate": {
+    aminoType: "/hyperweb.hvm.MsgInstantiate",
     toAmino: MsgInstantiate.toAmino,
     fromAmino: MsgInstantiate.fromAmino
   },
-  "/jsd.jsd.MsgEval": {
-    aminoType: "/jsd.jsd.MsgEval",
+  "/hyperweb.hvm.MsgEval": {
+    aminoType: "/hyperweb.hvm.MsgEval",
     toAmino: MsgEval.toAmino,
     fromAmino: MsgEval.fromAmino
   }

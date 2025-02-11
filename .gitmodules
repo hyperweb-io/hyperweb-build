@@ -1,6 +1,6 @@
 [submodule "packages/hyperwebjs/cosmos-sdk"]
 	path = packages/hyperwebjs/cosmos-sdk
 	url = git@github.com:cosmos/cosmos-sdk.git
-[submodule "packages/hyperwebjs/jsd"]
-	path = packages/hyperwebjs/jsd
-	url = git@github.com:cosmology-tech/jsd.git
+[submodule "packages/hyperwebjs/hyperweb"]
+	path = packages/hyperwebjs/hyperweb
+	url = git@github.com:hyperweb-io/hyperweb.git

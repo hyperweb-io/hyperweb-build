@@ -2,17 +2,17 @@ import { BinaryReader, BinaryWriter } from "../../binary";
 import { JsonSafe } from "../../json-safe";
 import { DeepPartial } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
-export const protobufPackage = "jsd.jsd";
+export const protobufPackage = "hyperweb.hvm";
 /** Params defines the parameters for the module. */
 export interface Params {}
 export interface ParamsProtoMsg {
-  typeUrl: "/jsd.jsd.Params";
+  typeUrl: "/hyperweb.hvm.Params";
   value: Uint8Array;
 }
 /** Params defines the parameters for the module. */
 export interface ParamsAmino {}
 export interface ParamsAminoMsg {
-  type: "jsd/x/jsd/Params";
+  type: "hvm/x/hvm/Params";
   value: ParamsAmino;
 }
 /** Params defines the parameters for the module. */
@@ -21,8 +21,8 @@ function createBaseParams(): Params {
   return {};
 }
 export const Params = {
-  typeUrl: "/jsd.jsd.Params",
-  aminoType: "jsd/x/jsd/Params",
+  typeUrl: "/hyperweb.hvm.Params",
+  aminoType: "hvm/x/hvm/Params",
   is(o: any): o is Params {
     return o && o.$typeUrl === Params.typeUrl;
   },
@@ -81,7 +81,7 @@ export const Params = {
   },
   toAminoMsg(message: Params): ParamsAminoMsg {
     return {
-      type: "jsd/x/jsd/Params",
+      type: "hvm/x/hvm/Params",
       value: Params.toAmino(message)
     };
   },
@@ -93,7 +93,7 @@ export const Params = {
   },
   toProtoMsg(message: Params): ParamsProtoMsg {
     return {
-      typeUrl: "/jsd.jsd.Params",
+      typeUrl: "/hyperweb.hvm.Params",
       value: Params.encode(message).finish()
     };
   }

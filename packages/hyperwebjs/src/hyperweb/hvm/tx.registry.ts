@@ -1,8 +1,9 @@
 import { Params, ParamsSDKType } from "./params";
+import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../google/protobuf/any";
 import { TelescopeGeneratedType } from "../../types";
 import { Registry } from "@cosmjs/proto-signing";
 import { MsgUpdateParams, MsgUpdateParamsSDKType, MsgInstantiate, MsgInstantiateSDKType, MsgEval, MsgEvalSDKType } from "./tx";
-export const registry: ReadonlyArray<[string, TelescopeGeneratedType<any, any, any>]> = [["/jsd.jsd.MsgUpdateParams", MsgUpdateParams], ["/jsd.jsd.MsgInstantiate", MsgInstantiate], ["/jsd.jsd.MsgEval", MsgEval]];
+export const registry: ReadonlyArray<[string, TelescopeGeneratedType<any, any, any>]> = [["/hyperweb.hvm.MsgUpdateParams", MsgUpdateParams], ["/hyperweb.hvm.MsgInstantiate", MsgInstantiate], ["/hyperweb.hvm.MsgEval", MsgEval]];
 export const load = (protoRegistry: Registry) => {
   registry.forEach(([typeUrl, mod]) => {
     protoRegistry.register(typeUrl, mod);
@@ -12,19 +13,19 @@ export const MessageComposer = {
   encoded: {
     updateParams(value: MsgUpdateParams) {
       return {
-        typeUrl: "/jsd.jsd.MsgUpdateParams",
+        typeUrl: "/hyperweb.hvm.MsgUpdateParams",
         value: MsgUpdateParams.encode(value).finish()
       };
     },
     instantiate(value: MsgInstantiate) {
       return {
-        typeUrl: "/jsd.jsd.MsgInstantiate",
+        typeUrl: "/hyperweb.hvm.MsgInstantiate",
         value: MsgInstantiate.encode(value).finish()
       };
     },
     eval(value: MsgEval) {
       return {
-        typeUrl: "/jsd.jsd.MsgEval",
+        typeUrl: "/hyperweb.hvm.MsgEval",
         value: MsgEval.encode(value).finish()
       };
     }
@@ -32,19 +33,19 @@ export const MessageComposer = {
   withTypeUrl: {
     updateParams(value: MsgUpdateParams) {
       return {
-        typeUrl: "/jsd.jsd.MsgUpdateParams",
+        typeUrl: "/hyperweb.hvm.MsgUpdateParams",
         value
       };
     },
     instantiate(value: MsgInstantiate) {
       return {
-        typeUrl: "/jsd.jsd.MsgInstantiate",
+        typeUrl: "/hyperweb.hvm.MsgInstantiate",
         value
       };
     },
     eval(value: MsgEval) {
       return {
-        typeUrl: "/jsd.jsd.MsgEval",
+        typeUrl: "/hyperweb.hvm.MsgEval",
         value
       };
     }
@@ -52,19 +53,19 @@ export const MessageComposer = {
   toJSON: {
     updateParams(value: MsgUpdateParams) {
       return {
-        typeUrl: "/jsd.jsd.MsgUpdateParams",
+        typeUrl: "/hyperweb.hvm.MsgUpdateParams",
         value: MsgUpdateParams.toJSON(value)
       };
     },
     instantiate(value: MsgInstantiate) {
       return {
-        typeUrl: "/jsd.jsd.MsgInstantiate",
+        typeUrl: "/hyperweb.hvm.MsgInstantiate",
         value: MsgInstantiate.toJSON(value)
       };
     },
     eval(value: MsgEval) {
       return {
-        typeUrl: "/jsd.jsd.MsgEval",
+        typeUrl: "/hyperweb.hvm.MsgEval",
         value: MsgEval.toJSON(value)
       };
     }
@@ -72,19 +73,19 @@ export const MessageComposer = {
   fromJSON: {
     updateParams(value: any) {
       return {
-        typeUrl: "/jsd.jsd.MsgUpdateParams",
+        typeUrl: "/hyperweb.hvm.MsgUpdateParams",
         value: MsgUpdateParams.fromJSON(value)
       };
     },
     instantiate(value: any) {
       return {
-        typeUrl: "/jsd.jsd.MsgInstantiate",
+        typeUrl: "/hyperweb.hvm.MsgInstantiate",
         value: MsgInstantiate.fromJSON(value)
       };
     },
     eval(value: any) {
       return {
-        typeUrl: "/jsd.jsd.MsgEval",
+        typeUrl: "/hyperweb.hvm.MsgEval",
         value: MsgEval.fromJSON(value)
       };
     }
@@ -92,19 +93,19 @@ export const MessageComposer = {
   fromPartial: {
     updateParams(value: MsgUpdateParams) {
       return {
-        typeUrl: "/jsd.jsd.MsgUpdateParams",
+        typeUrl: "/hyperweb.hvm.MsgUpdateParams",
         value: MsgUpdateParams.fromPartial(value)
       };
     },
     instantiate(value: MsgInstantiate) {
       return {
-        typeUrl: "/jsd.jsd.MsgInstantiate",
+        typeUrl: "/hyperweb.hvm.MsgInstantiate",
         value: MsgInstantiate.fromPartial(value)
       };
     },
     eval(value: MsgEval) {
       return {
-        typeUrl: "/jsd.jsd.MsgEval",
+        typeUrl: "/hyperweb.hvm.MsgEval",
         value: MsgEval.fromPartial(value)
       };
     }
