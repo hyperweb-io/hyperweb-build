@@ -8,7 +8,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "fixed",
+  "version": "0.0.1",
   "registry": "https://registry.npmjs.org",
   "command": {
     "create": {
