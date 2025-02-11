@@ -2,25 +2,30 @@ import { BinaryReader, BinaryWriter } from "../../binary";
 import { isSet, DeepPartial } from "../../helpers";
 import { JsonSafe } from "../../json-safe";
 import { GlobalDecoderRegistry } from "../../registry";
-export const protobufPackage = "jsd.jsd";
+export const protobufPackage = "hyperweb.hvm";
+/** contract account */
 export interface ContractAccount {
+  /** contract account index */
   index: bigint;
-  /** auth account number */
+  /** account number */
   accountNumber: bigint;
 }
 export interface ContractAccountProtoMsg {
-  typeUrl: "/jsd.jsd.ContractAccount";
+  typeUrl: "/hyperweb.hvm.ContractAccount";
   value: Uint8Array;
 }
+/** contract account */
 export interface ContractAccountAmino {
+  /** contract account index */
   index?: string;
-  /** auth account number */
+  /** account number */
   account_number?: string;
 }
 export interface ContractAccountAminoMsg {
-  type: "/jsd.jsd.ContractAccount";
+  type: "/hyperweb.hvm.ContractAccount";
   value: ContractAccountAmino;
 }
+/** contract account */
 export interface ContractAccountSDKType {
   index: bigint;
   account_number: bigint;
@@ -32,7 +37,7 @@ function createBaseContractAccount(): ContractAccount {
   };
 }
 export const ContractAccount = {
-  typeUrl: "/jsd.jsd.ContractAccount",
+  typeUrl: "/hyperweb.hvm.ContractAccount",
   is(o: any): o is ContractAccount {
     return o && (o.$typeUrl === ContractAccount.typeUrl || typeof o.index === "bigint" && typeof o.accountNumber === "bigint");
   },
@@ -132,7 +137,7 @@ export const ContractAccount = {
   },
   toProtoMsg(message: ContractAccount): ContractAccountProtoMsg {
     return {
-      typeUrl: "/jsd.jsd.ContractAccount",
+      typeUrl: "/hyperweb.hvm.ContractAccount",
       value: ContractAccount.encode(message).finish()
     };
   }

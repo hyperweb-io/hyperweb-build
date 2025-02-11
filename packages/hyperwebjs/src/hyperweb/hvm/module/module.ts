@@ -2,23 +2,29 @@ import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
 import { GlobalDecoderRegistry } from "../../../registry";
-export const protobufPackage = "jsd.jsd.module";
+export const protobufPackage = "hyperweb.hvm.module";
 /** Module is the config object for the module. */
 export interface Module {
-  /** authority defines the custom module authority. If not set, defaults to the governance module. */
+  /**
+   * authority defines the custom module authority. If not set, defaults to the
+   * governance module.
+   */
   authority: string;
 }
 export interface ModuleProtoMsg {
-  typeUrl: "/jsd.jsd.module.Module";
+  typeUrl: "/hyperweb.hvm.module.Module";
   value: Uint8Array;
 }
 /** Module is the config object for the module. */
 export interface ModuleAmino {
-  /** authority defines the custom module authority. If not set, defaults to the governance module. */
+  /**
+   * authority defines the custom module authority. If not set, defaults to the
+   * governance module.
+   */
   authority?: string;
 }
 export interface ModuleAminoMsg {
-  type: "/jsd.jsd.module.Module";
+  type: "/hyperweb.hvm.module.Module";
   value: ModuleAmino;
 }
 /** Module is the config object for the module. */
@@ -31,7 +37,7 @@ function createBaseModule(): Module {
   };
 }
 export const Module = {
-  typeUrl: "/jsd.jsd.module.Module",
+  typeUrl: "/hyperweb.hvm.module.Module",
   is(o: any): o is Module {
     return o && (o.$typeUrl === Module.typeUrl || typeof o.authority === "string");
   },
@@ -112,7 +118,7 @@ export const Module = {
   },
   toProtoMsg(message: Module): ModuleProtoMsg {
     return {
-      typeUrl: "/jsd.jsd.module.Module",
+      typeUrl: "/hyperweb.hvm.module.Module",
       value: Module.encode(message).finish()
     };
   }

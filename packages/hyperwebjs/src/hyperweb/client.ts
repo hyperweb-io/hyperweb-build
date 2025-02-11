@@ -1,13 +1,13 @@
 import { GeneratedType, Registry, OfflineSigner } from "@cosmjs/proto-signing";
 import { defaultRegistryTypes, AminoTypes, SigningStargateClient } from "@cosmjs/stargate";
 import { HttpEndpoint } from "@cosmjs/tendermint-rpc";
-import * as jsdJsdTxRegistry from "./jsd/tx.registry";
-import * as jsdJsdTxAmino from "./jsd/tx.amino";
-export const jsdAminoConverters = {
-  ...jsdJsdTxAmino.AminoConverter
+import * as hyperwebHvmTxRegistry from "./hvm/tx.registry";
+import * as hyperwebHvmTxAmino from "./hvm/tx.amino";
+export const hyperwebAminoConverters = {
+  ...hyperwebHvmTxAmino.AminoConverter
 };
-export const jsdProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...jsdJsdTxRegistry.registry];
-export const getSigningJsdClientOptions = ({
+export const hyperwebProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...hyperwebHvmTxRegistry.registry];
+export const getSigningHyperwebClientOptions = ({
   defaultTypes = defaultRegistryTypes
 }: {
   defaultTypes?: ReadonlyArray<[string, GeneratedType]>;
@@ -15,16 +15,16 @@ export const getSigningJsdClientOptions = ({
   registry: Registry;
   aminoTypes: AminoTypes;
 } => {
-  const registry = new Registry([...defaultTypes, ...jsdProtoRegistry]);
+  const registry = new Registry([...defaultTypes, ...hyperwebProtoRegistry]);
   const aminoTypes = new AminoTypes({
-    ...jsdAminoConverters
+    ...hyperwebAminoConverters
   });
   return {
     registry,
     aminoTypes
   };
 };
-export const getSigningJsdClient = async ({
+export const getSigningHyperwebClient = async ({
   rpcEndpoint,
   signer,
   defaultTypes = defaultRegistryTypes
@@ -36,7 +36,7 @@ export const getSigningJsdClient = async ({
   const {
     registry,
     aminoTypes
-  } = getSigningJsdClientOptions({
+  } = getSigningHyperwebClientOptions({
     defaultTypes
   });
   const client = await SigningStargateClient.connectWithSigner(rpcEndpoint, signer, {

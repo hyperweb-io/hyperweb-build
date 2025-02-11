@@ -1,29 +1,36 @@
 import { Params, ParamsAmino, ParamsSDKType } from "./params";
+import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { isSet, DeepPartial } from "../../helpers";
 import { JsonSafe } from "../../json-safe";
 import { GlobalDecoderRegistry } from "../../registry";
-export const protobufPackage = "jsd.jsd";
+export const protobufPackage = "hyperweb.hvm";
 /** MsgUpdateParams is the Msg/UpdateParams request type. */
 export interface MsgUpdateParams {
-  /** authority is the address that controls the module (defaults to x/gov unless overwritten). */
+  /**
+   * authority is the address that controls the module (defaults to x/gov unless
+   * overwritten).
+   */
   authority: string;
   /** NOTE: All parameters must be supplied. */
   params: Params;
 }
 export interface MsgUpdateParamsProtoMsg {
-  typeUrl: "/jsd.jsd.MsgUpdateParams";
+  typeUrl: "/hyperweb.hvm.MsgUpdateParams";
   value: Uint8Array;
 }
 /** MsgUpdateParams is the Msg/UpdateParams request type. */
 export interface MsgUpdateParamsAmino {
-  /** authority is the address that controls the module (defaults to x/gov unless overwritten). */
+  /**
+   * authority is the address that controls the module (defaults to x/gov unless
+   * overwritten).
+   */
   authority?: string;
   /** NOTE: All parameters must be supplied. */
   params: ParamsAmino;
 }
 export interface MsgUpdateParamsAminoMsg {
-  type: "jsd/x/jsd/MsgUpdateParams";
+  type: "hvm/x/hvm/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
 }
 /** MsgUpdateParams is the Msg/UpdateParams request type. */
@@ -37,7 +44,7 @@ export interface MsgUpdateParamsSDKType {
  */
 export interface MsgUpdateParamsResponse {}
 export interface MsgUpdateParamsResponseProtoMsg {
-  typeUrl: "/jsd.jsd.MsgUpdateParamsResponse";
+  typeUrl: "/hyperweb.hvm.MsgUpdateParamsResponse";
   value: Uint8Array;
 }
 /**
@@ -46,7 +53,7 @@ export interface MsgUpdateParamsResponseProtoMsg {
  */
 export interface MsgUpdateParamsResponseAmino {}
 export interface MsgUpdateParamsResponseAminoMsg {
-  type: "/jsd.jsd.MsgUpdateParamsResponse";
+  type: "/hyperweb.hvm.MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
 /**
@@ -54,83 +61,98 @@ export interface MsgUpdateParamsResponseAminoMsg {
  * MsgUpdateParams message.
  */
 export interface MsgUpdateParamsResponseSDKType {}
+/** msg instantiate */
 export interface MsgInstantiate {
   creator: string;
   code: string;
+  source: string;
 }
 export interface MsgInstantiateProtoMsg {
-  typeUrl: "/jsd.jsd.MsgInstantiate";
+  typeUrl: "/hyperweb.hvm.MsgInstantiate";
   value: Uint8Array;
 }
+/** msg instantiate */
 export interface MsgInstantiateAmino {
   creator?: string;
   code?: string;
+  source?: string;
 }
 export interface MsgInstantiateAminoMsg {
-  type: "/jsd.jsd.MsgInstantiate";
+  type: "/hyperweb.hvm.MsgInstantiate";
   value: MsgInstantiateAmino;
 }
+/** msg instantiate */
 export interface MsgInstantiateSDKType {
   creator: string;
   code: string;
+  source: string;
 }
+/** msg instantiate response */
 export interface MsgInstantiateResponse {
   index: bigint;
 }
 export interface MsgInstantiateResponseProtoMsg {
-  typeUrl: "/jsd.jsd.MsgInstantiateResponse";
+  typeUrl: "/hyperweb.hvm.MsgInstantiateResponse";
   value: Uint8Array;
 }
+/** msg instantiate response */
 export interface MsgInstantiateResponseAmino {
   index?: string;
 }
 export interface MsgInstantiateResponseAminoMsg {
-  type: "/jsd.jsd.MsgInstantiateResponse";
+  type: "/hyperweb.hvm.MsgInstantiateResponse";
   value: MsgInstantiateResponseAmino;
 }
+/** msg instantiate response */
 export interface MsgInstantiateResponseSDKType {
   index: bigint;
 }
+/** msg eval response - TODO add response to this and instantiate */
 export interface MsgEval {
   creator: string;
   index: bigint;
-  fnName: string;
-  arg: string;
+  callee: string;
+  args: Any[];
 }
 export interface MsgEvalProtoMsg {
-  typeUrl: "/jsd.jsd.MsgEval";
+  typeUrl: "/hyperweb.hvm.MsgEval";
   value: Uint8Array;
 }
+/** msg eval response - TODO add response to this and instantiate */
 export interface MsgEvalAmino {
   creator?: string;
   index?: string;
-  fn_name?: string;
-  arg?: string;
+  callee?: string;
+  args?: AnyAmino[];
 }
 export interface MsgEvalAminoMsg {
-  type: "/jsd.jsd.MsgEval";
+  type: "/hyperweb.hvm.MsgEval";
   value: MsgEvalAmino;
 }
+/** msg eval response - TODO add response to this and instantiate */
 export interface MsgEvalSDKType {
   creator: string;
   index: bigint;
-  fn_name: string;
-  arg: string;
+  callee: string;
+  args: AnySDKType[];
 }
+/** msg eval response */
 export interface MsgEvalResponse {
   result: string;
 }
 export interface MsgEvalResponseProtoMsg {
-  typeUrl: "/jsd.jsd.MsgEvalResponse";
+  typeUrl: "/hyperweb.hvm.MsgEvalResponse";
   value: Uint8Array;
 }
+/** msg eval response */
 export interface MsgEvalResponseAmino {
   result?: string;
 }
 export interface MsgEvalResponseAminoMsg {
-  type: "/jsd.jsd.MsgEvalResponse";
+  type: "/hyperweb.hvm.MsgEvalResponse";
   value: MsgEvalResponseAmino;
 }
+/** msg eval response */
 export interface MsgEvalResponseSDKType {
   result: string;
 }
@@ -141,8 +163,8 @@ function createBaseMsgUpdateParams(): MsgUpdateParams {
   };
 }
 export const MsgUpdateParams = {
-  typeUrl: "/jsd.jsd.MsgUpdateParams",
-  aminoType: "jsd/x/jsd/MsgUpdateParams",
+  typeUrl: "/hyperweb.hvm.MsgUpdateParams",
+  aminoType: "hvm/x/hvm/MsgUpdateParams",
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
   },
@@ -234,7 +256,7 @@ export const MsgUpdateParams = {
   },
   toAminoMsg(message: MsgUpdateParams): MsgUpdateParamsAminoMsg {
     return {
-      type: "jsd/x/jsd/MsgUpdateParams",
+      type: "hvm/x/hvm/MsgUpdateParams",
       value: MsgUpdateParams.toAmino(message)
     };
   },
@@ -246,7 +268,7 @@ export const MsgUpdateParams = {
   },
   toProtoMsg(message: MsgUpdateParams): MsgUpdateParamsProtoMsg {
     return {
-      typeUrl: "/jsd.jsd.MsgUpdateParams",
+      typeUrl: "/hyperweb.hvm.MsgUpdateParams",
       value: MsgUpdateParams.encode(message).finish()
     };
   }
@@ -257,7 +279,7 @@ function createBaseMsgUpdateParamsResponse(): MsgUpdateParamsResponse {
   return {};
 }
 export const MsgUpdateParamsResponse = {
-  typeUrl: "/jsd.jsd.MsgUpdateParamsResponse",
+  typeUrl: "/hyperweb.hvm.MsgUpdateParamsResponse",
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -322,7 +344,7 @@ export const MsgUpdateParamsResponse = {
   },
   toProtoMsg(message: MsgUpdateParamsResponse): MsgUpdateParamsResponseProtoMsg {
     return {
-      typeUrl: "/jsd.jsd.MsgUpdateParamsResponse",
+      typeUrl: "/hyperweb.hvm.MsgUpdateParamsResponse",
       value: MsgUpdateParamsResponse.encode(message).finish()
     };
   }
@@ -331,19 +353,20 @@ GlobalDecoderRegistry.register(MsgUpdateParamsResponse.typeUrl, MsgUpdateParamsR
 function createBaseMsgInstantiate(): MsgInstantiate {
   return {
     creator: "",
-    code: ""
+    code: "",
+    source: ""
   };
 }
 export const MsgInstantiate = {
-  typeUrl: "/jsd.jsd.MsgInstantiate",
+  typeUrl: "/hyperweb.hvm.MsgInstantiate",
   is(o: any): o is MsgInstantiate {
-    return o && (o.$typeUrl === MsgInstantiate.typeUrl || typeof o.creator === "string" && typeof o.code === "string");
+    return o && (o.$typeUrl === MsgInstantiate.typeUrl || typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
   },
   isSDK(o: any): o is MsgInstantiateSDKType {
-    return o && (o.$typeUrl === MsgInstantiate.typeUrl || typeof o.creator === "string" && typeof o.code === "string");
+    return o && (o.$typeUrl === MsgInstantiate.typeUrl || typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
   },
   isAmino(o: any): o is MsgInstantiateAmino {
-    return o && (o.$typeUrl === MsgInstantiate.typeUrl || typeof o.creator === "string" && typeof o.code === "string");
+    return o && (o.$typeUrl === MsgInstantiate.typeUrl || typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
   },
   encode(message: MsgInstantiate, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.creator !== undefined) {
@@ -351,6 +374,9 @@ export const MsgInstantiate = {
     }
     if (message.code !== undefined) {
       writer.uint32(18).string(message.code);
+    }
+    if (message.source !== undefined) {
+      writer.uint32(26).string(message.source);
     }
     return writer;
   },
@@ -367,6 +393,9 @@ export const MsgInstantiate = {
         case 2:
           message.code = reader.string();
           break;
+        case 3:
+          message.source = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -378,30 +407,35 @@ export const MsgInstantiate = {
     const obj = createBaseMsgInstantiate();
     if (isSet(object.creator)) obj.creator = String(object.creator);
     if (isSet(object.code)) obj.code = String(object.code);
+    if (isSet(object.source)) obj.source = String(object.source);
     return obj;
   },
   toJSON(message: MsgInstantiate): JsonSafe<MsgInstantiate> {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
     message.code !== undefined && (obj.code = message.code);
+    message.source !== undefined && (obj.source = message.source);
     return obj;
   },
   fromPartial(object: DeepPartial<MsgInstantiate>): MsgInstantiate {
     const message = createBaseMsgInstantiate();
     message.creator = object.creator ?? "";
     message.code = object.code ?? "";
+    message.source = object.source ?? "";
     return message;
   },
   fromSDK(object: MsgInstantiateSDKType): MsgInstantiate {
     return {
       creator: object?.creator,
-      code: object?.code
+      code: object?.code,
+      source: object?.source
     };
   },
   toSDK(message: MsgInstantiate): MsgInstantiateSDKType {
     const obj: any = {};
     obj.creator = message.creator;
     obj.code = message.code;
+    obj.source = message.source;
     return obj;
   },
   fromAmino(object: MsgInstantiateAmino): MsgInstantiate {
@@ -412,12 +446,16 @@ export const MsgInstantiate = {
     if (object.code !== undefined && object.code !== null) {
       message.code = object.code;
     }
+    if (object.source !== undefined && object.source !== null) {
+      message.source = object.source;
+    }
     return message;
   },
   toAmino(message: MsgInstantiate): MsgInstantiateAmino {
     const obj: any = {};
     obj.creator = message.creator === "" ? undefined : message.creator;
     obj.code = message.code === "" ? undefined : message.code;
+    obj.source = message.source === "" ? undefined : message.source;
     return obj;
   },
   fromAminoMsg(object: MsgInstantiateAminoMsg): MsgInstantiate {
@@ -431,7 +469,7 @@ export const MsgInstantiate = {
   },
   toProtoMsg(message: MsgInstantiate): MsgInstantiateProtoMsg {
     return {
-      typeUrl: "/jsd.jsd.MsgInstantiate",
+      typeUrl: "/hyperweb.hvm.MsgInstantiate",
       value: MsgInstantiate.encode(message).finish()
     };
   }
@@ -443,7 +481,7 @@ function createBaseMsgInstantiateResponse(): MsgInstantiateResponse {
   };
 }
 export const MsgInstantiateResponse = {
-  typeUrl: "/jsd.jsd.MsgInstantiateResponse",
+  typeUrl: "/hyperweb.hvm.MsgInstantiateResponse",
   is(o: any): o is MsgInstantiateResponse {
     return o && (o.$typeUrl === MsgInstantiateResponse.typeUrl || typeof o.index === "bigint");
   },
@@ -526,7 +564,7 @@ export const MsgInstantiateResponse = {
   },
   toProtoMsg(message: MsgInstantiateResponse): MsgInstantiateResponseProtoMsg {
     return {
-      typeUrl: "/jsd.jsd.MsgInstantiateResponse",
+      typeUrl: "/hyperweb.hvm.MsgInstantiateResponse",
       value: MsgInstantiateResponse.encode(message).finish()
     };
   }
@@ -536,20 +574,20 @@ function createBaseMsgEval(): MsgEval {
   return {
     creator: "",
     index: BigInt(0),
-    fnName: "",
-    arg: ""
+    callee: "",
+    args: []
   };
 }
 export const MsgEval = {
-  typeUrl: "/jsd.jsd.MsgEval",
+  typeUrl: "/hyperweb.hvm.MsgEval",
   is(o: any): o is MsgEval {
-    return o && (o.$typeUrl === MsgEval.typeUrl || typeof o.creator === "string" && typeof o.index === "bigint" && typeof o.fnName === "string" && typeof o.arg === "string");
+    return o && (o.$typeUrl === MsgEval.typeUrl || typeof o.creator === "string" && typeof o.index === "bigint" && typeof o.callee === "string" && Array.isArray(o.args) && (!o.args.length || Any.is(o.args[0])));
   },
   isSDK(o: any): o is MsgEvalSDKType {
-    return o && (o.$typeUrl === MsgEval.typeUrl || typeof o.creator === "string" && typeof o.index === "bigint" && typeof o.fn_name === "string" && typeof o.arg === "string");
+    return o && (o.$typeUrl === MsgEval.typeUrl || typeof o.creator === "string" && typeof o.index === "bigint" && typeof o.callee === "string" && Array.isArray(o.args) && (!o.args.length || Any.isSDK(o.args[0])));
   },
   isAmino(o: any): o is MsgEvalAmino {
-    return o && (o.$typeUrl === MsgEval.typeUrl || typeof o.creator === "string" && typeof o.index === "bigint" && typeof o.fn_name === "string" && typeof o.arg === "string");
+    return o && (o.$typeUrl === MsgEval.typeUrl || typeof o.creator === "string" && typeof o.index === "bigint" && typeof o.callee === "string" && Array.isArray(o.args) && (!o.args.length || Any.isAmino(o.args[0])));
   },
   encode(message: MsgEval, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.creator !== undefined) {
@@ -558,11 +596,11 @@ export const MsgEval = {
     if (message.index !== undefined) {
       writer.uint32(16).uint64(message.index);
     }
-    if (message.fnName !== undefined) {
-      writer.uint32(26).string(message.fnName);
+    if (message.callee !== undefined) {
+      writer.uint32(26).string(message.callee);
     }
-    if (message.arg !== undefined) {
-      writer.uint32(34).string(message.arg);
+    for (const v of message.args) {
+      Any.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -580,10 +618,10 @@ export const MsgEval = {
           message.index = reader.uint64();
           break;
         case 3:
-          message.fnName = reader.string();
+          message.callee = reader.string();
           break;
         case 4:
-          message.arg = reader.string();
+          message.args.push(Any.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -596,16 +634,20 @@ export const MsgEval = {
     const obj = createBaseMsgEval();
     if (isSet(object.creator)) obj.creator = String(object.creator);
     if (isSet(object.index)) obj.index = BigInt(object.index.toString());
-    if (isSet(object.fnName)) obj.fnName = String(object.fnName);
-    if (isSet(object.arg)) obj.arg = String(object.arg);
+    if (isSet(object.callee)) obj.callee = String(object.callee);
+    if (Array.isArray(object?.args)) obj.args = object.args.map((e: any) => Any.fromJSON(e));
     return obj;
   },
   toJSON(message: MsgEval): JsonSafe<MsgEval> {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
     message.index !== undefined && (obj.index = (message.index || BigInt(0)).toString());
-    message.fnName !== undefined && (obj.fnName = message.fnName);
-    message.arg !== undefined && (obj.arg = message.arg);
+    message.callee !== undefined && (obj.callee = message.callee);
+    if (message.args) {
+      obj.args = message.args.map(e => e ? Any.toJSON(e) : undefined);
+    } else {
+      obj.args = [];
+    }
     return obj;
   },
   fromPartial(object: DeepPartial<MsgEval>): MsgEval {
@@ -614,24 +656,28 @@ export const MsgEval = {
     if (object.index !== undefined && object.index !== null) {
       message.index = BigInt(object.index.toString());
     }
-    message.fnName = object.fnName ?? "";
-    message.arg = object.arg ?? "";
+    message.callee = object.callee ?? "";
+    message.args = object.args?.map(e => Any.fromPartial(e)) || [];
     return message;
   },
   fromSDK(object: MsgEvalSDKType): MsgEval {
     return {
       creator: object?.creator,
       index: object?.index,
-      fnName: object?.fn_name,
-      arg: object?.arg
+      callee: object?.callee,
+      args: Array.isArray(object?.args) ? object.args.map((e: any) => Any.fromSDK(e)) : []
     };
   },
   toSDK(message: MsgEval): MsgEvalSDKType {
     const obj: any = {};
     obj.creator = message.creator;
     obj.index = message.index;
-    obj.fn_name = message.fnName;
-    obj.arg = message.arg;
+    obj.callee = message.callee;
+    if (message.args) {
+      obj.args = message.args.map(e => e ? Any.toSDK(e) : undefined);
+    } else {
+      obj.args = [];
+    }
     return obj;
   },
   fromAmino(object: MsgEvalAmino): MsgEval {
@@ -642,20 +688,22 @@ export const MsgEval = {
     if (object.index !== undefined && object.index !== null) {
       message.index = BigInt(object.index);
     }
-    if (object.fn_name !== undefined && object.fn_name !== null) {
-      message.fnName = object.fn_name;
+    if (object.callee !== undefined && object.callee !== null) {
+      message.callee = object.callee;
     }
-    if (object.arg !== undefined && object.arg !== null) {
-      message.arg = object.arg;
-    }
+    message.args = object.args?.map(e => Any.fromAmino(e)) || [];
     return message;
   },
   toAmino(message: MsgEval): MsgEvalAmino {
     const obj: any = {};
     obj.creator = message.creator === "" ? undefined : message.creator;
     obj.index = message.index !== BigInt(0) ? (message.index?.toString)() : undefined;
-    obj.fn_name = message.fnName === "" ? undefined : message.fnName;
-    obj.arg = message.arg === "" ? undefined : message.arg;
+    obj.callee = message.callee === "" ? undefined : message.callee;
+    if (message.args) {
+      obj.args = message.args.map(e => e ? Any.toAmino(e) : undefined);
+    } else {
+      obj.args = message.args;
+    }
     return obj;
   },
   fromAminoMsg(object: MsgEvalAminoMsg): MsgEval {
@@ -669,7 +717,7 @@ export const MsgEval = {
   },
   toProtoMsg(message: MsgEval): MsgEvalProtoMsg {
     return {
-      typeUrl: "/jsd.jsd.MsgEval",
+      typeUrl: "/hyperweb.hvm.MsgEval",
       value: MsgEval.encode(message).finish()
     };
   }
@@ -681,7 +729,7 @@ function createBaseMsgEvalResponse(): MsgEvalResponse {
   };
 }
 export const MsgEvalResponse = {
-  typeUrl: "/jsd.jsd.MsgEvalResponse",
+  typeUrl: "/hyperweb.hvm.MsgEvalResponse",
   is(o: any): o is MsgEvalResponse {
     return o && (o.$typeUrl === MsgEvalResponse.typeUrl || typeof o.result === "string");
   },
@@ -762,7 +810,7 @@ export const MsgEvalResponse = {
   },
   toProtoMsg(message: MsgEvalResponse): MsgEvalResponseProtoMsg {
     return {
-      typeUrl: "/jsd.jsd.MsgEvalResponse",
+      typeUrl: "/hyperweb.hvm.MsgEvalResponse",
       value: MsgEvalResponse.encode(message).finish()
     };
   }
