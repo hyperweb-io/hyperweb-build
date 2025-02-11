@@ -1,6 +1,6 @@
 {
   "name": "hyperwebjs",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "JS client for Hyperweb",
   "main": "index.js",

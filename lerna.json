@@ -2,13 +2,9 @@
   "lerna": "6",
   "conventionalCommits": true,
   "npmClient": "yarn",
-  "npmClientArgs": [
-    "--no-lockfile"
-  ],
-  "packages": [
-    "packages/*"
-  ],
-  "version": "0.0.1",
+  "npmClientArgs": ["--no-lockfile"],
+  "packages": ["packages/*"],
+  "version": "1.0.0",
   "registry": "https://registry.npmjs.org",
   "command": {
     "create": {
