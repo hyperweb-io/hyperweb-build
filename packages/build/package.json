@@ -1,6 +1,6 @@
 {
   "name": "@hyperweb/build",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "build tools for hyperweb",
   "main": "index.js",

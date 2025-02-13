@@ -1,6 +1,6 @@
 {
   "name": "@hyperweb/ts-json-schema",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Hyperweb, Inc. <developers@hyperweb.io>",
   "description": "TS to JSON Schema",
   "main": "index.js",
