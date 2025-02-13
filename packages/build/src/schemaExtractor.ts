@@ -4,6 +4,7 @@ import * as path from 'path';
 import * as ts from 'typescript';
 
 import { HyperwebBuildOptions } from './build';
+import { extractDecoratorsFromSourceFile } from "./decorators";
 
 interface SchemaExtractorOptions {
   outputPath?: string;
@@ -31,7 +32,7 @@ export const schemaExtractorPlugin = (
       });
 
       const checker = program.getTypeChecker();
-      const schemaData: Record<string, any> = { state: {}, methods: [] };
+      const schemaData: Record<string, any> = { state: {}, methods: [], decorators: [] };
 
       // Extract state and methods from the contract's default export
       program.getSourceFiles().forEach((sourceFile) => {
@@ -39,6 +40,7 @@ export const schemaExtractorPlugin = (
 
         extractDefaultExport(sourceFile, checker, schemaData);
         extractStateInterface(sourceFile, checker, schemaData);
+        extractDecoratorsFromSourceFile(sourceFile, checker, schemaData, baseDir);
       });
 
       const outputPath =
