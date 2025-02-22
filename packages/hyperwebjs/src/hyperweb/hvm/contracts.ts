@@ -6,6 +6,7 @@ export const protobufPackage = "hyperweb.hvm";
 /** contracts msg */
 export interface Contracts {
   index: bigint;
+  contractAddress: string;
   creator: string;
   code: string;
   source: string;
@@ -17,6 +18,7 @@ export interface ContractsProtoMsg {
 /** contracts msg */
 export interface ContractsAmino {
   index?: string;
+  contract_address?: string;
   creator?: string;
   code?: string;
   source?: string;
@@ -28,6 +30,7 @@ export interface ContractsAminoMsg {
 /** contracts msg */
 export interface ContractsSDKType {
   index: bigint;
+  contract_address: string;
   creator: string;
   code: string;
   source: string;
@@ -35,6 +38,7 @@ export interface ContractsSDKType {
 function createBaseContracts(): Contracts {
   return {
     index: BigInt(0),
+    contractAddress: "",
     creator: "",
     code: "",
     source: ""
@@ -43,26 +47,29 @@ function createBaseContracts(): Contracts {
 export const Contracts = {
   typeUrl: "/hyperweb.hvm.Contracts",
   is(o: any): o is Contracts {
-    return o && (o.$typeUrl === Contracts.typeUrl || typeof o.index === "bigint" && typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
+    return o && (o.$typeUrl === Contracts.typeUrl || typeof o.index === "bigint" && typeof o.contractAddress === "string" && typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
   },
   isSDK(o: any): o is ContractsSDKType {
-    return o && (o.$typeUrl === Contracts.typeUrl || typeof o.index === "bigint" && typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
+    return o && (o.$typeUrl === Contracts.typeUrl || typeof o.index === "bigint" && typeof o.contract_address === "string" && typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
   },
   isAmino(o: any): o is ContractsAmino {
-    return o && (o.$typeUrl === Contracts.typeUrl || typeof o.index === "bigint" && typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
+    return o && (o.$typeUrl === Contracts.typeUrl || typeof o.index === "bigint" && typeof o.contract_address === "string" && typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
   },
   encode(message: Contracts, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.index !== undefined) {
       writer.uint32(8).uint64(message.index);
     }
+    if (message.contractAddress !== undefined) {
+      writer.uint32(18).string(message.contractAddress);
+    }
     if (message.creator !== undefined) {
-      writer.uint32(18).string(message.creator);
+      writer.uint32(26).string(message.creator);
     }
     if (message.code !== undefined) {
-      writer.uint32(26).string(message.code);
+      writer.uint32(34).string(message.code);
     }
     if (message.source !== undefined) {
-      writer.uint32(34).string(message.source);
+      writer.uint32(42).string(message.source);
     }
     return writer;
   },
@@ -77,12 +84,15 @@ export const Contracts = {
           message.index = reader.uint64();
           break;
         case 2:
-          message.creator = reader.string();
+          message.contractAddress = reader.string();
           break;
         case 3:
-          message.code = reader.string();
+          message.creator = reader.string();
           break;
         case 4:
+          message.code = reader.string();
+          break;
+        case 5:
           message.source = reader.string();
           break;
         default:
@@ -95,6 +105,7 @@ export const Contracts = {
   fromJSON(object: any): Contracts {
     const obj = createBaseContracts();
     if (isSet(object.index)) obj.index = BigInt(object.index.toString());
+    if (isSet(object.contractAddress)) obj.contractAddress = String(object.contractAddress);
     if (isSet(object.creator)) obj.creator = String(object.creator);
     if (isSet(object.code)) obj.code = String(object.code);
     if (isSet(object.source)) obj.source = String(object.source);
@@ -103,6 +114,7 @@ export const Contracts = {
   toJSON(message: Contracts): JsonSafe<Contracts> {
     const obj: any = {};
     message.index !== undefined && (obj.index = (message.index || BigInt(0)).toString());
+    message.contractAddress !== undefined && (obj.contractAddress = message.contractAddress);
     message.creator !== undefined && (obj.creator = message.creator);
     message.code !== undefined && (obj.code = message.code);
     message.source !== undefined && (obj.source = message.source);
@@ -113,6 +125,7 @@ export const Contracts = {
     if (object.index !== undefined && object.index !== null) {
       message.index = BigInt(object.index.toString());
     }
+    message.contractAddress = object.contractAddress ?? "";
     message.creator = object.creator ?? "";
     message.code = object.code ?? "";
     message.source = object.source ?? "";
@@ -121,6 +134,7 @@ export const Contracts = {
   fromSDK(object: ContractsSDKType): Contracts {
     return {
       index: object?.index,
+      contractAddress: object?.contract_address,
       creator: object?.creator,
       code: object?.code,
       source: object?.source
@@ -129,6 +143,7 @@ export const Contracts = {
   toSDK(message: Contracts): ContractsSDKType {
     const obj: any = {};
     obj.index = message.index;
+    obj.contract_address = message.contractAddress;
     obj.creator = message.creator;
     obj.code = message.code;
     obj.source = message.source;
@@ -138,6 +153,9 @@ export const Contracts = {
     const message = createBaseContracts();
     if (object.index !== undefined && object.index !== null) {
       message.index = BigInt(object.index);
+    }
+    if (object.contract_address !== undefined && object.contract_address !== null) {
+      message.contractAddress = object.contract_address;
     }
     if (object.creator !== undefined && object.creator !== null) {
       message.creator = object.creator;
@@ -153,6 +171,7 @@ export const Contracts = {
   toAmino(message: Contracts): ContractsAmino {
     const obj: any = {};
     obj.index = message.index !== BigInt(0) ? (message.index?.toString)() : undefined;
+    obj.contract_address = message.contractAddress === "" ? undefined : message.contractAddress;
     obj.creator = message.creator === "" ? undefined : message.creator;
     obj.code = message.code === "" ? undefined : message.code;
     obj.source = message.source === "" ? undefined : message.source;

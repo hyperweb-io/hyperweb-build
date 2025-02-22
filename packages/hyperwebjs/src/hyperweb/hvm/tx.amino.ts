@@ -1,5 +1,4 @@
 import { Params, ParamsSDKType } from "./params";
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../google/protobuf/any";
 import { MsgUpdateParams, MsgUpdateParamsSDKType, MsgInstantiate, MsgInstantiateSDKType, MsgEval, MsgEvalSDKType } from "./tx";
 export const AminoConverter = {
   "/hyperweb.hvm.MsgUpdateParams": {
