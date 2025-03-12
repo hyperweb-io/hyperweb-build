@@ -6,8 +6,6 @@
  
 export * from "./hyperweb/bundle";
 export * from "./hyperweb/client";
-export * from "./osmosis/bundle";
-export * from "./osmosis/client";
 export * from "./amino/bundle";
 export * from "./cosmos/bundle";
 export * from "./cosmos/client";

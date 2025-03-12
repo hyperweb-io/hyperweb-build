@@ -44,11 +44,11 @@ export class LCDQueryClient {
     if (typeof params?.address !== "undefined") {
       options.params.address = params.address;
     }
-    if (typeof params?.fnName !== "undefined") {
-      options.params.fn_name = params.fnName;
+    if (typeof params?.callee !== "undefined") {
+      options.params.callee = params.callee;
     }
-    if (typeof params?.arg !== "undefined") {
-      options.params.arg = params.arg;
+    if (typeof params?.args !== "undefined") {
+      options.params.args = params.args;
     }
     const endpoint = `hvm/hvm/eval`;
     return await this.req.get<EvalResponseSDKType>(endpoint, options);

@@ -168,8 +168,8 @@ export interface ListContractsResponseSDKType {
 /** request to evaluate contract function */
 export interface EvalRequest {
   address: string;
-  fnName: string;
-  arg: string;
+  callee: string;
+  args: string[];
 }
 export interface EvalRequestProtoMsg {
   typeUrl: "/hyperweb.hvm.EvalRequest";
@@ -178,8 +178,8 @@ export interface EvalRequestProtoMsg {
 /** request to evaluate contract function */
 export interface EvalRequestAmino {
   address?: string;
-  fn_name?: string;
-  arg?: string;
+  callee?: string;
+  args?: string[];
 }
 export interface EvalRequestAminoMsg {
   type: "/hyperweb.hvm.EvalRequest";
@@ -188,8 +188,8 @@ export interface EvalRequestAminoMsg {
 /** request to evaluate contract function */
 export interface EvalRequestSDKType {
   address: string;
-  fn_name: string;
-  arg: string;
+  callee: string;
+  args: string[];
 }
 /** response from contract function evaluation */
 export interface EvalResponse {
@@ -1061,30 +1061,30 @@ GlobalDecoderRegistry.register(ListContractsResponse.typeUrl, ListContractsRespo
 function createBaseEvalRequest(): EvalRequest {
   return {
     address: "",
-    fnName: "",
-    arg: ""
+    callee: "",
+    args: []
   };
 }
 export const EvalRequest = {
   typeUrl: "/hyperweb.hvm.EvalRequest",
   is(o: any): o is EvalRequest {
-    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.address === "string" && typeof o.fnName === "string" && typeof o.arg === "string");
+    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.address === "string" && typeof o.callee === "string" && Array.isArray(o.args) && (!o.args.length || typeof o.args[0] === "string"));
   },
   isSDK(o: any): o is EvalRequestSDKType {
-    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.address === "string" && typeof o.fn_name === "string" && typeof o.arg === "string");
+    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.address === "string" && typeof o.callee === "string" && Array.isArray(o.args) && (!o.args.length || typeof o.args[0] === "string"));
   },
   isAmino(o: any): o is EvalRequestAmino {
-    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.address === "string" && typeof o.fn_name === "string" && typeof o.arg === "string");
+    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.address === "string" && typeof o.callee === "string" && Array.isArray(o.args) && (!o.args.length || typeof o.args[0] === "string"));
   },
   encode(message: EvalRequest, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.address !== undefined) {
       writer.uint32(10).string(message.address);
     }
-    if (message.fnName !== undefined) {
-      writer.uint32(18).string(message.fnName);
+    if (message.callee !== undefined) {
+      writer.uint32(18).string(message.callee);
     }
-    if (message.arg !== undefined) {
-      writer.uint32(26).string(message.arg);
+    for (const v of message.args) {
+      writer.uint32(26).string(v!);
     }
     return writer;
   },
@@ -1099,10 +1099,10 @@ export const EvalRequest = {
           message.address = reader.string();
           break;
         case 2:
-          message.fnName = reader.string();
+          message.callee = reader.string();
           break;
         case 3:
-          message.arg = reader.string();
+          message.args.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1114,36 +1114,44 @@ export const EvalRequest = {
   fromJSON(object: any): EvalRequest {
     const obj = createBaseEvalRequest();
     if (isSet(object.address)) obj.address = String(object.address);
-    if (isSet(object.fnName)) obj.fnName = String(object.fnName);
-    if (isSet(object.arg)) obj.arg = String(object.arg);
+    if (isSet(object.callee)) obj.callee = String(object.callee);
+    if (Array.isArray(object?.args)) obj.args = object.args.map((e: any) => String(e));
     return obj;
   },
   toJSON(message: EvalRequest): JsonSafe<EvalRequest> {
     const obj: any = {};
     message.address !== undefined && (obj.address = message.address);
-    message.fnName !== undefined && (obj.fnName = message.fnName);
-    message.arg !== undefined && (obj.arg = message.arg);
+    message.callee !== undefined && (obj.callee = message.callee);
+    if (message.args) {
+      obj.args = message.args.map(e => e);
+    } else {
+      obj.args = [];
+    }
     return obj;
   },
   fromPartial(object: DeepPartial<EvalRequest>): EvalRequest {
     const message = createBaseEvalRequest();
     message.address = object.address ?? "";
-    message.fnName = object.fnName ?? "";
-    message.arg = object.arg ?? "";
+    message.callee = object.callee ?? "";
+    message.args = object.args?.map(e => e) || [];
     return message;
   },
   fromSDK(object: EvalRequestSDKType): EvalRequest {
     return {
       address: object?.address,
-      fnName: object?.fn_name,
-      arg: object?.arg
+      callee: object?.callee,
+      args: Array.isArray(object?.args) ? object.args.map((e: any) => e) : []
     };
   },
   toSDK(message: EvalRequest): EvalRequestSDKType {
     const obj: any = {};
     obj.address = message.address;
-    obj.fn_name = message.fnName;
-    obj.arg = message.arg;
+    obj.callee = message.callee;
+    if (message.args) {
+      obj.args = message.args.map(e => e);
+    } else {
+      obj.args = [];
+    }
     return obj;
   },
   fromAmino(object: EvalRequestAmino): EvalRequest {
@@ -1151,19 +1159,21 @@ export const EvalRequest = {
     if (object.address !== undefined && object.address !== null) {
       message.address = object.address;
     }
-    if (object.fn_name !== undefined && object.fn_name !== null) {
-      message.fnName = object.fn_name;
+    if (object.callee !== undefined && object.callee !== null) {
+      message.callee = object.callee;
     }
-    if (object.arg !== undefined && object.arg !== null) {
-      message.arg = object.arg;
-    }
+    message.args = object.args?.map(e => e) || [];
     return message;
   },
   toAmino(message: EvalRequest): EvalRequestAmino {
     const obj: any = {};
     obj.address = message.address === "" ? undefined : message.address;
-    obj.fn_name = message.fnName === "" ? undefined : message.fnName;
-    obj.arg = message.arg === "" ? undefined : message.arg;
+    obj.callee = message.callee === "" ? undefined : message.callee;
+    if (message.args) {
+      obj.args = message.args.map(e => e);
+    } else {
+      obj.args = message.args;
+    }
     return obj;
   },
   fromAminoMsg(object: EvalRequestAminoMsg): EvalRequest {
