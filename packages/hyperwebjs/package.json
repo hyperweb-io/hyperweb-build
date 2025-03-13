@@ -1,6 +1,6 @@
 {
   "name": "hyperwebjs",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "JS client for Hyperweb",
   "main": "index.js",
@@ -35,12 +35,12 @@
     "rimraf": "^6.0.1"
   },
   "dependencies": {
+    "@cosmology/lcd": "^0.14.0",
     "@interchainjs/cosmos": "1.9.14",
     "@interchainjs/encoding": "1.9.14",
     "@interchainjs/pubkey": "1.9.14",
     "@interchainjs/types": "1.9.14",
-    "@interchainjs/utils": "1.9.14",
-    "@cosmology/lcd": "^0.14.0"
+    "@interchainjs/utils": "1.9.14"
   },
   "keywords": [],
   "gitHead": "9cd7d6a148f412b070d4cfdea94e966eb80ef2b8"
