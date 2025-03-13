@@ -31,19 +31,19 @@ export interface GetRequestProtoMsg {
 /** GetRequest is the Query/Get request type. */
 export interface GetRequestAmino {
   /** message_name is the fully-qualified message name of the ORM table being queried. */
-  message_name?: string;
+  message_name: string;
   /**
    * index is the index fields expression used in orm definitions. If it
    * is empty, the table's primary key is assumed. If it is non-empty, it must
    * refer to an unique index.
    */
-  index?: string;
+  index: string;
   /**
    * values are the values of the fields corresponding to the requested index.
    * There must be as many values provided as there are fields in the index and
    * these values must correspond to the index field types.
    */
-  values?: IndexValueAmino[];
+  values: IndexValueAmino[];
 }
 export interface GetRequestAminoMsg {
   type: "cosmos-sdk/GetRequest";
@@ -106,12 +106,12 @@ export interface ListRequestProtoMsg {
 /** ListRequest is the Query/List request type. */
 export interface ListRequestAmino {
   /** message_name is the fully-qualified message name of the ORM table being queried. */
-  message_name?: string;
+  message_name: string;
   /**
    * index is the index fields expression used in orm definitions. If it
    * is empty, the table's primary key is assumed.
    */
-  index?: string;
+  index: string;
   /** prefix defines a prefix query. */
   prefix?: ListRequest_PrefixAmino;
   /** range defines a range query. */
@@ -151,7 +151,7 @@ export interface ListRequest_PrefixAmino {
    * It is valid to special a partial prefix with fewer values than
    * the number of fields in the index.
    */
-  values?: IndexValueAmino[];
+  values: IndexValueAmino[];
 }
 export interface ListRequest_PrefixAminoMsg {
   type: "cosmos-sdk/Prefix";
@@ -187,13 +187,13 @@ export interface ListRequest_RangeAmino {
    * It is valid to provide fewer values than the number of fields in the
    * index.
    */
-  start?: IndexValueAmino[];
+  start: IndexValueAmino[];
   /**
    * end specifies the inclusive ending index values for the range query.
    * It is valid to provide fewer values than the number of fields in the
    * index.
    */
-  end?: IndexValueAmino[];
+  end: IndexValueAmino[];
 }
 export interface ListRequest_RangeAminoMsg {
   type: "cosmos-sdk/Range";
@@ -218,7 +218,7 @@ export interface ListResponseProtoMsg {
 /** ListResponse is the Query/List response type. */
 export interface ListResponseAmino {
   /** results are the results of the query. */
-  results?: AnyAmino[];
+  results: AnyAmino[];
   /** pagination is the pagination response. */
   pagination?: PageResponseAmino;
 }
@@ -439,10 +439,11 @@ export const GetRequest = {
       typeUrl: "/cosmos.orm.query.v1alpha1.GetRequest",
       value: GetRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IndexValue.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetRequest.typeUrl, GetRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetRequest.aminoType, GetRequest.typeUrl);
 function createBaseGetResponse(): GetResponse {
   return {
     result: undefined
@@ -542,10 +543,9 @@ export const GetResponse = {
       typeUrl: "/cosmos.orm.query.v1alpha1.GetResponse",
       value: GetResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetResponse.typeUrl, GetResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetResponse.aminoType, GetResponse.typeUrl);
 function createBaseListRequest(): ListRequest {
   return {
     messageName: "",
@@ -713,10 +713,13 @@ export const ListRequest = {
       typeUrl: "/cosmos.orm.query.v1alpha1.ListRequest",
       value: ListRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ListRequest_Prefix.registerTypeUrl();
+    ListRequest_Range.registerTypeUrl();
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ListRequest.typeUrl, ListRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(ListRequest.aminoType, ListRequest.typeUrl);
 function createBaseListRequest_Prefix(): ListRequest_Prefix {
   return {
     values: []
@@ -824,10 +827,11 @@ export const ListRequest_Prefix = {
       typeUrl: "/cosmos.orm.query.v1alpha1.Prefix",
       value: ListRequest_Prefix.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IndexValue.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ListRequest_Prefix.typeUrl, ListRequest_Prefix);
-GlobalDecoderRegistry.registerAminoProtoMapping(ListRequest_Prefix.aminoType, ListRequest_Prefix.typeUrl);
 function createBaseListRequest_Range(): ListRequest_Range {
   return {
     start: [],
@@ -961,10 +965,11 @@ export const ListRequest_Range = {
       typeUrl: "/cosmos.orm.query.v1alpha1.Range",
       value: ListRequest_Range.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IndexValue.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ListRequest_Range.typeUrl, ListRequest_Range);
-GlobalDecoderRegistry.registerAminoProtoMapping(ListRequest_Range.aminoType, ListRequest_Range.typeUrl);
 function createBaseListResponse(): ListResponse {
   return {
     results: [],
@@ -1090,10 +1095,11 @@ export const ListResponse = {
       typeUrl: "/cosmos.orm.query.v1alpha1.ListResponse",
       value: ListResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ListResponse.typeUrl, ListResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(ListResponse.aminoType, ListResponse.typeUrl);
 function createBaseIndexValue(): IndexValue {
   return {
     uint: undefined,
@@ -1283,8 +1289,8 @@ export const IndexValue = {
   },
   toAmino(message: IndexValue): IndexValueAmino {
     const obj: any = {};
-    obj.uint = message.uint !== BigInt(0) ? (message.uint?.toString)() : undefined;
-    obj.int = message.int !== BigInt(0) ? (message.int?.toString)() : undefined;
+    obj.uint = message.uint !== BigInt(0) ? message.uint?.toString() : undefined;
+    obj.int = message.int !== BigInt(0) ? message.int?.toString() : undefined;
     obj.str = message.str === null ? undefined : message.str;
     obj.bytes = message.bytes ? base64FromBytes(message.bytes) : undefined;
     obj.enum = message.enum === null ? undefined : message.enum;
@@ -1313,7 +1319,6 @@ export const IndexValue = {
       typeUrl: "/cosmos.orm.query.v1alpha1.IndexValue",
       value: IndexValue.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(IndexValue.typeUrl, IndexValue);
-GlobalDecoderRegistry.registerAminoProtoMapping(IndexValue.aminoType, IndexValue.typeUrl);

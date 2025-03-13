@@ -57,7 +57,7 @@ export interface QuerySigningInfoRequestProtoMsg {
  */
 export interface QuerySigningInfoRequestAmino {
   /** cons_address is the address to query signing info of */
-  cons_address?: string;
+  cons_address: string;
 }
 export interface QuerySigningInfoRequestAminoMsg {
   type: "cosmos-sdk/QuerySigningInfoRequest";
@@ -243,10 +243,9 @@ export const QueryParamsRequest = {
       typeUrl: "/cosmos.slashing.v1beta1.QueryParamsRequest",
       value: QueryParamsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryParamsRequest.typeUrl, QueryParamsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryParamsRequest.aminoType, QueryParamsRequest.typeUrl);
 function createBaseQueryParamsResponse(): QueryParamsResponse {
   return {
     params: Params.fromPartial({})
@@ -346,10 +345,11 @@ export const QueryParamsResponse = {
       typeUrl: "/cosmos.slashing.v1beta1.QueryParamsResponse",
       value: QueryParamsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryParamsResponse.typeUrl, QueryParamsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryParamsResponse.aminoType, QueryParamsResponse.typeUrl);
 function createBaseQuerySigningInfoRequest(): QuerySigningInfoRequest {
   return {
     consAddress: ""
@@ -447,10 +447,9 @@ export const QuerySigningInfoRequest = {
       typeUrl: "/cosmos.slashing.v1beta1.QuerySigningInfoRequest",
       value: QuerySigningInfoRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QuerySigningInfoRequest.typeUrl, QuerySigningInfoRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QuerySigningInfoRequest.aminoType, QuerySigningInfoRequest.typeUrl);
 function createBaseQuerySigningInfoResponse(): QuerySigningInfoResponse {
   return {
     valSigningInfo: ValidatorSigningInfo.fromPartial({})
@@ -550,10 +549,11 @@ export const QuerySigningInfoResponse = {
       typeUrl: "/cosmos.slashing.v1beta1.QuerySigningInfoResponse",
       value: QuerySigningInfoResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ValidatorSigningInfo.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QuerySigningInfoResponse.typeUrl, QuerySigningInfoResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QuerySigningInfoResponse.aminoType, QuerySigningInfoResponse.typeUrl);
 function createBaseQuerySigningInfosRequest(): QuerySigningInfosRequest {
   return {
     pagination: undefined
@@ -653,10 +653,11 @@ export const QuerySigningInfosRequest = {
       typeUrl: "/cosmos.slashing.v1beta1.QuerySigningInfosRequest",
       value: QuerySigningInfosRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QuerySigningInfosRequest.typeUrl, QuerySigningInfosRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QuerySigningInfosRequest.aminoType, QuerySigningInfosRequest.typeUrl);
 function createBaseQuerySigningInfosResponse(): QuerySigningInfosResponse {
   return {
     info: [],
@@ -782,7 +783,9 @@ export const QuerySigningInfosResponse = {
       typeUrl: "/cosmos.slashing.v1beta1.QuerySigningInfosResponse",
       value: QuerySigningInfosResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ValidatorSigningInfo.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QuerySigningInfosResponse.typeUrl, QuerySigningInfosResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QuerySigningInfosResponse.aminoType, QuerySigningInfosResponse.typeUrl);

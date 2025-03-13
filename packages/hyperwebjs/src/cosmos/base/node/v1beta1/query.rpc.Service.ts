@@ -1,7 +1,6 @@
 import { Timestamp, TimestampSDKType } from "../../../../google/protobuf/timestamp";
 import { TxRpc } from "../../../../types";
 import { BinaryReader } from "../../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { ConfigRequest, ConfigRequestSDKType, ConfigResponse, ConfigResponseSDKType, StatusRequest, StatusRequestSDKType, StatusResponse, StatusResponseSDKType } from "./query";
 /** Service defines the gRPC querier service for node related queries. */
 export interface Service {
@@ -28,15 +27,6 @@ export class ServiceClientImpl implements Service {
     return promise.then(data => StatusResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new ServiceClientImpl(rpc);
-  return {
-    config(request?: ConfigRequest): Promise<ConfigResponse> {
-      return queryService.config(request);
-    },
-    status(request?: StatusRequest): Promise<StatusResponse> {
-      return queryService.status(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new ServiceClientImpl(rpc);
 };

@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.applications.transfer.v1";
 /**
  * DenomTrace contains the base denomination for ICS20 fungible tokens and the
@@ -29,9 +28,9 @@ export interface DenomTraceAmino {
    * path defines the chain of port/channel identifiers used for tracing the
    * source of the fungible token.
    */
-  path?: string;
+  path: string;
   /** base denomination of the relayed fungible token. */
-  base_denom?: string;
+  base_denom: string;
 }
 export interface DenomTraceAminoMsg {
   type: "cosmos-sdk/DenomTrace";
@@ -78,12 +77,12 @@ export interface ParamsAmino {
    * send_enabled enables or disables all cross-chain token transfers from this
    * chain.
    */
-  send_enabled?: boolean;
+  send_enabled: boolean;
   /**
    * receive_enabled enables or disables all cross-chain token transfers to this
    * chain.
    */
-  receive_enabled?: boolean;
+  receive_enabled: boolean;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/Params";
@@ -212,10 +211,9 @@ export const DenomTrace = {
       typeUrl: "/ibc.applications.transfer.v1.DenomTrace",
       value: DenomTrace.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(DenomTrace.typeUrl, DenomTrace);
-GlobalDecoderRegistry.registerAminoProtoMapping(DenomTrace.aminoType, DenomTrace.typeUrl);
 function createBaseParams(): Params {
   return {
     sendEnabled: false,
@@ -329,7 +327,6 @@ export const Params = {
       typeUrl: "/ibc.applications.transfer.v1.Params",
       value: Params.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Params.typeUrl, Params);
-GlobalDecoderRegistry.registerAminoProtoMapping(Params.aminoType, Params.typeUrl);

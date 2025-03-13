@@ -119,10 +119,9 @@ export const QueryConfigRequest = {
       typeUrl: "/cosmos.app.v1alpha1.QueryConfigRequest",
       value: QueryConfigRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryConfigRequest.typeUrl, QueryConfigRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConfigRequest.aminoType, QueryConfigRequest.typeUrl);
 function createBaseQueryConfigResponse(): QueryConfigResponse {
   return {
     config: undefined
@@ -222,7 +221,8 @@ export const QueryConfigResponse = {
       typeUrl: "/cosmos.app.v1alpha1.QueryConfigResponse",
       value: QueryConfigResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Config.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConfigResponse.typeUrl, QueryConfigResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConfigResponse.aminoType, QueryConfigResponse.typeUrl);

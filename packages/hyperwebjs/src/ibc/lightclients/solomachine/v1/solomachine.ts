@@ -2,9 +2,9 @@ import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../../google/proto
 import { ConnectionEnd, ConnectionEndAmino, ConnectionEndSDKType } from "../../../core/connection/v1/connection";
 import { Channel, ChannelAmino, ChannelSDKType } from "../../../core/channel/v1/channel";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.lightclients.solomachine.v1";
 /**
  * DataType defines the type of solo machine proof being created. This is done
@@ -126,15 +126,15 @@ export interface ClientStateProtoMsg {
  */
 export interface ClientStateAmino {
   /** latest sequence of the client state */
-  sequence?: string;
+  sequence: string;
   /** frozen sequence of the solo machine */
-  frozen_sequence?: string;
+  frozen_sequence: string;
   consensus_state?: ConsensusStateAmino;
   /**
    * when set to true, will allow governance to update a solo machine client.
    * The client will be unfrozen if it is frozen.
    */
-  allow_update_after_proposal?: boolean;
+  allow_update_after_proposal: boolean;
 }
 export interface ClientStateAminoMsg {
   type: "cosmos-sdk/ClientState";
@@ -183,8 +183,8 @@ export interface ConsensusStateAmino {
    * machine clients (potentially on different chains) without being considered
    * misbehaviour.
    */
-  diversifier?: string;
-  timestamp?: string;
+  diversifier: string;
+  timestamp: string;
 }
 export interface ConsensusStateAminoMsg {
   type: "cosmos-sdk/ConsensusState";
@@ -216,11 +216,11 @@ export interface HeaderProtoMsg {
 /** Header defines a solo machine consensus header */
 export interface HeaderAmino {
   /** sequence to update solo machine public key at */
-  sequence?: string;
-  timestamp?: string;
-  signature?: string;
+  sequence: string;
+  timestamp: string;
+  signature: string;
   new_public_key?: AnyAmino;
-  new_diversifier?: string;
+  new_diversifier: string;
 }
 export interface HeaderAminoMsg {
   type: "cosmos-sdk/Header";
@@ -253,8 +253,8 @@ export interface MisbehaviourProtoMsg {
  * of a sequence and two signatures over different messages at that sequence.
  */
 export interface MisbehaviourAmino {
-  client_id?: string;
-  sequence?: string;
+  client_id: string;
+  sequence: string;
   signature_one?: SignatureAndDataAmino;
   signature_two?: SignatureAndDataAmino;
 }
@@ -291,10 +291,10 @@ export interface SignatureAndDataProtoMsg {
  * signature.
  */
 export interface SignatureAndDataAmino {
-  signature?: string;
-  data_type?: DataType;
-  data?: string;
-  timestamp?: string;
+  signature: string;
+  data_type: DataType;
+  data: string;
+  timestamp: string;
 }
 export interface SignatureAndDataAminoMsg {
   type: "cosmos-sdk/SignatureAndData";
@@ -327,8 +327,8 @@ export interface TimestampedSignatureDataProtoMsg {
  * signature.
  */
 export interface TimestampedSignatureDataAmino {
-  signature_data?: string;
-  timestamp?: string;
+  signature_data: string;
+  timestamp: string;
 }
 export interface TimestampedSignatureDataAminoMsg {
   type: "cosmos-sdk/TimestampedSignatureData";
@@ -358,13 +358,13 @@ export interface SignBytesProtoMsg {
 }
 /** SignBytes defines the signed bytes used for signature verification. */
 export interface SignBytesAmino {
-  sequence?: string;
-  timestamp?: string;
-  diversifier?: string;
+  sequence: string;
+  timestamp: string;
+  diversifier: string;
   /** type of the data used */
-  data_type?: DataType;
+  data_type: DataType;
   /** marshaled data */
-  data?: string;
+  data: string;
 }
 export interface SignBytesAminoMsg {
   type: "cosmos-sdk/SignBytes";
@@ -394,7 +394,7 @@ export interface HeaderDataAmino {
   /** header public key */
   new_pub_key?: AnyAmino;
   /** header diversifier */
-  new_diversifier?: string;
+  new_diversifier: string;
 }
 export interface HeaderDataAminoMsg {
   type: "cosmos-sdk/HeaderData";
@@ -416,7 +416,7 @@ export interface ClientStateDataProtoMsg {
 }
 /** ClientStateData returns the SignBytes data for client state verification. */
 export interface ClientStateDataAmino {
-  path?: string;
+  path: string;
   client_state?: AnyAmino;
 }
 export interface ClientStateDataAminoMsg {
@@ -445,7 +445,7 @@ export interface ConsensusStateDataProtoMsg {
  * verification.
  */
 export interface ConsensusStateDataAmino {
-  path?: string;
+  path: string;
   consensus_state?: AnyAmino;
 }
 export interface ConsensusStateDataAminoMsg {
@@ -477,7 +477,7 @@ export interface ConnectionStateDataProtoMsg {
  * verification.
  */
 export interface ConnectionStateDataAmino {
-  path?: string;
+  path: string;
   connection?: ConnectionEndAmino;
 }
 export interface ConnectionStateDataAminoMsg {
@@ -509,7 +509,7 @@ export interface ChannelStateDataProtoMsg {
  * verification.
  */
 export interface ChannelStateDataAmino {
-  path?: string;
+  path: string;
   channel?: ChannelAmino;
 }
 export interface ChannelStateDataAminoMsg {
@@ -541,8 +541,8 @@ export interface PacketCommitmentDataProtoMsg {
  * verification.
  */
 export interface PacketCommitmentDataAmino {
-  path?: string;
-  commitment?: string;
+  path: string;
+  commitment: string;
 }
 export interface PacketCommitmentDataAminoMsg {
   type: "cosmos-sdk/PacketCommitmentData";
@@ -573,8 +573,8 @@ export interface PacketAcknowledgementDataProtoMsg {
  * verification.
  */
 export interface PacketAcknowledgementDataAmino {
-  path?: string;
-  acknowledgement?: string;
+  path: string;
+  acknowledgement: string;
 }
 export interface PacketAcknowledgementDataAminoMsg {
   type: "cosmos-sdk/PacketAcknowledgementData";
@@ -604,7 +604,7 @@ export interface PacketReceiptAbsenceDataProtoMsg {
  * packet receipt absence verification.
  */
 export interface PacketReceiptAbsenceDataAmino {
-  path?: string;
+  path: string;
 }
 export interface PacketReceiptAbsenceDataAminoMsg {
   type: "cosmos-sdk/PacketReceiptAbsenceData";
@@ -634,8 +634,8 @@ export interface NextSequenceRecvDataProtoMsg {
  * sequence to be received.
  */
 export interface NextSequenceRecvDataAmino {
-  path?: string;
-  next_seq_recv?: string;
+  path: string;
+  next_seq_recv: string;
 }
 export interface NextSequenceRecvDataAminoMsg {
   type: "cosmos-sdk/NextSequenceRecvData";
@@ -774,8 +774,8 @@ export const ClientState = {
   },
   toAmino(message: ClientState): ClientStateAmino {
     const obj: any = {};
-    obj.sequence = message.sequence !== BigInt(0) ? (message.sequence?.toString)() : undefined;
-    obj.frozen_sequence = message.frozenSequence !== BigInt(0) ? (message.frozenSequence?.toString)() : undefined;
+    obj.sequence = message.sequence !== BigInt(0) ? message.sequence?.toString() : undefined;
+    obj.frozen_sequence = message.frozenSequence !== BigInt(0) ? message.frozenSequence?.toString() : undefined;
     obj.consensus_state = message.consensusState ? ConsensusState.toAmino(message.consensusState) : undefined;
     obj.allow_update_after_proposal = message.allowUpdateAfterProposal === false ? undefined : message.allowUpdateAfterProposal;
     return obj;
@@ -800,10 +800,11 @@ export const ClientState = {
       typeUrl: "/ibc.lightclients.solomachine.v1.ClientState",
       value: ClientState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ConsensusState.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ClientState.typeUrl, ClientState);
-GlobalDecoderRegistry.registerAminoProtoMapping(ClientState.aminoType, ClientState.typeUrl);
 function createBaseConsensusState(): ConsensusState {
   return {
     publicKey: undefined,
@@ -914,7 +915,7 @@ export const ConsensusState = {
     const obj: any = {};
     obj.public_key = message.publicKey ? Any.toAmino(message.publicKey) : undefined;
     obj.diversifier = message.diversifier === "" ? undefined : message.diversifier;
-    obj.timestamp = message.timestamp !== BigInt(0) ? (message.timestamp?.toString)() : undefined;
+    obj.timestamp = message.timestamp !== BigInt(0) ? message.timestamp?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ConsensusStateAminoMsg): ConsensusState {
@@ -937,10 +938,9 @@ export const ConsensusState = {
       typeUrl: "/ibc.lightclients.solomachine.v1.ConsensusState",
       value: ConsensusState.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ConsensusState.typeUrl, ConsensusState);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConsensusState.aminoType, ConsensusState.typeUrl);
 function createBaseHeader(): Header {
   return {
     sequence: BigInt(0),
@@ -1081,8 +1081,8 @@ export const Header = {
   },
   toAmino(message: Header): HeaderAmino {
     const obj: any = {};
-    obj.sequence = message.sequence !== BigInt(0) ? (message.sequence?.toString)() : undefined;
-    obj.timestamp = message.timestamp !== BigInt(0) ? (message.timestamp?.toString)() : undefined;
+    obj.sequence = message.sequence !== BigInt(0) ? message.sequence?.toString() : undefined;
+    obj.timestamp = message.timestamp !== BigInt(0) ? message.timestamp?.toString() : undefined;
     obj.signature = message.signature ? base64FromBytes(message.signature) : undefined;
     obj.new_public_key = message.newPublicKey ? Any.toAmino(message.newPublicKey) : undefined;
     obj.new_diversifier = message.newDiversifier === "" ? undefined : message.newDiversifier;
@@ -1108,10 +1108,9 @@ export const Header = {
       typeUrl: "/ibc.lightclients.solomachine.v1.Header",
       value: Header.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Header.typeUrl, Header);
-GlobalDecoderRegistry.registerAminoProtoMapping(Header.aminoType, Header.typeUrl);
 function createBaseMisbehaviour(): Misbehaviour {
   return {
     clientId: "",
@@ -1238,7 +1237,7 @@ export const Misbehaviour = {
   toAmino(message: Misbehaviour): MisbehaviourAmino {
     const obj: any = {};
     obj.client_id = message.clientId === "" ? undefined : message.clientId;
-    obj.sequence = message.sequence !== BigInt(0) ? (message.sequence?.toString)() : undefined;
+    obj.sequence = message.sequence !== BigInt(0) ? message.sequence?.toString() : undefined;
     obj.signature_one = message.signatureOne ? SignatureAndData.toAmino(message.signatureOne) : undefined;
     obj.signature_two = message.signatureTwo ? SignatureAndData.toAmino(message.signatureTwo) : undefined;
     return obj;
@@ -1263,10 +1262,11 @@ export const Misbehaviour = {
       typeUrl: "/ibc.lightclients.solomachine.v1.Misbehaviour",
       value: Misbehaviour.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    SignatureAndData.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Misbehaviour.typeUrl, Misbehaviour);
-GlobalDecoderRegistry.registerAminoProtoMapping(Misbehaviour.aminoType, Misbehaviour.typeUrl);
 function createBaseSignatureAndData(): SignatureAndData {
   return {
     signature: new Uint8Array(),
@@ -1391,7 +1391,7 @@ export const SignatureAndData = {
     obj.signature = message.signature ? base64FromBytes(message.signature) : undefined;
     obj.data_type = message.dataType === 0 ? undefined : message.dataType;
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
-    obj.timestamp = message.timestamp !== BigInt(0) ? (message.timestamp?.toString)() : undefined;
+    obj.timestamp = message.timestamp !== BigInt(0) ? message.timestamp?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: SignatureAndDataAminoMsg): SignatureAndData {
@@ -1414,10 +1414,9 @@ export const SignatureAndData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.SignatureAndData",
       value: SignatureAndData.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(SignatureAndData.typeUrl, SignatureAndData);
-GlobalDecoderRegistry.registerAminoProtoMapping(SignatureAndData.aminoType, SignatureAndData.typeUrl);
 function createBaseTimestampedSignatureData(): TimestampedSignatureData {
   return {
     signatureData: new Uint8Array(),
@@ -1510,7 +1509,7 @@ export const TimestampedSignatureData = {
   toAmino(message: TimestampedSignatureData): TimestampedSignatureDataAmino {
     const obj: any = {};
     obj.signature_data = message.signatureData ? base64FromBytes(message.signatureData) : undefined;
-    obj.timestamp = message.timestamp !== BigInt(0) ? (message.timestamp?.toString)() : undefined;
+    obj.timestamp = message.timestamp !== BigInt(0) ? message.timestamp?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: TimestampedSignatureDataAminoMsg): TimestampedSignatureData {
@@ -1533,10 +1532,9 @@ export const TimestampedSignatureData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.TimestampedSignatureData",
       value: TimestampedSignatureData.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(TimestampedSignatureData.typeUrl, TimestampedSignatureData);
-GlobalDecoderRegistry.registerAminoProtoMapping(TimestampedSignatureData.aminoType, TimestampedSignatureData.typeUrl);
 function createBaseSignBytes(): SignBytes {
   return {
     sequence: BigInt(0),
@@ -1675,8 +1673,8 @@ export const SignBytes = {
   },
   toAmino(message: SignBytes): SignBytesAmino {
     const obj: any = {};
-    obj.sequence = message.sequence !== BigInt(0) ? (message.sequence?.toString)() : undefined;
-    obj.timestamp = message.timestamp !== BigInt(0) ? (message.timestamp?.toString)() : undefined;
+    obj.sequence = message.sequence !== BigInt(0) ? message.sequence?.toString() : undefined;
+    obj.timestamp = message.timestamp !== BigInt(0) ? message.timestamp?.toString() : undefined;
     obj.diversifier = message.diversifier === "" ? undefined : message.diversifier;
     obj.data_type = message.dataType === 0 ? undefined : message.dataType;
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
@@ -1702,10 +1700,9 @@ export const SignBytes = {
       typeUrl: "/ibc.lightclients.solomachine.v1.SignBytes",
       value: SignBytes.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(SignBytes.typeUrl, SignBytes);
-GlobalDecoderRegistry.registerAminoProtoMapping(SignBytes.aminoType, SignBytes.typeUrl);
 function createBaseHeaderData(): HeaderData {
   return {
     newPubKey: undefined,
@@ -1821,10 +1818,9 @@ export const HeaderData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.HeaderData",
       value: HeaderData.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(HeaderData.typeUrl, HeaderData);
-GlobalDecoderRegistry.registerAminoProtoMapping(HeaderData.aminoType, HeaderData.typeUrl);
 function createBaseClientStateData(): ClientStateData {
   return {
     path: new Uint8Array(),
@@ -1940,10 +1936,9 @@ export const ClientStateData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.ClientStateData",
       value: ClientStateData.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ClientStateData.typeUrl, ClientStateData);
-GlobalDecoderRegistry.registerAminoProtoMapping(ClientStateData.aminoType, ClientStateData.typeUrl);
 function createBaseConsensusStateData(): ConsensusStateData {
   return {
     path: new Uint8Array(),
@@ -2059,10 +2054,9 @@ export const ConsensusStateData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.ConsensusStateData",
       value: ConsensusStateData.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ConsensusStateData.typeUrl, ConsensusStateData);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConsensusStateData.aminoType, ConsensusStateData.typeUrl);
 function createBaseConnectionStateData(): ConnectionStateData {
   return {
     path: new Uint8Array(),
@@ -2178,10 +2172,11 @@ export const ConnectionStateData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.ConnectionStateData",
       value: ConnectionStateData.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ConnectionEnd.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ConnectionStateData.typeUrl, ConnectionStateData);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConnectionStateData.aminoType, ConnectionStateData.typeUrl);
 function createBaseChannelStateData(): ChannelStateData {
   return {
     path: new Uint8Array(),
@@ -2297,10 +2292,11 @@ export const ChannelStateData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.ChannelStateData",
       value: ChannelStateData.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Channel.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ChannelStateData.typeUrl, ChannelStateData);
-GlobalDecoderRegistry.registerAminoProtoMapping(ChannelStateData.aminoType, ChannelStateData.typeUrl);
 function createBasePacketCommitmentData(): PacketCommitmentData {
   return {
     path: new Uint8Array(),
@@ -2414,10 +2410,9 @@ export const PacketCommitmentData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.PacketCommitmentData",
       value: PacketCommitmentData.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PacketCommitmentData.typeUrl, PacketCommitmentData);
-GlobalDecoderRegistry.registerAminoProtoMapping(PacketCommitmentData.aminoType, PacketCommitmentData.typeUrl);
 function createBasePacketAcknowledgementData(): PacketAcknowledgementData {
   return {
     path: new Uint8Array(),
@@ -2531,10 +2526,9 @@ export const PacketAcknowledgementData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.PacketAcknowledgementData",
       value: PacketAcknowledgementData.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PacketAcknowledgementData.typeUrl, PacketAcknowledgementData);
-GlobalDecoderRegistry.registerAminoProtoMapping(PacketAcknowledgementData.aminoType, PacketAcknowledgementData.typeUrl);
 function createBasePacketReceiptAbsenceData(): PacketReceiptAbsenceData {
   return {
     path: new Uint8Array()
@@ -2632,10 +2626,9 @@ export const PacketReceiptAbsenceData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.PacketReceiptAbsenceData",
       value: PacketReceiptAbsenceData.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PacketReceiptAbsenceData.typeUrl, PacketReceiptAbsenceData);
-GlobalDecoderRegistry.registerAminoProtoMapping(PacketReceiptAbsenceData.aminoType, PacketReceiptAbsenceData.typeUrl);
 function createBaseNextSequenceRecvData(): NextSequenceRecvData {
   return {
     path: new Uint8Array(),
@@ -2728,7 +2721,7 @@ export const NextSequenceRecvData = {
   toAmino(message: NextSequenceRecvData): NextSequenceRecvDataAmino {
     const obj: any = {};
     obj.path = message.path ? base64FromBytes(message.path) : undefined;
-    obj.next_seq_recv = message.nextSeqRecv !== BigInt(0) ? (message.nextSeqRecv?.toString)() : undefined;
+    obj.next_seq_recv = message.nextSeqRecv !== BigInt(0) ? message.nextSeqRecv?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: NextSequenceRecvDataAminoMsg): NextSequenceRecvData {
@@ -2751,7 +2744,6 @@ export const NextSequenceRecvData = {
       typeUrl: "/ibc.lightclients.solomachine.v1.NextSequenceRecvData",
       value: NextSequenceRecvData.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(NextSequenceRecvData.typeUrl, NextSequenceRecvData);
-GlobalDecoderRegistry.registerAminoProtoMapping(NextSequenceRecvData.aminoType, NextSequenceRecvData.typeUrl);

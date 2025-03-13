@@ -1,10 +1,10 @@
 import { AccessConfig, AccessConfigAmino, AccessConfigSDKType } from "./types";
 import { Coin, CoinAmino, CoinSDKType } from "../../../cosmos/base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { fromBase64, toBase64, toUtf8, fromUtf8 } from "@cosmjs/encoding";
-import { GlobalDecoderRegistry } from "../../../registry";
+import { fromBase64, toBase64, toUtf8, fromUtf8 } from "@interchainjs/encoding";
 export const protobufPackage = "cosmwasm.wasm.v1";
 /** StoreCodeProposal gov proposal content type to submit WASM code to the system */
 export interface StoreCodeProposal {
@@ -41,29 +41,29 @@ export interface StoreCodeProposalProtoMsg {
 /** StoreCodeProposal gov proposal content type to submit WASM code to the system */
 export interface StoreCodeProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** RunAs is the address that is passed to the contract's environment as sender */
-  run_as?: string;
+  run_as: string;
   /** WASMByteCode can be raw or gzip compressed */
-  wasm_byte_code?: string;
+  wasm_byte_code: string;
   /** InstantiatePermission to apply on contract creation, optional */
   instantiate_permission?: AccessConfigAmino;
   /** UnpinCode code on upload, optional */
-  unpin_code?: boolean;
+  unpin_code: boolean;
   /** Source is the URL where the code is hosted */
-  source?: string;
+  source: string;
   /**
    * Builder is the docker image used to build the code deterministically, used
    * for smart contract verification
    */
-  builder?: string;
+  builder: string;
   /**
    * CodeHash is the SHA256 sum of the code outputted by builder, used for smart
    * contract verification
    */
-  code_hash?: string;
+  code_hash: string;
 }
 export interface StoreCodeProposalAminoMsg {
   type: "wasm/StoreCodeProposal";
@@ -115,21 +115,21 @@ export interface InstantiateContractProposalProtoMsg {
  */
 export interface InstantiateContractProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** RunAs is the address that is passed to the contract's environment as sender */
-  run_as?: string;
+  run_as: string;
   /** Admin is an optional address that can execute migrations */
-  admin?: string;
+  admin: string;
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Label is optional metadata to be stored with a constract instance. */
-  label?: string;
+  label: string;
   /** Msg json encoded message to be passed to the contract on instantiation */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on instantiation */
-  funds?: CoinAmino[];
+  funds: CoinAmino[];
 }
 export interface InstantiateContractProposalAminoMsg {
   type: "wasm/InstantiateContractProposal";
@@ -190,28 +190,28 @@ export interface InstantiateContract2ProposalProtoMsg {
  */
 export interface InstantiateContract2ProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** RunAs is the address that is passed to the contract's enviroment as sender */
-  run_as?: string;
+  run_as: string;
   /** Admin is an optional address that can execute migrations */
-  admin?: string;
+  admin: string;
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Label is optional metadata to be stored with a constract instance. */
-  label?: string;
+  label: string;
   /** Msg json encode message to be passed to the contract on instantiation */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on instantiation */
-  funds?: CoinAmino[];
+  funds: CoinAmino[];
   /** Salt is an arbitrary value provided by the sender. Size can be 1 to 64. */
-  salt?: string;
+  salt: string;
   /**
    * FixMsg include the msg value into the hash for the predictable address.
    * Default is false
    */
-  fix_msg?: boolean;
+  fix_msg: boolean;
 }
 export interface InstantiateContract2ProposalAminoMsg {
   type: "wasm/InstantiateContract2Proposal";
@@ -255,15 +255,15 @@ export interface MigrateContractProposalProtoMsg {
 /** MigrateContractProposal gov proposal content type to migrate a contract. */
 export interface MigrateContractProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
   /** CodeID references the new WASM code */
-  code_id?: string;
+  code_id: string;
   /** Msg json encoded message to be passed to the contract on migration */
-  msg?: any;
+  msg: any;
 }
 export interface MigrateContractProposalAminoMsg {
   type: "wasm/MigrateContractProposal";
@@ -297,13 +297,13 @@ export interface SudoContractProposalProtoMsg {
 /** SudoContractProposal gov proposal content type to call sudo on a contract. */
 export interface SudoContractProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
   /** Msg json encoded message to be passed to the contract as sudo */
-  msg?: any;
+  msg: any;
 }
 export interface SudoContractProposalAminoMsg {
   type: "wasm/SudoContractProposal";
@@ -346,17 +346,17 @@ export interface ExecuteContractProposalProtoMsg {
  */
 export interface ExecuteContractProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** RunAs is the address that is passed to the contract's environment as sender */
-  run_as?: string;
+  run_as: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
   /** Msg json encoded message to be passed to the contract as execute */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on instantiation */
-  funds?: CoinAmino[];
+  funds: CoinAmino[];
 }
 export interface ExecuteContractProposalAminoMsg {
   type: "wasm/ExecuteContractProposal";
@@ -394,13 +394,13 @@ export interface UpdateAdminProposalProtoMsg {
 /** UpdateAdminProposal gov proposal content type to set an admin for a contract. */
 export interface UpdateAdminProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** NewAdmin address to be set */
-  new_admin?: string;
+  new_admin: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
 }
 export interface UpdateAdminProposalAminoMsg {
   type: "wasm/UpdateAdminProposal";
@@ -437,11 +437,11 @@ export interface ClearAdminProposalProtoMsg {
  */
 export interface ClearAdminProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
 }
 export interface ClearAdminProposalAminoMsg {
   type: "wasm/ClearAdminProposal";
@@ -480,11 +480,11 @@ export interface PinCodesProposalProtoMsg {
  */
 export interface PinCodesProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** CodeIDs references the new WASM codes */
-  code_ids?: string[];
+  code_ids: string[];
 }
 export interface PinCodesProposalAminoMsg {
   type: "wasm/PinCodesProposal";
@@ -523,11 +523,11 @@ export interface UnpinCodesProposalProtoMsg {
  */
 export interface UnpinCodesProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** CodeIDs references the WASM codes */
-  code_ids?: string[];
+  code_ids: string[];
 }
 export interface UnpinCodesProposalAminoMsg {
   type: "wasm/UnpinCodesProposal";
@@ -563,9 +563,9 @@ export interface AccessConfigUpdateProtoMsg {
  */
 export interface AccessConfigUpdateAmino {
   /** CodeID is the reference to the stored WASM code to be updated */
-  code_id?: string;
+  code_id: string;
   /** InstantiatePermission to apply to the set of code ids */
-  instantiate_permission?: AccessConfigAmino;
+  instantiate_permission: AccessConfigAmino;
 }
 export interface AccessConfigUpdateAminoMsg {
   type: "wasm/AccessConfigUpdate";
@@ -605,14 +605,14 @@ export interface UpdateInstantiateConfigProposalProtoMsg {
  */
 export interface UpdateInstantiateConfigProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /**
    * AccessConfigUpdate contains the list of code ids and the access config
    * to be applied.
    */
-  access_config_updates?: AccessConfigUpdateAmino[];
+  access_config_updates: AccessConfigUpdateAmino[];
 }
 export interface UpdateInstantiateConfigProposalAminoMsg {
   type: "wasm/UpdateInstantiateConfigProposal";
@@ -677,37 +677,37 @@ export interface StoreAndInstantiateContractProposalProtoMsg {
  */
 export interface StoreAndInstantiateContractProposalAmino {
   /** Title is a short summary */
-  title?: string;
+  title: string;
   /** Description is a human readable text */
-  description?: string;
+  description: string;
   /** RunAs is the address that is passed to the contract's environment as sender */
-  run_as?: string;
+  run_as: string;
   /** WASMByteCode can be raw or gzip compressed */
-  wasm_byte_code?: string;
+  wasm_byte_code: string;
   /** InstantiatePermission to apply on contract creation, optional */
   instantiate_permission?: AccessConfigAmino;
   /** UnpinCode code on upload, optional */
-  unpin_code?: boolean;
+  unpin_code: boolean;
   /** Admin is an optional address that can execute migrations */
-  admin?: string;
+  admin: string;
   /** Label is optional metadata to be stored with a constract instance. */
-  label?: string;
+  label: string;
   /** Msg json encoded message to be passed to the contract on instantiation */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on instantiation */
-  funds?: CoinAmino[];
+  funds: CoinAmino[];
   /** Source is the URL where the code is hosted */
-  source?: string;
+  source: string;
   /**
    * Builder is the docker image used to build the code deterministically, used
    * for smart contract verification
    */
-  builder?: string;
+  builder: string;
   /**
    * CodeHash is the SHA256 sum of the code outputted by builder, used for smart
    * contract verification
    */
-  code_hash?: string;
+  code_hash: string;
 }
 export interface StoreAndInstantiateContractProposalAminoMsg {
   type: "wasm/StoreAndInstantiateContractProposal";
@@ -961,10 +961,13 @@ export const StoreCodeProposal = {
       typeUrl: "/cosmwasm.wasm.v1.StoreCodeProposal",
       value: StoreCodeProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(StoreCodeProposal.typeUrl, StoreCodeProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(StoreCodeProposal.aminoType, StoreCodeProposal.typeUrl);
+    AccessConfig.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(StoreCodeProposal.typeUrl, StoreCodeProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(StoreCodeProposal.aminoType, StoreCodeProposal.typeUrl);
 function createBaseInstantiateContractProposal(): InstantiateContractProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.InstantiateContractProposal",
@@ -1157,7 +1160,7 @@ export const InstantiateContractProposal = {
     obj.description = message.description === "" ? undefined : message.description;
     obj.run_as = message.runAs === "" ? undefined : message.runAs;
     obj.admin = message.admin === "" ? undefined : message.admin;
-    obj.code_id = message.codeId !== BigInt(0) ? (message.codeId?.toString)() : undefined;
+    obj.code_id = message.codeId !== BigInt(0) ? message.codeId?.toString() : undefined;
     obj.label = message.label === "" ? undefined : message.label;
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     if (message.funds) {
@@ -1187,10 +1190,13 @@ export const InstantiateContractProposal = {
       typeUrl: "/cosmwasm.wasm.v1.InstantiateContractProposal",
       value: InstantiateContractProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(InstantiateContractProposal.typeUrl, InstantiateContractProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(InstantiateContractProposal.aminoType, InstantiateContractProposal.typeUrl);
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(InstantiateContractProposal.typeUrl, InstantiateContractProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(InstantiateContractProposal.aminoType, InstantiateContractProposal.typeUrl);
 function createBaseInstantiateContract2Proposal(): InstantiateContract2Proposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.InstantiateContract2Proposal",
@@ -1413,7 +1419,7 @@ export const InstantiateContract2Proposal = {
     obj.description = message.description === "" ? undefined : message.description;
     obj.run_as = message.runAs === "" ? undefined : message.runAs;
     obj.admin = message.admin === "" ? undefined : message.admin;
-    obj.code_id = message.codeId !== BigInt(0) ? (message.codeId?.toString)() : undefined;
+    obj.code_id = message.codeId !== BigInt(0) ? message.codeId?.toString() : undefined;
     obj.label = message.label === "" ? undefined : message.label;
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     if (message.funds) {
@@ -1445,10 +1451,13 @@ export const InstantiateContract2Proposal = {
       typeUrl: "/cosmwasm.wasm.v1.InstantiateContract2Proposal",
       value: InstantiateContract2Proposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(InstantiateContract2Proposal.typeUrl, InstantiateContract2Proposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(InstantiateContract2Proposal.aminoType, InstantiateContract2Proposal.typeUrl);
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(InstantiateContract2Proposal.typeUrl, InstantiateContract2Proposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(InstantiateContract2Proposal.aminoType, InstantiateContract2Proposal.typeUrl);
 function createBaseMigrateContractProposal(): MigrateContractProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.MigrateContractProposal",
@@ -1589,7 +1598,7 @@ export const MigrateContractProposal = {
     obj.title = message.title === "" ? undefined : message.title;
     obj.description = message.description === "" ? undefined : message.description;
     obj.contract = message.contract === "" ? undefined : message.contract;
-    obj.code_id = message.codeId !== BigInt(0) ? (message.codeId?.toString)() : undefined;
+    obj.code_id = message.codeId !== BigInt(0) ? message.codeId?.toString() : undefined;
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     return obj;
   },
@@ -1613,10 +1622,12 @@ export const MigrateContractProposal = {
       typeUrl: "/cosmwasm.wasm.v1.MigrateContractProposal",
       value: MigrateContractProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(MigrateContractProposal.typeUrl, MigrateContractProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(MigrateContractProposal.aminoType, MigrateContractProposal.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(MigrateContractProposal.typeUrl, MigrateContractProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(MigrateContractProposal.aminoType, MigrateContractProposal.typeUrl);
 function createBaseSudoContractProposal(): SudoContractProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.SudoContractProposal",
@@ -1763,10 +1774,12 @@ export const SudoContractProposal = {
       typeUrl: "/cosmwasm.wasm.v1.SudoContractProposal",
       value: SudoContractProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(SudoContractProposal.typeUrl, SudoContractProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(SudoContractProposal.aminoType, SudoContractProposal.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(SudoContractProposal.typeUrl, SudoContractProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(SudoContractProposal.aminoType, SudoContractProposal.typeUrl);
 function createBaseExecuteContractProposal(): ExecuteContractProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.ExecuteContractProposal",
@@ -1955,10 +1968,13 @@ export const ExecuteContractProposal = {
       typeUrl: "/cosmwasm.wasm.v1.ExecuteContractProposal",
       value: ExecuteContractProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(ExecuteContractProposal.typeUrl, ExecuteContractProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(ExecuteContractProposal.aminoType, ExecuteContractProposal.typeUrl);
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ExecuteContractProposal.typeUrl, ExecuteContractProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(ExecuteContractProposal.aminoType, ExecuteContractProposal.typeUrl);
 function createBaseUpdateAdminProposal(): UpdateAdminProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.UpdateAdminProposal",
@@ -2105,10 +2121,12 @@ export const UpdateAdminProposal = {
       typeUrl: "/cosmwasm.wasm.v1.UpdateAdminProposal",
       value: UpdateAdminProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(UpdateAdminProposal.typeUrl, UpdateAdminProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(UpdateAdminProposal.aminoType, UpdateAdminProposal.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(UpdateAdminProposal.typeUrl, UpdateAdminProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(UpdateAdminProposal.aminoType, UpdateAdminProposal.typeUrl);
 function createBaseClearAdminProposal(): ClearAdminProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.ClearAdminProposal",
@@ -2239,10 +2257,12 @@ export const ClearAdminProposal = {
       typeUrl: "/cosmwasm.wasm.v1.ClearAdminProposal",
       value: ClearAdminProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(ClearAdminProposal.typeUrl, ClearAdminProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(ClearAdminProposal.aminoType, ClearAdminProposal.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(ClearAdminProposal.typeUrl, ClearAdminProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(ClearAdminProposal.aminoType, ClearAdminProposal.typeUrl);
 function createBasePinCodesProposal(): PinCodesProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.PinCodesProposal",
@@ -2392,10 +2412,12 @@ export const PinCodesProposal = {
       typeUrl: "/cosmwasm.wasm.v1.PinCodesProposal",
       value: PinCodesProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(PinCodesProposal.typeUrl, PinCodesProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(PinCodesProposal.aminoType, PinCodesProposal.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(PinCodesProposal.typeUrl, PinCodesProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(PinCodesProposal.aminoType, PinCodesProposal.typeUrl);
 function createBaseUnpinCodesProposal(): UnpinCodesProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.UnpinCodesProposal",
@@ -2545,10 +2567,12 @@ export const UnpinCodesProposal = {
       typeUrl: "/cosmwasm.wasm.v1.UnpinCodesProposal",
       value: UnpinCodesProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(UnpinCodesProposal.typeUrl, UnpinCodesProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(UnpinCodesProposal.aminoType, UnpinCodesProposal.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(UnpinCodesProposal.typeUrl, UnpinCodesProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(UnpinCodesProposal.aminoType, UnpinCodesProposal.typeUrl);
 function createBaseAccessConfigUpdate(): AccessConfigUpdate {
   return {
     codeId: BigInt(0),
@@ -2642,7 +2666,7 @@ export const AccessConfigUpdate = {
   },
   toAmino(message: AccessConfigUpdate): AccessConfigUpdateAmino {
     const obj: any = {};
-    obj.code_id = message.codeId !== BigInt(0) ? (message.codeId?.toString)() : undefined;
+    obj.code_id = message.codeId !== BigInt(0) ? message.codeId?.toString() : undefined;
     obj.instantiate_permission = message.instantiatePermission ? AccessConfig.toAmino(message.instantiatePermission) : undefined;
     return obj;
   },
@@ -2666,10 +2690,11 @@ export const AccessConfigUpdate = {
       typeUrl: "/cosmwasm.wasm.v1.AccessConfigUpdate",
       value: AccessConfigUpdate.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    AccessConfig.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(AccessConfigUpdate.typeUrl, AccessConfigUpdate);
-GlobalDecoderRegistry.registerAminoProtoMapping(AccessConfigUpdate.aminoType, AccessConfigUpdate.typeUrl);
 function createBaseUpdateInstantiateConfigProposal(): UpdateInstantiateConfigProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.UpdateInstantiateConfigProposal",
@@ -2810,10 +2835,13 @@ export const UpdateInstantiateConfigProposal = {
       typeUrl: "/cosmwasm.wasm.v1.UpdateInstantiateConfigProposal",
       value: UpdateInstantiateConfigProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(UpdateInstantiateConfigProposal.typeUrl, UpdateInstantiateConfigProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(UpdateInstantiateConfigProposal.aminoType, UpdateInstantiateConfigProposal.typeUrl);
+    AccessConfigUpdate.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(UpdateInstantiateConfigProposal.typeUrl, UpdateInstantiateConfigProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(UpdateInstantiateConfigProposal.aminoType, UpdateInstantiateConfigProposal.typeUrl);
 function createBaseStoreAndInstantiateContractProposal(): StoreAndInstantiateContractProposal {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.StoreAndInstantiateContractProposal",
@@ -3116,7 +3144,11 @@ export const StoreAndInstantiateContractProposal = {
       typeUrl: "/cosmwasm.wasm.v1.StoreAndInstantiateContractProposal",
       value: StoreAndInstantiateContractProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(StoreAndInstantiateContractProposal.typeUrl, StoreAndInstantiateContractProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(StoreAndInstantiateContractProposal.aminoType, StoreAndInstantiateContractProposal.typeUrl);
+    AccessConfig.registerTypeUrl();
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(StoreAndInstantiateContractProposal.typeUrl, StoreAndInstantiateContractProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(StoreAndInstantiateContractProposal.aminoType, StoreAndInstantiateContractProposal.typeUrl);

@@ -25,7 +25,7 @@ export interface QueryConnectionRequestProtoMsg {
  */
 export interface QueryConnectionRequestAmino {
   /** connection unique identifier */
-  connection_id?: string;
+  connection_id: string;
 }
 export interface QueryConnectionRequestAminoMsg {
   type: "cosmos-sdk/QueryConnectionRequest";
@@ -64,9 +64,9 @@ export interface QueryConnectionResponseAmino {
   /** connection associated with the request identifier */
   connection?: ConnectionEndAmino;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryConnectionResponseAminoMsg {
   type: "cosmos-sdk/QueryConnectionResponse";
@@ -133,11 +133,11 @@ export interface QueryConnectionsResponseProtoMsg {
  */
 export interface QueryConnectionsResponseAmino {
   /** list of stored connections of the chain. */
-  connections?: IdentifiedConnectionAmino[];
+  connections: IdentifiedConnectionAmino[];
   /** pagination response */
   pagination?: PageResponseAmino;
   /** query block height */
-  height?: HeightAmino;
+  height: HeightAmino;
 }
 export interface QueryConnectionsResponseAminoMsg {
   type: "cosmos-sdk/QueryConnectionsResponse";
@@ -170,7 +170,7 @@ export interface QueryClientConnectionsRequestProtoMsg {
  */
 export interface QueryClientConnectionsRequestAmino {
   /** client identifier associated with a connection */
-  client_id?: string;
+  client_id: string;
 }
 export interface QueryClientConnectionsRequestAminoMsg {
   type: "cosmos-sdk/QueryClientConnectionsRequest";
@@ -205,11 +205,11 @@ export interface QueryClientConnectionsResponseProtoMsg {
  */
 export interface QueryClientConnectionsResponseAmino {
   /** slice of all the connection paths associated with a client. */
-  connection_paths?: string[];
+  connection_paths: string[];
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was generated */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryClientConnectionsResponseAminoMsg {
   type: "cosmos-sdk/QueryClientConnectionsResponse";
@@ -242,7 +242,7 @@ export interface QueryConnectionClientStateRequestProtoMsg {
  */
 export interface QueryConnectionClientStateRequestAmino {
   /** connection identifier */
-  connection_id?: string;
+  connection_id: string;
 }
 export interface QueryConnectionClientStateRequestAminoMsg {
   type: "cosmos-sdk/QueryConnectionClientStateRequest";
@@ -279,9 +279,9 @@ export interface QueryConnectionClientStateResponseAmino {
   /** client state associated with the channel */
   identified_client_state?: IdentifiedClientStateAmino;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryConnectionClientStateResponseAminoMsg {
   type: "cosmos-sdk/QueryConnectionClientStateResponse";
@@ -316,9 +316,9 @@ export interface QueryConnectionConsensusStateRequestProtoMsg {
  */
 export interface QueryConnectionConsensusStateRequestAmino {
   /** connection identifier */
-  connection_id?: string;
-  revision_number?: string;
-  revision_height?: string;
+  connection_id: string;
+  revision_number: string;
+  revision_height: string;
 }
 export interface QueryConnectionConsensusStateRequestAminoMsg {
   type: "cosmos-sdk/QueryConnectionConsensusStateRequest";
@@ -359,11 +359,11 @@ export interface QueryConnectionConsensusStateResponseAmino {
   /** consensus state associated with the channel */
   consensus_state?: AnyAmino;
   /** client ID associated with the consensus state */
-  client_id?: string;
+  client_id: string;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryConnectionConsensusStateResponseAminoMsg {
   type: "cosmos-sdk/QueryConnectionConsensusStateResponse";
@@ -476,10 +476,9 @@ export const QueryConnectionRequest = {
       typeUrl: "/ibc.core.connection.v1.QueryConnectionRequest",
       value: QueryConnectionRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryConnectionRequest.typeUrl, QueryConnectionRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionRequest.aminoType, QueryConnectionRequest.typeUrl);
 function createBaseQueryConnectionResponse(): QueryConnectionResponse {
   return {
     connection: undefined,
@@ -613,10 +612,12 @@ export const QueryConnectionResponse = {
       typeUrl: "/ibc.core.connection.v1.QueryConnectionResponse",
       value: QueryConnectionResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ConnectionEnd.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConnectionResponse.typeUrl, QueryConnectionResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionResponse.aminoType, QueryConnectionResponse.typeUrl);
 function createBaseQueryConnectionsRequest(): QueryConnectionsRequest {
   return {
     pagination: undefined
@@ -716,10 +717,11 @@ export const QueryConnectionsRequest = {
       typeUrl: "/ibc.core.connection.v1.QueryConnectionsRequest",
       value: QueryConnectionsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConnectionsRequest.typeUrl, QueryConnectionsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionsRequest.aminoType, QueryConnectionsRequest.typeUrl);
 function createBaseQueryConnectionsResponse(): QueryConnectionsResponse {
   return {
     connections: [],
@@ -863,10 +865,13 @@ export const QueryConnectionsResponse = {
       typeUrl: "/ibc.core.connection.v1.QueryConnectionsResponse",
       value: QueryConnectionsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IdentifiedConnection.registerTypeUrl();
+    PageResponse.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConnectionsResponse.typeUrl, QueryConnectionsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionsResponse.aminoType, QueryConnectionsResponse.typeUrl);
 function createBaseQueryClientConnectionsRequest(): QueryClientConnectionsRequest {
   return {
     clientId: ""
@@ -964,10 +969,9 @@ export const QueryClientConnectionsRequest = {
       typeUrl: "/ibc.core.connection.v1.QueryClientConnectionsRequest",
       value: QueryClientConnectionsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryClientConnectionsRequest.typeUrl, QueryClientConnectionsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientConnectionsRequest.aminoType, QueryClientConnectionsRequest.typeUrl);
 function createBaseQueryClientConnectionsResponse(): QueryClientConnectionsResponse {
   return {
     connectionPaths: [],
@@ -1109,10 +1113,11 @@ export const QueryClientConnectionsResponse = {
       typeUrl: "/ibc.core.connection.v1.QueryClientConnectionsResponse",
       value: QueryClientConnectionsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryClientConnectionsResponse.typeUrl, QueryClientConnectionsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientConnectionsResponse.aminoType, QueryClientConnectionsResponse.typeUrl);
 function createBaseQueryConnectionClientStateRequest(): QueryConnectionClientStateRequest {
   return {
     connectionId: ""
@@ -1210,10 +1215,9 @@ export const QueryConnectionClientStateRequest = {
       typeUrl: "/ibc.core.connection.v1.QueryConnectionClientStateRequest",
       value: QueryConnectionClientStateRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryConnectionClientStateRequest.typeUrl, QueryConnectionClientStateRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionClientStateRequest.aminoType, QueryConnectionClientStateRequest.typeUrl);
 function createBaseQueryConnectionClientStateResponse(): QueryConnectionClientStateResponse {
   return {
     identifiedClientState: undefined,
@@ -1347,10 +1351,12 @@ export const QueryConnectionClientStateResponse = {
       typeUrl: "/ibc.core.connection.v1.QueryConnectionClientStateResponse",
       value: QueryConnectionClientStateResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IdentifiedClientState.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConnectionClientStateResponse.typeUrl, QueryConnectionClientStateResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionClientStateResponse.aminoType, QueryConnectionClientStateResponse.typeUrl);
 function createBaseQueryConnectionConsensusStateRequest(): QueryConnectionConsensusStateRequest {
   return {
     connectionId: "",
@@ -1460,8 +1466,8 @@ export const QueryConnectionConsensusStateRequest = {
   toAmino(message: QueryConnectionConsensusStateRequest): QueryConnectionConsensusStateRequestAmino {
     const obj: any = {};
     obj.connection_id = message.connectionId === "" ? undefined : message.connectionId;
-    obj.revision_number = message.revisionNumber !== BigInt(0) ? (message.revisionNumber?.toString)() : undefined;
-    obj.revision_height = message.revisionHeight !== BigInt(0) ? (message.revisionHeight?.toString)() : undefined;
+    obj.revision_number = message.revisionNumber !== BigInt(0) ? message.revisionNumber?.toString() : undefined;
+    obj.revision_height = message.revisionHeight !== BigInt(0) ? message.revisionHeight?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: QueryConnectionConsensusStateRequestAminoMsg): QueryConnectionConsensusStateRequest {
@@ -1484,10 +1490,9 @@ export const QueryConnectionConsensusStateRequest = {
       typeUrl: "/ibc.core.connection.v1.QueryConnectionConsensusStateRequest",
       value: QueryConnectionConsensusStateRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryConnectionConsensusStateRequest.typeUrl, QueryConnectionConsensusStateRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionConsensusStateRequest.aminoType, QueryConnectionConsensusStateRequest.typeUrl);
 function createBaseQueryConnectionConsensusStateResponse(): QueryConnectionConsensusStateResponse {
   return {
     consensusState: undefined,
@@ -1637,7 +1642,8 @@ export const QueryConnectionConsensusStateResponse = {
       typeUrl: "/ibc.core.connection.v1.QueryConnectionConsensusStateResponse",
       value: QueryConnectionConsensusStateResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConnectionConsensusStateResponse.typeUrl, QueryConnectionConsensusStateResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionConsensusStateResponse.aminoType, QueryConnectionConsensusStateResponse.typeUrl);

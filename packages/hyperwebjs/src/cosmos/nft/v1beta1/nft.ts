@@ -1,8 +1,8 @@
 import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.nft.v1beta1";
 /** Class defines the class of the nft type. */
 export interface Class {
@@ -28,17 +28,17 @@ export interface ClassProtoMsg {
 /** Class defines the class of the nft type. */
 export interface ClassAmino {
   /** id defines the unique identifier of the NFT classification, similar to the contract address of ERC721 */
-  id?: string;
+  id: string;
   /** name defines the human-readable name of the NFT classification. Optional */
-  name?: string;
+  name: string;
   /** symbol is an abbreviated name for nft classification. Optional */
-  symbol?: string;
+  symbol: string;
   /** description is a brief description of nft classification. Optional */
-  description?: string;
+  description: string;
   /** uri for the class metadata stored off chain. It can define schema for Class and NFT `Data` attributes. Optional */
-  uri?: string;
+  uri: string;
   /** uri_hash is a hash of the document pointed by uri. Optional */
-  uri_hash?: string;
+  uri_hash: string;
   /** data is the app specific metadata of the NFT class. Optional */
   data?: AnyAmino;
 }
@@ -76,13 +76,13 @@ export interface NFTProtoMsg {
 /** NFT defines the NFT. */
 export interface NFTAmino {
   /** class_id associated with the NFT, similar to the contract address of ERC721 */
-  class_id?: string;
+  class_id: string;
   /** id is a unique identifier of the NFT */
-  id?: string;
+  id: string;
   /** uri for the NFT metadata stored off chain */
-  uri?: string;
+  uri: string;
   /** uri_hash is a hash of the document pointed by uri */
-  uri_hash?: string;
+  uri_hash: string;
   /** data is an app specific data of the NFT. Optional */
   data?: AnyAmino;
 }
@@ -293,10 +293,9 @@ export const Class = {
       typeUrl: "/cosmos.nft.v1beta1.Class",
       value: Class.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Class.typeUrl, Class);
-GlobalDecoderRegistry.registerAminoProtoMapping(Class.aminoType, Class.typeUrl);
 function createBaseNFT(): NFT {
   return {
     classId: "",
@@ -460,7 +459,6 @@ export const NFT = {
       typeUrl: "/cosmos.nft.v1beta1.NFT",
       value: NFT.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(NFT.typeUrl, NFT);
-GlobalDecoderRegistry.registerAminoProtoMapping(NFT.aminoType, NFT.typeUrl);

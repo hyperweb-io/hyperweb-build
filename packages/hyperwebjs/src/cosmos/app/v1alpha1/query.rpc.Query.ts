@@ -1,7 +1,6 @@
 import { Config, ConfigSDKType } from "./config";
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryConfigRequest, QueryConfigRequestSDKType, QueryConfigResponse, QueryConfigResponseSDKType } from "./query";
 /** Query is the app module query service. */
 export interface Query {
@@ -20,12 +19,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => QueryConfigResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    config(request?: QueryConfigRequest): Promise<QueryConfigResponse> {
-      return queryService.config(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };

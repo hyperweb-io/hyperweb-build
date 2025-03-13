@@ -1,8 +1,8 @@
 import { Duration, DurationAmino, DurationSDKType } from "../../../../google/protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.group.module.v1";
 /** Module is the config object of the group module. */
 export interface Module {
@@ -32,7 +32,7 @@ export interface ModuleAmino {
    * max_metadata_len defines the max length of the metadata bytes field for various entities within the group module.
    * Defaults to 255 if not explicitly set.
    */
-  max_metadata_len?: string;
+  max_metadata_len: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
@@ -137,7 +137,7 @@ export const Module = {
   toAmino(message: Module): ModuleAmino {
     const obj: any = {};
     obj.max_execution_period = message.maxExecutionPeriod ? Duration.toAmino(message.maxExecutionPeriod) : Duration.toAmino(Duration.fromPartial({}));
-    obj.max_metadata_len = message.maxMetadataLen !== BigInt(0) ? (message.maxMetadataLen?.toString)() : undefined;
+    obj.max_metadata_len = message.maxMetadataLen !== BigInt(0) ? message.maxMetadataLen?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ModuleAminoMsg): Module {
@@ -160,7 +160,6 @@ export const Module = {
       typeUrl: "/cosmos.group.module.v1.Module",
       value: Module.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Module.typeUrl, Module);
-GlobalDecoderRegistry.registerAminoProtoMapping(Module.aminoType, Module.typeUrl);

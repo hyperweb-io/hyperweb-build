@@ -39,7 +39,7 @@ export interface SendAuthorizationAmino {
    * 
    * Since: cosmos-sdk 0.47
    */
-  allow_list?: string[];
+  allow_list: string[];
 }
 export interface SendAuthorizationAminoMsg {
   type: "cosmos-sdk/SendAuthorization";
@@ -190,7 +190,10 @@ export const SendAuthorization = {
       typeUrl: "/cosmos.bank.v1beta1.SendAuthorization",
       value: SendAuthorization.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(SendAuthorization.typeUrl, SendAuthorization);
+    GlobalDecoderRegistry.registerAminoProtoMapping(SendAuthorization.aminoType, SendAuthorization.typeUrl);
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(SendAuthorization.typeUrl, SendAuthorization);
-GlobalDecoderRegistry.registerAminoProtoMapping(SendAuthorization.aminoType, SendAuthorization.typeUrl);

@@ -2,7 +2,6 @@ import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.crypto.multisig";
 /**
  * LegacyAminoPubKey specifies a public key type
@@ -23,8 +22,8 @@ export interface LegacyAminoPubKeyProtoMsg {
  * it uses legacy amino address rules.
  */
 export interface LegacyAminoPubKeyAmino {
-  threshold?: number;
-  public_keys?: AnyAmino[];
+  threshold: number;
+  public_keys: AnyAmino[];
 }
 export interface LegacyAminoPubKeyAminoMsg {
   type: "tendermint/PubKeyMultisigThreshold";
@@ -162,7 +161,6 @@ export const LegacyAminoPubKey = {
       typeUrl: "/cosmos.crypto.multisig.LegacyAminoPubKey",
       value: LegacyAminoPubKey.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(LegacyAminoPubKey.typeUrl, LegacyAminoPubKey);
-GlobalDecoderRegistry.registerAminoProtoMapping(LegacyAminoPubKey.aminoType, LegacyAminoPubKey.typeUrl);

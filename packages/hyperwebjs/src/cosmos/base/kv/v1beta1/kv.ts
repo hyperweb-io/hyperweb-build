@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { JsonSafe } from "../../../../json-safe";
 import { DeepPartial, isSet, bytesFromBase64, base64FromBytes } from "../../../../helpers";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.base.kv.v1beta1";
 /** Pairs defines a repeated slice of Pair objects. */
 export interface Pairs {
@@ -13,7 +12,7 @@ export interface PairsProtoMsg {
 }
 /** Pairs defines a repeated slice of Pair objects. */
 export interface PairsAmino {
-  pairs?: PairAmino[];
+  pairs: PairAmino[];
 }
 export interface PairsAminoMsg {
   type: "cosmos-sdk/Pairs";
@@ -34,8 +33,8 @@ export interface PairProtoMsg {
 }
 /** Pair defines a key/value bytes tuple. */
 export interface PairAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
 }
 export interface PairAminoMsg {
   type: "cosmos-sdk/Pair";
@@ -153,10 +152,11 @@ export const Pairs = {
       typeUrl: "/cosmos.base.kv.v1beta1.Pairs",
       value: Pairs.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Pair.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Pairs.typeUrl, Pairs);
-GlobalDecoderRegistry.registerAminoProtoMapping(Pairs.aminoType, Pairs.typeUrl);
 function createBasePair(): Pair {
   return {
     key: new Uint8Array(),
@@ -270,7 +270,6 @@ export const Pair = {
       typeUrl: "/cosmos.base.kv.v1beta1.Pair",
       value: Pair.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Pair.typeUrl, Pair);
-GlobalDecoderRegistry.registerAminoProtoMapping(Pair.aminoType, Pair.typeUrl);

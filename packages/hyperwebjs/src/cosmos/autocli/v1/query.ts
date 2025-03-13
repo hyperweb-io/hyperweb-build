@@ -27,7 +27,7 @@ export interface AppOptionsResponse_ModuleOptionsEntryProtoMsg {
   value: Uint8Array;
 }
 export interface AppOptionsResponse_ModuleOptionsEntryAmino {
-  key?: string;
+  key: string;
   value?: ModuleOptionsAmino;
 }
 export interface AppOptionsResponse_ModuleOptionsEntryAminoMsg {
@@ -52,7 +52,7 @@ export interface AppOptionsResponseProtoMsg {
 /** AppOptionsResponse is the RemoteInfoService/AppOptions response type. */
 export interface AppOptionsResponseAmino {
   /** module_options is a map of module name to autocli module options. */
-  module_options?: {
+  module_options: {
     [key: string]: ModuleOptionsAmino;
   };
 }
@@ -145,10 +145,9 @@ export const AppOptionsRequest = {
       typeUrl: "/cosmos.autocli.v1.AppOptionsRequest",
       value: AppOptionsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(AppOptionsRequest.typeUrl, AppOptionsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(AppOptionsRequest.aminoType, AppOptionsRequest.typeUrl);
 function createBaseAppOptionsResponse_ModuleOptionsEntry(): AppOptionsResponse_ModuleOptionsEntry {
   return {
     key: "",
@@ -241,6 +240,9 @@ export const AppOptionsResponse_ModuleOptionsEntry = {
   },
   toProto(message: AppOptionsResponse_ModuleOptionsEntry): Uint8Array {
     return AppOptionsResponse_ModuleOptionsEntry.encode(message).finish();
+  },
+  registerTypeUrl() {
+    ModuleOptions.registerTypeUrl();
   }
 };
 function createBaseAppOptionsResponse(): AppOptionsResponse {
@@ -383,7 +385,8 @@ export const AppOptionsResponse = {
       typeUrl: "/cosmos.autocli.v1.AppOptionsResponse",
       value: AppOptionsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ModuleOptions.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(AppOptionsResponse.typeUrl, AppOptionsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(AppOptionsResponse.aminoType, AppOptionsResponse.typeUrl);

@@ -3,7 +3,7 @@ import { Contracts, ContractsSDKType } from "./contracts";
 import { PageRequest, PageRequestSDKType, PageResponse, PageResponseSDKType } from "../../cosmos/base/query/v1beta1/pagination";
 import { setPaginationParams } from "../../helpers";
 import { LCDClient } from "@cosmology/lcd";
-import { ParamsRequest, ParamsRequestSDKType, ParamsResponse, ParamsResponseSDKType, GetContractRequest, GetContractRequestSDKType, GetContractResponse, GetContractResponseSDKType, ListContractsRequest, ListContractsRequestSDKType, ListContractsResponse, ListContractsResponseSDKType, EvalRequest, EvalRequestSDKType, EvalResponse, EvalResponseSDKType, LocalStateRequest, LocalStateRequestSDKType, LocalStateResponse, LocalStateResponseSDKType, GetContractSourceRequest, GetContractSourceRequestSDKType, GetContractSourceResponse, GetContractSourceResponseSDKType, GetContractByIndexRequest, GetContractByIndexRequestSDKType, GetContractByIndexResponse, GetContractByIndexResponseSDKType } from "./query";
+import { ParamsRequest, ParamsRequestSDKType, ParamsResponse, ParamsResponseSDKType, GetContractRequest, GetContractRequestSDKType, GetContractResponse, GetContractResponseSDKType, ListContractsRequest, ListContractsRequestSDKType, ListContractsResponse, ListContractsResponseSDKType, EvalRequest, EvalRequestSDKType, EvalResponse, EvalResponseSDKType, LocalStateRequest, LocalStateRequestSDKType, LocalStateResponse, LocalStateResponseSDKType, GetContractSourceRequest, GetContractSourceRequestSDKType, GetContractSourceResponse, GetContractSourceResponseSDKType } from "./query";
 export class LCDQueryClient {
   req: LCDClient;
   constructor({
@@ -20,7 +20,7 @@ export class LCDQueryClient {
   };
   /* get contract by index */
   getContract = async (params: GetContractRequest): Promise<GetContractResponseSDKType> => {
-    const endpoint = `hvm/hvm/contracts/${params.address}`;
+    const endpoint = `hvm/hvm/contracts/${params.index}`;
     return await this.req.get<GetContractResponseSDKType>(endpoint);
   };
   /* list all contracts */
@@ -41,8 +41,8 @@ export class LCDQueryClient {
     const options: any = {
       params: {}
     };
-    if (typeof params?.address !== "undefined") {
-      options.params.address = params.address;
+    if (typeof params?.index !== "undefined") {
+      options.params.index = params.index;
     }
     if (typeof params?.fnName !== "undefined") {
       options.params.fn_name = params.fnName;
@@ -58,8 +58,8 @@ export class LCDQueryClient {
     const options: any = {
       params: {}
     };
-    if (typeof params?.address !== "undefined") {
-      options.params.address = params.address;
+    if (typeof params?.index !== "undefined") {
+      options.params.index = params.index;
     }
     if (typeof params?.key !== "undefined") {
       options.params.key = params.key;
@@ -69,12 +69,7 @@ export class LCDQueryClient {
   };
   /* fetch TypeScript source */
   getContractSource = async (params: GetContractSourceRequest): Promise<GetContractSourceResponseSDKType> => {
-    const endpoint = `hvm/hvm/contract_source/${params.address}`;
+    const endpoint = `hvm/hvm/contract_source/${params.index}`;
     return await this.req.get<GetContractSourceResponseSDKType>(endpoint);
-  };
-  /* GetContractByIndex */
-  getContractByIndex = async (params: GetContractByIndexRequest): Promise<GetContractByIndexResponseSDKType> => {
-    const endpoint = `hvm/hvm/contracts/index/${params.index}`;
-    return await this.req.get<GetContractByIndexResponseSDKType>(endpoint);
   };
 }

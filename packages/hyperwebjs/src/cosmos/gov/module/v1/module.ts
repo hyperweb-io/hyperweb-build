@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.gov.module.v1";
 /** Module is the config object of the gov module. */
 export interface Module {
@@ -23,9 +22,9 @@ export interface ModuleAmino {
    * max_metadata_len defines the maximum proposal metadata length.
    * Defaults to 255 if not explicitly set.
    */
-  max_metadata_len?: string;
+  max_metadata_len: string;
   /** authority defines the custom module authority. If not set, defaults to the governance module. */
-  authority?: string;
+  authority: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
@@ -127,7 +126,7 @@ export const Module = {
   },
   toAmino(message: Module): ModuleAmino {
     const obj: any = {};
-    obj.max_metadata_len = message.maxMetadataLen !== BigInt(0) ? (message.maxMetadataLen?.toString)() : undefined;
+    obj.max_metadata_len = message.maxMetadataLen !== BigInt(0) ? message.maxMetadataLen?.toString() : undefined;
     obj.authority = message.authority === "" ? undefined : message.authority;
     return obj;
   },
@@ -151,7 +150,6 @@ export const Module = {
       typeUrl: "/cosmos.gov.module.v1.Module",
       value: Module.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Module.typeUrl, Module);
-GlobalDecoderRegistry.registerAminoProtoMapping(Module.aminoType, Module.typeUrl);

@@ -29,7 +29,7 @@ export interface QueryConstitutionResponseProtoMsg {
 }
 /** QueryConstitutionResponse is the response type for the Query/Constitution RPC method */
 export interface QueryConstitutionResponseAmino {
-  constitution?: string;
+  constitution: string;
 }
 export interface QueryConstitutionResponseAminoMsg {
   type: "cosmos-sdk/v1/QueryConstitutionResponse";
@@ -51,7 +51,7 @@ export interface QueryProposalRequestProtoMsg {
 /** QueryProposalRequest is the request type for the Query/Proposal RPC method. */
 export interface QueryProposalRequestAmino {
   /** proposal_id defines the unique id of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
 }
 export interface QueryProposalRequestAminoMsg {
   type: "cosmos-sdk/v1/QueryProposalRequest";
@@ -101,11 +101,11 @@ export interface QueryProposalsRequestProtoMsg {
 /** QueryProposalsRequest is the request type for the Query/Proposals RPC method. */
 export interface QueryProposalsRequestAmino {
   /** proposal_status defines the status of the proposals. */
-  proposal_status?: ProposalStatus;
+  proposal_status: ProposalStatus;
   /** voter defines the voter address for the proposals. */
-  voter?: string;
+  voter: string;
   /** depositor defines the deposit addresses from the proposals. */
-  depositor?: string;
+  depositor: string;
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
@@ -140,7 +140,7 @@ export interface QueryProposalsResponseProtoMsg {
  */
 export interface QueryProposalsResponseAmino {
   /** proposals defines all the requested governance proposals. */
-  proposals?: ProposalAmino[];
+  proposals: ProposalAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
 }
@@ -170,9 +170,9 @@ export interface QueryVoteRequestProtoMsg {
 /** QueryVoteRequest is the request type for the Query/Vote RPC method. */
 export interface QueryVoteRequestAmino {
   /** proposal_id defines the unique id of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
   /** voter defines the voter address for the proposals. */
-  voter?: string;
+  voter: string;
 }
 export interface QueryVoteRequestAminoMsg {
   type: "cosmos-sdk/v1/QueryVoteRequest";
@@ -219,7 +219,7 @@ export interface QueryVotesRequestProtoMsg {
 /** QueryVotesRequest is the request type for the Query/Votes RPC method. */
 export interface QueryVotesRequestAmino {
   /** proposal_id defines the unique id of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
@@ -246,7 +246,7 @@ export interface QueryVotesResponseProtoMsg {
 /** QueryVotesResponse is the response type for the Query/Votes RPC method. */
 export interface QueryVotesResponseAmino {
   /** votes defines the queried votes. */
-  votes?: VoteAmino[];
+  votes: VoteAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
 }
@@ -277,7 +277,7 @@ export interface QueryParamsRequestAmino {
    * params_type defines which parameters to query for, can be one of "voting",
    * "tallying" or "deposit".
    */
-  params_type?: string;
+  params_type: string;
 }
 export interface QueryParamsRequestAminoMsg {
   type: "cosmos-sdk/v1/QueryParamsRequest";
@@ -373,9 +373,9 @@ export interface QueryDepositRequestProtoMsg {
 /** QueryDepositRequest is the request type for the Query/Deposit RPC method. */
 export interface QueryDepositRequestAmino {
   /** proposal_id defines the unique id of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
   /** depositor defines the deposit addresses from the proposals. */
-  depositor?: string;
+  depositor: string;
 }
 export interface QueryDepositRequestAminoMsg {
   type: "cosmos-sdk/v1/QueryDepositRequest";
@@ -422,7 +422,7 @@ export interface QueryDepositsRequestProtoMsg {
 /** QueryDepositsRequest is the request type for the Query/Deposits RPC method. */
 export interface QueryDepositsRequestAmino {
   /** proposal_id defines the unique id of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
   /** pagination defines an optional pagination for the request. */
   pagination?: PageRequestAmino;
 }
@@ -449,7 +449,7 @@ export interface QueryDepositsResponseProtoMsg {
 /** QueryDepositsResponse is the response type for the Query/Deposits RPC method. */
 export interface QueryDepositsResponseAmino {
   /** deposits defines the requested deposits. */
-  deposits?: DepositAmino[];
+  deposits: DepositAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
 }
@@ -474,7 +474,7 @@ export interface QueryTallyResultRequestProtoMsg {
 /** QueryTallyResultRequest is the request type for the Query/Tally RPC method. */
 export interface QueryTallyResultRequestAmino {
   /** proposal_id defines the unique id of the proposal. */
-  proposal_id?: string;
+  proposal_id: string;
 }
 export interface QueryTallyResultRequestAminoMsg {
   type: "cosmos-sdk/v1/QueryTallyResultRequest";
@@ -585,10 +585,9 @@ export const QueryConstitutionRequest = {
       typeUrl: "/cosmos.gov.v1.QueryConstitutionRequest",
       value: QueryConstitutionRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryConstitutionRequest.typeUrl, QueryConstitutionRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConstitutionRequest.aminoType, QueryConstitutionRequest.typeUrl);
 function createBaseQueryConstitutionResponse(): QueryConstitutionResponse {
   return {
     constitution: ""
@@ -686,10 +685,9 @@ export const QueryConstitutionResponse = {
       typeUrl: "/cosmos.gov.v1.QueryConstitutionResponse",
       value: QueryConstitutionResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryConstitutionResponse.typeUrl, QueryConstitutionResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConstitutionResponse.aminoType, QueryConstitutionResponse.typeUrl);
 function createBaseQueryProposalRequest(): QueryProposalRequest {
   return {
     proposalId: BigInt(0)
@@ -766,7 +764,7 @@ export const QueryProposalRequest = {
   },
   toAmino(message: QueryProposalRequest): QueryProposalRequestAmino {
     const obj: any = {};
-    obj.proposal_id = message.proposalId !== BigInt(0) ? (message.proposalId?.toString)() : undefined;
+    obj.proposal_id = message.proposalId !== BigInt(0) ? message.proposalId?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: QueryProposalRequestAminoMsg): QueryProposalRequest {
@@ -789,10 +787,9 @@ export const QueryProposalRequest = {
       typeUrl: "/cosmos.gov.v1.QueryProposalRequest",
       value: QueryProposalRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryProposalRequest.typeUrl, QueryProposalRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryProposalRequest.aminoType, QueryProposalRequest.typeUrl);
 function createBaseQueryProposalResponse(): QueryProposalResponse {
   return {
     proposal: undefined
@@ -892,10 +889,11 @@ export const QueryProposalResponse = {
       typeUrl: "/cosmos.gov.v1.QueryProposalResponse",
       value: QueryProposalResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Proposal.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryProposalResponse.typeUrl, QueryProposalResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryProposalResponse.aminoType, QueryProposalResponse.typeUrl);
 function createBaseQueryProposalsRequest(): QueryProposalsRequest {
   return {
     proposalStatus: 0,
@@ -1043,10 +1041,11 @@ export const QueryProposalsRequest = {
       typeUrl: "/cosmos.gov.v1.QueryProposalsRequest",
       value: QueryProposalsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryProposalsRequest.typeUrl, QueryProposalsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryProposalsRequest.aminoType, QueryProposalsRequest.typeUrl);
 function createBaseQueryProposalsResponse(): QueryProposalsResponse {
   return {
     proposals: [],
@@ -1172,10 +1171,12 @@ export const QueryProposalsResponse = {
       typeUrl: "/cosmos.gov.v1.QueryProposalsResponse",
       value: QueryProposalsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Proposal.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryProposalsResponse.typeUrl, QueryProposalsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryProposalsResponse.aminoType, QueryProposalsResponse.typeUrl);
 function createBaseQueryVoteRequest(): QueryVoteRequest {
   return {
     proposalId: BigInt(0),
@@ -1267,7 +1268,7 @@ export const QueryVoteRequest = {
   },
   toAmino(message: QueryVoteRequest): QueryVoteRequestAmino {
     const obj: any = {};
-    obj.proposal_id = message.proposalId !== BigInt(0) ? (message.proposalId?.toString)() : undefined;
+    obj.proposal_id = message.proposalId !== BigInt(0) ? message.proposalId?.toString() : undefined;
     obj.voter = message.voter === "" ? undefined : message.voter;
     return obj;
   },
@@ -1291,10 +1292,9 @@ export const QueryVoteRequest = {
       typeUrl: "/cosmos.gov.v1.QueryVoteRequest",
       value: QueryVoteRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryVoteRequest.typeUrl, QueryVoteRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryVoteRequest.aminoType, QueryVoteRequest.typeUrl);
 function createBaseQueryVoteResponse(): QueryVoteResponse {
   return {
     vote: undefined
@@ -1394,10 +1394,11 @@ export const QueryVoteResponse = {
       typeUrl: "/cosmos.gov.v1.QueryVoteResponse",
       value: QueryVoteResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Vote.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryVoteResponse.typeUrl, QueryVoteResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryVoteResponse.aminoType, QueryVoteResponse.typeUrl);
 function createBaseQueryVotesRequest(): QueryVotesRequest {
   return {
     proposalId: BigInt(0),
@@ -1491,7 +1492,7 @@ export const QueryVotesRequest = {
   },
   toAmino(message: QueryVotesRequest): QueryVotesRequestAmino {
     const obj: any = {};
-    obj.proposal_id = message.proposalId !== BigInt(0) ? (message.proposalId?.toString)() : undefined;
+    obj.proposal_id = message.proposalId !== BigInt(0) ? message.proposalId?.toString() : undefined;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
   },
@@ -1515,10 +1516,11 @@ export const QueryVotesRequest = {
       typeUrl: "/cosmos.gov.v1.QueryVotesRequest",
       value: QueryVotesRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryVotesRequest.typeUrl, QueryVotesRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryVotesRequest.aminoType, QueryVotesRequest.typeUrl);
 function createBaseQueryVotesResponse(): QueryVotesResponse {
   return {
     votes: [],
@@ -1644,10 +1646,12 @@ export const QueryVotesResponse = {
       typeUrl: "/cosmos.gov.v1.QueryVotesResponse",
       value: QueryVotesResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Vote.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryVotesResponse.typeUrl, QueryVotesResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryVotesResponse.aminoType, QueryVotesResponse.typeUrl);
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {
     paramsType: ""
@@ -1745,10 +1749,9 @@ export const QueryParamsRequest = {
       typeUrl: "/cosmos.gov.v1.QueryParamsRequest",
       value: QueryParamsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryParamsRequest.typeUrl, QueryParamsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryParamsRequest.aminoType, QueryParamsRequest.typeUrl);
 function createBaseQueryParamsResponse(): QueryParamsResponse {
   return {
     votingParams: undefined,
@@ -1902,10 +1905,14 @@ export const QueryParamsResponse = {
       typeUrl: "/cosmos.gov.v1.QueryParamsResponse",
       value: QueryParamsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    VotingParams.registerTypeUrl();
+    DepositParams.registerTypeUrl();
+    TallyParams.registerTypeUrl();
+    Params.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryParamsResponse.typeUrl, QueryParamsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryParamsResponse.aminoType, QueryParamsResponse.typeUrl);
 function createBaseQueryDepositRequest(): QueryDepositRequest {
   return {
     proposalId: BigInt(0),
@@ -1997,7 +2004,7 @@ export const QueryDepositRequest = {
   },
   toAmino(message: QueryDepositRequest): QueryDepositRequestAmino {
     const obj: any = {};
-    obj.proposal_id = message.proposalId !== BigInt(0) ? (message.proposalId?.toString)() : undefined;
+    obj.proposal_id = message.proposalId !== BigInt(0) ? message.proposalId?.toString() : undefined;
     obj.depositor = message.depositor === "" ? undefined : message.depositor;
     return obj;
   },
@@ -2021,10 +2028,9 @@ export const QueryDepositRequest = {
       typeUrl: "/cosmos.gov.v1.QueryDepositRequest",
       value: QueryDepositRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryDepositRequest.typeUrl, QueryDepositRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryDepositRequest.aminoType, QueryDepositRequest.typeUrl);
 function createBaseQueryDepositResponse(): QueryDepositResponse {
   return {
     deposit: undefined
@@ -2124,10 +2130,11 @@ export const QueryDepositResponse = {
       typeUrl: "/cosmos.gov.v1.QueryDepositResponse",
       value: QueryDepositResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Deposit.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryDepositResponse.typeUrl, QueryDepositResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryDepositResponse.aminoType, QueryDepositResponse.typeUrl);
 function createBaseQueryDepositsRequest(): QueryDepositsRequest {
   return {
     proposalId: BigInt(0),
@@ -2221,7 +2228,7 @@ export const QueryDepositsRequest = {
   },
   toAmino(message: QueryDepositsRequest): QueryDepositsRequestAmino {
     const obj: any = {};
-    obj.proposal_id = message.proposalId !== BigInt(0) ? (message.proposalId?.toString)() : undefined;
+    obj.proposal_id = message.proposalId !== BigInt(0) ? message.proposalId?.toString() : undefined;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
   },
@@ -2245,10 +2252,11 @@ export const QueryDepositsRequest = {
       typeUrl: "/cosmos.gov.v1.QueryDepositsRequest",
       value: QueryDepositsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryDepositsRequest.typeUrl, QueryDepositsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryDepositsRequest.aminoType, QueryDepositsRequest.typeUrl);
 function createBaseQueryDepositsResponse(): QueryDepositsResponse {
   return {
     deposits: [],
@@ -2374,10 +2382,12 @@ export const QueryDepositsResponse = {
       typeUrl: "/cosmos.gov.v1.QueryDepositsResponse",
       value: QueryDepositsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Deposit.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryDepositsResponse.typeUrl, QueryDepositsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryDepositsResponse.aminoType, QueryDepositsResponse.typeUrl);
 function createBaseQueryTallyResultRequest(): QueryTallyResultRequest {
   return {
     proposalId: BigInt(0)
@@ -2454,7 +2464,7 @@ export const QueryTallyResultRequest = {
   },
   toAmino(message: QueryTallyResultRequest): QueryTallyResultRequestAmino {
     const obj: any = {};
-    obj.proposal_id = message.proposalId !== BigInt(0) ? (message.proposalId?.toString)() : undefined;
+    obj.proposal_id = message.proposalId !== BigInt(0) ? message.proposalId?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: QueryTallyResultRequestAminoMsg): QueryTallyResultRequest {
@@ -2477,10 +2487,9 @@ export const QueryTallyResultRequest = {
       typeUrl: "/cosmos.gov.v1.QueryTallyResultRequest",
       value: QueryTallyResultRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryTallyResultRequest.typeUrl, QueryTallyResultRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryTallyResultRequest.aminoType, QueryTallyResultRequest.typeUrl);
 function createBaseQueryTallyResultResponse(): QueryTallyResultResponse {
   return {
     tally: undefined
@@ -2580,7 +2589,8 @@ export const QueryTallyResultResponse = {
       typeUrl: "/cosmos.gov.v1.QueryTallyResultResponse",
       value: QueryTallyResultResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    TallyResult.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryTallyResultResponse.typeUrl, QueryTallyResultResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryTallyResultResponse.aminoType, QueryTallyResultResponse.typeUrl);

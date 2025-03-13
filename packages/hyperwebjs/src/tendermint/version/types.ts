@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { isSet, DeepPartial } from "../../helpers";
 import { JsonSafe } from "../../json-safe";
-import { GlobalDecoderRegistry } from "../../registry";
 export const protobufPackage = "tendermint.version";
 /**
  * App includes the protocol and software version for the application.
@@ -22,8 +21,8 @@ export interface AppProtoMsg {
  * updated in ResponseEndBlock.
  */
 export interface AppAmino {
-  protocol?: string;
-  software?: string;
+  protocol: string;
+  software: string;
 }
 export interface AppAminoMsg {
   type: "/tendermint.version.App";
@@ -57,8 +56,8 @@ export interface ConsensusProtoMsg {
  * state transition machine.
  */
 export interface ConsensusAmino {
-  block?: string;
-  app?: string;
+  block: string;
+  app: string;
 }
 export interface ConsensusAminoMsg {
   type: "/tendermint.version.Consensus";
@@ -163,7 +162,7 @@ export const App = {
   },
   toAmino(message: App): AppAmino {
     const obj: any = {};
-    obj.protocol = message.protocol !== BigInt(0) ? (message.protocol?.toString)() : undefined;
+    obj.protocol = message.protocol !== BigInt(0) ? message.protocol?.toString() : undefined;
     obj.software = message.software === "" ? undefined : message.software;
     return obj;
   },
@@ -181,9 +180,9 @@ export const App = {
       typeUrl: "/tendermint.version.App",
       value: App.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(App.typeUrl, App);
 function createBaseConsensus(): Consensus {
   return {
     block: BigInt(0),
@@ -276,8 +275,8 @@ export const Consensus = {
   },
   toAmino(message: Consensus): ConsensusAmino {
     const obj: any = {};
-    obj.block = message.block !== BigInt(0) ? (message.block?.toString)() : undefined;
-    obj.app = message.app !== BigInt(0) ? (message.app?.toString)() : undefined;
+    obj.block = message.block !== BigInt(0) ? message.block?.toString() : undefined;
+    obj.app = message.app !== BigInt(0) ? message.app?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ConsensusAminoMsg): Consensus {
@@ -294,6 +293,6 @@ export const Consensus = {
       typeUrl: "/tendermint.version.Consensus",
       value: Consensus.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Consensus.typeUrl, Consensus);

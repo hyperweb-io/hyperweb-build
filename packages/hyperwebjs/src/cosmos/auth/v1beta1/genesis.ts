@@ -1,9 +1,9 @@
 import { Params, ParamsAmino, ParamsSDKType } from "./auth";
 import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.auth.v1beta1";
 /** GenesisState defines the auth module's genesis state. */
 export interface GenesisState {
@@ -21,7 +21,7 @@ export interface GenesisStateAmino {
   /** params defines all the parameters of the module. */
   params: ParamsAmino;
   /** accounts are the accounts present at genesis. */
-  accounts?: AnyAmino[];
+  accounts: AnyAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -157,7 +157,6 @@ export const GenesisState = {
       typeUrl: "/cosmos.auth.v1beta1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);

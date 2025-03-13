@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.bank.module.v1";
 /** Module is the config object of the bank module. */
 export interface Module {
@@ -25,9 +24,9 @@ export interface ModuleAmino {
    * funds. If left empty it defaults to the list of account names supplied in the auth module configuration as
    * module_account_permissions
    */
-  blocked_module_accounts_override?: string[];
+  blocked_module_accounts_override: string[];
   /** authority defines the custom module authority. If not set, defaults to the governance module. */
-  authority?: string;
+  authority: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
@@ -161,7 +160,6 @@ export const Module = {
       typeUrl: "/cosmos.bank.module.v1.Module",
       value: Module.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Module.typeUrl, Module);
-GlobalDecoderRegistry.registerAminoProtoMapping(Module.aminoType, Module.typeUrl);

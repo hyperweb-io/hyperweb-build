@@ -1,8 +1,8 @@
 import { DenomTrace, DenomTraceAmino, DenomTraceSDKType, Params, ParamsAmino, ParamsSDKType } from "./transfer";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.applications.transfer.v1";
 /** GenesisState defines the ibc-transfer genesis state */
 export interface GenesisState {
@@ -16,9 +16,9 @@ export interface GenesisStateProtoMsg {
 }
 /** GenesisState defines the ibc-transfer genesis state */
 export interface GenesisStateAmino {
-  port_id?: string;
-  denom_traces?: DenomTraceAmino[];
-  params?: ParamsAmino;
+  port_id: string;
+  denom_traces: DenomTraceAmino[];
+  params: ParamsAmino;
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -171,7 +171,9 @@ export const GenesisState = {
       typeUrl: "/ibc.applications.transfer.v1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    DenomTrace.registerTypeUrl();
+    Params.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);

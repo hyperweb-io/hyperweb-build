@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "hyperweb.hvm.module";
 /** Module is the config object for the module. */
 export interface Module {
@@ -21,7 +20,7 @@ export interface ModuleAmino {
    * authority defines the custom module authority. If not set, defaults to the
    * governance module.
    */
-  authority?: string;
+  authority: string;
 }
 export interface ModuleAminoMsg {
   type: "/hyperweb.hvm.module.Module";
@@ -121,6 +120,6 @@ export const Module = {
       typeUrl: "/hyperweb.hvm.module.Module",
       value: Module.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Module.typeUrl, Module);

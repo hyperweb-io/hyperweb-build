@@ -1,8 +1,8 @@
 import { IdentifiedConnection, IdentifiedConnectionAmino, IdentifiedConnectionSDKType, ConnectionPaths, ConnectionPathsAmino, ConnectionPathsSDKType, Params, ParamsAmino, ParamsSDKType } from "./connection";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.core.connection.v1";
 /** GenesisState defines the ibc connection submodule's genesis state. */
 export interface GenesisState {
@@ -18,11 +18,11 @@ export interface GenesisStateProtoMsg {
 }
 /** GenesisState defines the ibc connection submodule's genesis state. */
 export interface GenesisStateAmino {
-  connections?: IdentifiedConnectionAmino[];
-  client_connection_paths?: ConnectionPathsAmino[];
+  connections: IdentifiedConnectionAmino[];
+  client_connection_paths: ConnectionPathsAmino[];
   /** the sequence for the next generated connection identifier */
-  next_connection_sequence?: string;
-  params?: ParamsAmino;
+  next_connection_sequence: string;
+  params: ParamsAmino;
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -180,7 +180,7 @@ export const GenesisState = {
     } else {
       obj.client_connection_paths = message.clientConnectionPaths;
     }
-    obj.next_connection_sequence = message.nextConnectionSequence !== BigInt(0) ? (message.nextConnectionSequence?.toString)() : undefined;
+    obj.next_connection_sequence = message.nextConnectionSequence !== BigInt(0) ? message.nextConnectionSequence?.toString() : undefined;
     obj.params = message.params ? Params.toAmino(message.params) : undefined;
     return obj;
   },
@@ -204,7 +204,10 @@ export const GenesisState = {
       typeUrl: "/ibc.core.connection.v1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IdentifiedConnection.registerTypeUrl();
+    ConnectionPaths.registerTypeUrl();
+    Params.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);

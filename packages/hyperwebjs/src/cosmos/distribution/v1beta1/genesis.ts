@@ -27,9 +27,9 @@ export interface DelegatorWithdrawInfoProtoMsg {
  */
 export interface DelegatorWithdrawInfoAmino {
   /** delegator_address is the address of the delegator. */
-  delegator_address?: string;
+  delegator_address: string;
   /** withdraw_address is the address to withdraw the delegation rewards to. */
-  withdraw_address?: string;
+  withdraw_address: string;
 }
 export interface DelegatorWithdrawInfoAminoMsg {
   type: "cosmos-sdk/DelegatorWithdrawInfo";
@@ -58,7 +58,7 @@ export interface ValidatorOutstandingRewardsRecordProtoMsg {
 /** ValidatorOutstandingRewardsRecord is used for import/export via genesis json. */
 export interface ValidatorOutstandingRewardsRecordAmino {
   /** validator_address is the address of the validator. */
-  validator_address?: string;
+  validator_address: string;
   /** outstanding_rewards represents the outstanding rewards of a validator. */
   outstanding_rewards: DecCoinAmino[];
 }
@@ -91,7 +91,7 @@ export interface ValidatorAccumulatedCommissionRecordProtoMsg {
  */
 export interface ValidatorAccumulatedCommissionRecordAmino {
   /** validator_address is the address of the validator. */
-  validator_address?: string;
+  validator_address: string;
   /** accumulated is the accumulated commission of a validator. */
   accumulated: ValidatorAccumulatedCommissionAmino;
 }
@@ -129,9 +129,9 @@ export interface ValidatorHistoricalRewardsRecordProtoMsg {
  */
 export interface ValidatorHistoricalRewardsRecordAmino {
   /** validator_address is the address of the validator. */
-  validator_address?: string;
+  validator_address: string;
   /** period defines the period the historical rewards apply to. */
-  period?: string;
+  period: string;
   /** rewards defines the historical rewards of a validator. */
   rewards: ValidatorHistoricalRewardsAmino;
 }
@@ -162,7 +162,7 @@ export interface ValidatorCurrentRewardsRecordProtoMsg {
 /** ValidatorCurrentRewardsRecord is used for import / export via genesis json. */
 export interface ValidatorCurrentRewardsRecordAmino {
   /** validator_address is the address of the validator. */
-  validator_address?: string;
+  validator_address: string;
   /** rewards defines the current rewards of a validator. */
   rewards: ValidatorCurrentRewardsAmino;
 }
@@ -191,9 +191,9 @@ export interface DelegatorStartingInfoRecordProtoMsg {
 /** DelegatorStartingInfoRecord used for import / export via genesis json. */
 export interface DelegatorStartingInfoRecordAmino {
   /** delegator_address is the address of the delegator. */
-  delegator_address?: string;
+  delegator_address: string;
   /** validator_address is the address of the validator. */
-  validator_address?: string;
+  validator_address: string;
   /** starting_info defines the starting info of a delegator. */
   starting_info: DelegatorStartingInfoAmino;
 }
@@ -225,11 +225,11 @@ export interface ValidatorSlashEventRecordProtoMsg {
 /** ValidatorSlashEventRecord is used for import / export via genesis json. */
 export interface ValidatorSlashEventRecordAmino {
   /** validator_address is the address of the validator. */
-  validator_address?: string;
+  validator_address: string;
   /** height defines the block height at which the slash event occurred. */
-  height?: string;
+  height: string;
   /** period is the period of the slash event. */
-  period?: string;
+  period: string;
   /** validator_slash_event describes the slash event. */
   validator_slash_event: ValidatorSlashEventAmino;
 }
@@ -280,7 +280,7 @@ export interface GenesisStateAmino {
   /** fee_pool defines the delegator withdraw infos at genesis. */
   delegator_withdraw_infos: DelegatorWithdrawInfoAmino[];
   /** fee_pool defines the previous proposer at genesis. */
-  previous_proposer?: string;
+  previous_proposer: string;
   /** fee_pool defines the outstanding rewards of all validators at genesis. */
   outstanding_rewards: ValidatorOutstandingRewardsRecordAmino[];
   /** fee_pool defines the accumulated commissions of all validators at genesis. */
@@ -424,10 +424,9 @@ export const DelegatorWithdrawInfo = {
       typeUrl: "/cosmos.distribution.v1beta1.DelegatorWithdrawInfo",
       value: DelegatorWithdrawInfo.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(DelegatorWithdrawInfo.typeUrl, DelegatorWithdrawInfo);
-GlobalDecoderRegistry.registerAminoProtoMapping(DelegatorWithdrawInfo.aminoType, DelegatorWithdrawInfo.typeUrl);
 function createBaseValidatorOutstandingRewardsRecord(): ValidatorOutstandingRewardsRecord {
   return {
     validatorAddress: "",
@@ -551,10 +550,11 @@ export const ValidatorOutstandingRewardsRecord = {
       typeUrl: "/cosmos.distribution.v1beta1.ValidatorOutstandingRewardsRecord",
       value: ValidatorOutstandingRewardsRecord.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    DecCoin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ValidatorOutstandingRewardsRecord.typeUrl, ValidatorOutstandingRewardsRecord);
-GlobalDecoderRegistry.registerAminoProtoMapping(ValidatorOutstandingRewardsRecord.aminoType, ValidatorOutstandingRewardsRecord.typeUrl);
 function createBaseValidatorAccumulatedCommissionRecord(): ValidatorAccumulatedCommissionRecord {
   return {
     validatorAddress: "",
@@ -670,10 +670,11 @@ export const ValidatorAccumulatedCommissionRecord = {
       typeUrl: "/cosmos.distribution.v1beta1.ValidatorAccumulatedCommissionRecord",
       value: ValidatorAccumulatedCommissionRecord.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ValidatorAccumulatedCommission.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ValidatorAccumulatedCommissionRecord.typeUrl, ValidatorAccumulatedCommissionRecord);
-GlobalDecoderRegistry.registerAminoProtoMapping(ValidatorAccumulatedCommissionRecord.aminoType, ValidatorAccumulatedCommissionRecord.typeUrl);
 function createBaseValidatorHistoricalRewardsRecord(): ValidatorHistoricalRewardsRecord {
   return {
     validatorAddress: "",
@@ -783,7 +784,7 @@ export const ValidatorHistoricalRewardsRecord = {
   toAmino(message: ValidatorHistoricalRewardsRecord): ValidatorHistoricalRewardsRecordAmino {
     const obj: any = {};
     obj.validator_address = message.validatorAddress === "" ? undefined : message.validatorAddress;
-    obj.period = message.period !== BigInt(0) ? (message.period?.toString)() : undefined;
+    obj.period = message.period !== BigInt(0) ? message.period?.toString() : undefined;
     obj.rewards = message.rewards ? ValidatorHistoricalRewards.toAmino(message.rewards) : ValidatorHistoricalRewards.toAmino(ValidatorHistoricalRewards.fromPartial({}));
     return obj;
   },
@@ -807,10 +808,11 @@ export const ValidatorHistoricalRewardsRecord = {
       typeUrl: "/cosmos.distribution.v1beta1.ValidatorHistoricalRewardsRecord",
       value: ValidatorHistoricalRewardsRecord.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ValidatorHistoricalRewards.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ValidatorHistoricalRewardsRecord.typeUrl, ValidatorHistoricalRewardsRecord);
-GlobalDecoderRegistry.registerAminoProtoMapping(ValidatorHistoricalRewardsRecord.aminoType, ValidatorHistoricalRewardsRecord.typeUrl);
 function createBaseValidatorCurrentRewardsRecord(): ValidatorCurrentRewardsRecord {
   return {
     validatorAddress: "",
@@ -926,10 +928,11 @@ export const ValidatorCurrentRewardsRecord = {
       typeUrl: "/cosmos.distribution.v1beta1.ValidatorCurrentRewardsRecord",
       value: ValidatorCurrentRewardsRecord.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ValidatorCurrentRewards.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ValidatorCurrentRewardsRecord.typeUrl, ValidatorCurrentRewardsRecord);
-GlobalDecoderRegistry.registerAminoProtoMapping(ValidatorCurrentRewardsRecord.aminoType, ValidatorCurrentRewardsRecord.typeUrl);
 function createBaseDelegatorStartingInfoRecord(): DelegatorStartingInfoRecord {
   return {
     delegatorAddress: "",
@@ -1061,10 +1064,11 @@ export const DelegatorStartingInfoRecord = {
       typeUrl: "/cosmos.distribution.v1beta1.DelegatorStartingInfoRecord",
       value: DelegatorStartingInfoRecord.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    DelegatorStartingInfo.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(DelegatorStartingInfoRecord.typeUrl, DelegatorStartingInfoRecord);
-GlobalDecoderRegistry.registerAminoProtoMapping(DelegatorStartingInfoRecord.aminoType, DelegatorStartingInfoRecord.typeUrl);
 function createBaseValidatorSlashEventRecord(): ValidatorSlashEventRecord {
   return {
     validatorAddress: "",
@@ -1191,8 +1195,8 @@ export const ValidatorSlashEventRecord = {
   toAmino(message: ValidatorSlashEventRecord): ValidatorSlashEventRecordAmino {
     const obj: any = {};
     obj.validator_address = message.validatorAddress === "" ? undefined : message.validatorAddress;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
-    obj.period = message.period !== BigInt(0) ? (message.period?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
+    obj.period = message.period !== BigInt(0) ? message.period?.toString() : undefined;
     obj.validator_slash_event = message.validatorSlashEvent ? ValidatorSlashEvent.toAmino(message.validatorSlashEvent) : ValidatorSlashEvent.toAmino(ValidatorSlashEvent.fromPartial({}));
     return obj;
   },
@@ -1216,10 +1220,11 @@ export const ValidatorSlashEventRecord = {
       typeUrl: "/cosmos.distribution.v1beta1.ValidatorSlashEventRecord",
       value: ValidatorSlashEventRecord.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ValidatorSlashEvent.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ValidatorSlashEventRecord.typeUrl, ValidatorSlashEventRecord);
-GlobalDecoderRegistry.registerAminoProtoMapping(ValidatorSlashEventRecord.aminoType, ValidatorSlashEventRecord.typeUrl);
 function createBaseGenesisState(): GenesisState {
   return {
     params: Params.fromPartial({}),
@@ -1535,7 +1540,16 @@ export const GenesisState = {
       typeUrl: "/cosmos.distribution.v1beta1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
+    FeePool.registerTypeUrl();
+    DelegatorWithdrawInfo.registerTypeUrl();
+    ValidatorOutstandingRewardsRecord.registerTypeUrl();
+    ValidatorAccumulatedCommissionRecord.registerTypeUrl();
+    ValidatorHistoricalRewardsRecord.registerTypeUrl();
+    ValidatorCurrentRewardsRecord.registerTypeUrl();
+    DelegatorStartingInfoRecord.registerTypeUrl();
+    ValidatorSlashEventRecord.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);

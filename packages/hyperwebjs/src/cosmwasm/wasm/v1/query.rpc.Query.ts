@@ -2,7 +2,6 @@ import { PageRequest, PageRequestSDKType, PageResponse, PageResponseSDKType } fr
 import { ContractInfo, ContractInfoSDKType, ContractCodeHistoryEntry, ContractCodeHistoryEntrySDKType, Model, ModelSDKType, AccessConfig, AccessConfigSDKType, Params, ParamsSDKType } from "./types";
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryContractInfoRequest, QueryContractInfoRequestSDKType, QueryContractInfoResponse, QueryContractInfoResponseSDKType, QueryContractHistoryRequest, QueryContractHistoryRequestSDKType, QueryContractHistoryResponse, QueryContractHistoryResponseSDKType, QueryContractsByCodeRequest, QueryContractsByCodeRequestSDKType, QueryContractsByCodeResponse, QueryContractsByCodeResponseSDKType, QueryAllContractStateRequest, QueryAllContractStateRequestSDKType, QueryAllContractStateResponse, QueryAllContractStateResponseSDKType, QueryRawContractStateRequest, QueryRawContractStateRequestSDKType, QueryRawContractStateResponse, QueryRawContractStateResponseSDKType, QuerySmartContractStateRequest, QuerySmartContractStateRequestSDKType, QuerySmartContractStateResponse, QuerySmartContractStateResponseSDKType, QueryCodeRequest, QueryCodeRequestSDKType, QueryCodeResponse, QueryCodeResponseSDKType, QueryCodesRequest, QueryCodesRequestSDKType, QueryCodesResponse, QueryCodesResponseSDKType, QueryPinnedCodesRequest, QueryPinnedCodesRequestSDKType, QueryPinnedCodesResponse, QueryPinnedCodesResponseSDKType, QueryParamsRequest, QueryParamsRequestSDKType, QueryParamsResponse, QueryParamsResponseSDKType, QueryContractsByCreatorRequest, QueryContractsByCreatorRequestSDKType, QueryContractsByCreatorResponse, QueryContractsByCreatorResponseSDKType } from "./query";
 /** Query provides defines the gRPC querier service */
 export interface Query {
@@ -105,42 +104,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => QueryContractsByCreatorResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    contractInfo(request: QueryContractInfoRequest): Promise<QueryContractInfoResponse> {
-      return queryService.contractInfo(request);
-    },
-    contractHistory(request: QueryContractHistoryRequest): Promise<QueryContractHistoryResponse> {
-      return queryService.contractHistory(request);
-    },
-    contractsByCode(request: QueryContractsByCodeRequest): Promise<QueryContractsByCodeResponse> {
-      return queryService.contractsByCode(request);
-    },
-    allContractState(request: QueryAllContractStateRequest): Promise<QueryAllContractStateResponse> {
-      return queryService.allContractState(request);
-    },
-    rawContractState(request: QueryRawContractStateRequest): Promise<QueryRawContractStateResponse> {
-      return queryService.rawContractState(request);
-    },
-    smartContractState(request: QuerySmartContractStateRequest): Promise<QuerySmartContractStateResponse> {
-      return queryService.smartContractState(request);
-    },
-    code(request: QueryCodeRequest): Promise<QueryCodeResponse> {
-      return queryService.code(request);
-    },
-    codes(request?: QueryCodesRequest): Promise<QueryCodesResponse> {
-      return queryService.codes(request);
-    },
-    pinnedCodes(request?: QueryPinnedCodesRequest): Promise<QueryPinnedCodesResponse> {
-      return queryService.pinnedCodes(request);
-    },
-    params(request?: QueryParamsRequest): Promise<QueryParamsResponse> {
-      return queryService.params(request);
-    },
-    contractsByCreator(request: QueryContractsByCreatorRequest): Promise<QueryContractsByCreatorResponse> {
-      return queryService.contractsByCreator(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };

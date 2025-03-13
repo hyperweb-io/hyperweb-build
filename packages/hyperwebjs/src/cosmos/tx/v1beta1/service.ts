@@ -5,8 +5,8 @@ import { BlockID, BlockIDAmino, BlockIDSDKType } from "../../../tendermint/types
 import { Block, BlockAmino, BlockSDKType } from "../../../tendermint/types/block";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { JsonSafe } from "../../../json-safe";
 import { GlobalDecoderRegistry } from "../../../registry";
+import { JsonSafe } from "../../../json-safe";
 export const protobufPackage = "cosmos.tx.v1beta1";
 /** OrderBy defines the sorting order */
 export enum OrderBy {
@@ -166,31 +166,31 @@ export interface GetTxsEventRequestAmino {
    * events query.
    */
   /** @deprecated */
-  events?: string[];
+  events: string[];
   /**
    * pagination defines a pagination for the request.
    * Deprecated post v0.46.x: use page and limit instead.
    */
   /** @deprecated */
   pagination?: PageRequestAmino;
-  order_by?: OrderBy;
+  order_by: OrderBy;
   /**
    * page is the page number to query, starts at 1. If not provided, will
    * default to first page.
    */
-  page?: string;
+  page: string;
   /**
    * limit is the total number of results to be returned in the result page.
    * If left empty it will default to a value to be set by each app.
    */
-  limit?: string;
+  limit: string;
   /**
    * query defines the transaction event query that is proxied to Tendermint's
    * TxSearch RPC method. The query must be valid.
    * 
    * Since cosmos-sdk 0.50
    */
-  query?: string;
+  query: string;
 }
 export interface GetTxsEventRequestAminoMsg {
   type: "cosmos-sdk/GetTxsEventRequest";
@@ -238,9 +238,9 @@ export interface GetTxsEventResponseProtoMsg {
  */
 export interface GetTxsEventResponseAmino {
   /** txs is the list of queried transactions. */
-  txs?: TxAmino[];
+  txs: TxAmino[];
   /** tx_responses is the list of queried TxResponses. */
-  tx_responses?: TxResponseAmino[];
+  tx_responses: TxResponseAmino[];
   /**
    * pagination defines a pagination for the response.
    * Deprecated post v0.46.x: use total instead.
@@ -248,7 +248,7 @@ export interface GetTxsEventResponseAmino {
   /** @deprecated */
   pagination?: PageResponseAmino;
   /** total is total number of results available */
-  total?: string;
+  total: string;
 }
 export interface GetTxsEventResponseAminoMsg {
   type: "cosmos-sdk/GetTxsEventResponse";
@@ -284,8 +284,8 @@ export interface BroadcastTxRequestProtoMsg {
  */
 export interface BroadcastTxRequestAmino {
   /** tx_bytes is the raw transaction. */
-  tx_bytes?: string;
-  mode?: BroadcastMode;
+  tx_bytes: string;
+  mode: BroadcastMode;
 }
 export interface BroadcastTxRequestAminoMsg {
   type: "cosmos-sdk/BroadcastTxRequest";
@@ -368,7 +368,7 @@ export interface SimulateRequestAmino {
    * 
    * Since: cosmos-sdk 0.43
    */
-  tx_bytes?: string;
+  tx_bytes: string;
 }
 export interface SimulateRequestAminoMsg {
   type: "cosmos-sdk/SimulateRequest";
@@ -437,7 +437,7 @@ export interface GetTxRequestProtoMsg {
  */
 export interface GetTxRequestAmino {
   /** hash is the tx hash to query, encoded as a hex string. */
-  hash?: string;
+  hash: string;
 }
 export interface GetTxRequestAminoMsg {
   type: "cosmos-sdk/GetTxRequest";
@@ -501,7 +501,7 @@ export interface GetBlockWithTxsRequestProtoMsg {
  */
 export interface GetBlockWithTxsRequestAmino {
   /** height is the height of the block to query. */
-  height?: string;
+  height: string;
   /** pagination defines a pagination for the request. */
   pagination?: PageRequestAmino;
 }
@@ -545,7 +545,7 @@ export interface GetBlockWithTxsResponseProtoMsg {
  */
 export interface GetBlockWithTxsResponseAmino {
   /** txs are the transactions in the block. */
-  txs?: TxAmino[];
+  txs: TxAmino[];
   block_id?: BlockIDAmino;
   block?: BlockAmino;
   /** pagination defines a pagination for the response. */
@@ -589,7 +589,7 @@ export interface TxDecodeRequestProtoMsg {
  */
 export interface TxDecodeRequestAmino {
   /** tx_bytes is the raw transaction. */
-  tx_bytes?: string;
+  tx_bytes: string;
 }
 export interface TxDecodeRequestAminoMsg {
   type: "cosmos-sdk/TxDecodeRequest";
@@ -700,7 +700,7 @@ export interface TxEncodeResponseProtoMsg {
  */
 export interface TxEncodeResponseAmino {
   /** tx_bytes is the encoded transaction bytes. */
-  tx_bytes?: string;
+  tx_bytes: string;
 }
 export interface TxEncodeResponseAminoMsg {
   type: "cosmos-sdk/TxEncodeResponse";
@@ -735,7 +735,7 @@ export interface TxEncodeAminoRequestProtoMsg {
  * Since: cosmos-sdk 0.47
  */
 export interface TxEncodeAminoRequestAmino {
-  amino_json?: string;
+  amino_json: string;
 }
 export interface TxEncodeAminoRequestAminoMsg {
   type: "cosmos-sdk/TxEncodeAminoRequest";
@@ -770,7 +770,7 @@ export interface TxEncodeAminoResponseProtoMsg {
  * Since: cosmos-sdk 0.47
  */
 export interface TxEncodeAminoResponseAmino {
-  amino_binary?: string;
+  amino_binary: string;
 }
 export interface TxEncodeAminoResponseAminoMsg {
   type: "cosmos-sdk/TxEncodeAminoResponse";
@@ -805,7 +805,7 @@ export interface TxDecodeAminoRequestProtoMsg {
  * Since: cosmos-sdk 0.47
  */
 export interface TxDecodeAminoRequestAmino {
-  amino_binary?: string;
+  amino_binary: string;
 }
 export interface TxDecodeAminoRequestAminoMsg {
   type: "cosmos-sdk/TxDecodeAminoRequest";
@@ -840,7 +840,7 @@ export interface TxDecodeAminoResponseProtoMsg {
  * Since: cosmos-sdk 0.47
  */
 export interface TxDecodeAminoResponseAmino {
-  amino_json?: string;
+  amino_json: string;
 }
 export interface TxDecodeAminoResponseAminoMsg {
   type: "cosmos-sdk/TxDecodeAminoResponse";
@@ -1023,8 +1023,8 @@ export const GetTxsEventRequest = {
     }
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     obj.order_by = message.orderBy === 0 ? undefined : message.orderBy;
-    obj.page = message.page !== BigInt(0) ? (message.page?.toString)() : undefined;
-    obj.limit = message.limit !== BigInt(0) ? (message.limit?.toString)() : undefined;
+    obj.page = message.page !== BigInt(0) ? message.page?.toString() : undefined;
+    obj.limit = message.limit !== BigInt(0) ? message.limit?.toString() : undefined;
     obj.query = message.query === "" ? undefined : message.query;
     return obj;
   },
@@ -1048,10 +1048,11 @@ export const GetTxsEventRequest = {
       typeUrl: "/cosmos.tx.v1beta1.GetTxsEventRequest",
       value: GetTxsEventRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetTxsEventRequest.typeUrl, GetTxsEventRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetTxsEventRequest.aminoType, GetTxsEventRequest.typeUrl);
 function createBaseGetTxsEventResponse(): GetTxsEventResponse {
   return {
     txs: [],
@@ -1198,7 +1199,7 @@ export const GetTxsEventResponse = {
       obj.tx_responses = message.txResponses;
     }
     obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
-    obj.total = message.total !== BigInt(0) ? (message.total?.toString)() : undefined;
+    obj.total = message.total !== BigInt(0) ? message.total?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: GetTxsEventResponseAminoMsg): GetTxsEventResponse {
@@ -1221,10 +1222,13 @@ export const GetTxsEventResponse = {
       typeUrl: "/cosmos.tx.v1beta1.GetTxsEventResponse",
       value: GetTxsEventResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Tx.registerTypeUrl();
+    TxResponse.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetTxsEventResponse.typeUrl, GetTxsEventResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetTxsEventResponse.aminoType, GetTxsEventResponse.typeUrl);
 function createBaseBroadcastTxRequest(): BroadcastTxRequest {
   return {
     txBytes: new Uint8Array(),
@@ -1338,10 +1342,9 @@ export const BroadcastTxRequest = {
       typeUrl: "/cosmos.tx.v1beta1.BroadcastTxRequest",
       value: BroadcastTxRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(BroadcastTxRequest.typeUrl, BroadcastTxRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(BroadcastTxRequest.aminoType, BroadcastTxRequest.typeUrl);
 function createBaseBroadcastTxResponse(): BroadcastTxResponse {
   return {
     txResponse: undefined
@@ -1441,10 +1444,11 @@ export const BroadcastTxResponse = {
       typeUrl: "/cosmos.tx.v1beta1.BroadcastTxResponse",
       value: BroadcastTxResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    TxResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(BroadcastTxResponse.typeUrl, BroadcastTxResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(BroadcastTxResponse.aminoType, BroadcastTxResponse.typeUrl);
 function createBaseSimulateRequest(): SimulateRequest {
   return {
     tx: undefined,
@@ -1560,10 +1564,11 @@ export const SimulateRequest = {
       typeUrl: "/cosmos.tx.v1beta1.SimulateRequest",
       value: SimulateRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Tx.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(SimulateRequest.typeUrl, SimulateRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(SimulateRequest.aminoType, SimulateRequest.typeUrl);
 function createBaseSimulateResponse(): SimulateResponse {
   return {
     gasInfo: undefined,
@@ -1681,10 +1686,12 @@ export const SimulateResponse = {
       typeUrl: "/cosmos.tx.v1beta1.SimulateResponse",
       value: SimulateResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GasInfo.registerTypeUrl();
+    Result.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(SimulateResponse.typeUrl, SimulateResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(SimulateResponse.aminoType, SimulateResponse.typeUrl);
 function createBaseGetTxRequest(): GetTxRequest {
   return {
     hash: ""
@@ -1782,10 +1789,9 @@ export const GetTxRequest = {
       typeUrl: "/cosmos.tx.v1beta1.GetTxRequest",
       value: GetTxRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetTxRequest.typeUrl, GetTxRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetTxRequest.aminoType, GetTxRequest.typeUrl);
 function createBaseGetTxResponse(): GetTxResponse {
   return {
     tx: undefined,
@@ -1903,10 +1909,12 @@ export const GetTxResponse = {
       typeUrl: "/cosmos.tx.v1beta1.GetTxResponse",
       value: GetTxResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Tx.registerTypeUrl();
+    TxResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetTxResponse.typeUrl, GetTxResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetTxResponse.aminoType, GetTxResponse.typeUrl);
 function createBaseGetBlockWithTxsRequest(): GetBlockWithTxsRequest {
   return {
     height: BigInt(0),
@@ -2000,7 +2008,7 @@ export const GetBlockWithTxsRequest = {
   },
   toAmino(message: GetBlockWithTxsRequest): GetBlockWithTxsRequestAmino {
     const obj: any = {};
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
   },
@@ -2024,10 +2032,11 @@ export const GetBlockWithTxsRequest = {
       typeUrl: "/cosmos.tx.v1beta1.GetBlockWithTxsRequest",
       value: GetBlockWithTxsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetBlockWithTxsRequest.typeUrl, GetBlockWithTxsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetBlockWithTxsRequest.aminoType, GetBlockWithTxsRequest.typeUrl);
 function createBaseGetBlockWithTxsResponse(): GetBlockWithTxsResponse {
   return {
     txs: [],
@@ -2189,10 +2198,14 @@ export const GetBlockWithTxsResponse = {
       typeUrl: "/cosmos.tx.v1beta1.GetBlockWithTxsResponse",
       value: GetBlockWithTxsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Tx.registerTypeUrl();
+    BlockID.registerTypeUrl();
+    Block.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetBlockWithTxsResponse.typeUrl, GetBlockWithTxsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetBlockWithTxsResponse.aminoType, GetBlockWithTxsResponse.typeUrl);
 function createBaseTxDecodeRequest(): TxDecodeRequest {
   return {
     txBytes: new Uint8Array()
@@ -2290,10 +2303,9 @@ export const TxDecodeRequest = {
       typeUrl: "/cosmos.tx.v1beta1.TxDecodeRequest",
       value: TxDecodeRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(TxDecodeRequest.typeUrl, TxDecodeRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(TxDecodeRequest.aminoType, TxDecodeRequest.typeUrl);
 function createBaseTxDecodeResponse(): TxDecodeResponse {
   return {
     tx: undefined
@@ -2393,10 +2405,11 @@ export const TxDecodeResponse = {
       typeUrl: "/cosmos.tx.v1beta1.TxDecodeResponse",
       value: TxDecodeResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Tx.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(TxDecodeResponse.typeUrl, TxDecodeResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(TxDecodeResponse.aminoType, TxDecodeResponse.typeUrl);
 function createBaseTxEncodeRequest(): TxEncodeRequest {
   return {
     tx: undefined
@@ -2496,10 +2509,11 @@ export const TxEncodeRequest = {
       typeUrl: "/cosmos.tx.v1beta1.TxEncodeRequest",
       value: TxEncodeRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Tx.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(TxEncodeRequest.typeUrl, TxEncodeRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(TxEncodeRequest.aminoType, TxEncodeRequest.typeUrl);
 function createBaseTxEncodeResponse(): TxEncodeResponse {
   return {
     txBytes: new Uint8Array()
@@ -2597,10 +2611,9 @@ export const TxEncodeResponse = {
       typeUrl: "/cosmos.tx.v1beta1.TxEncodeResponse",
       value: TxEncodeResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(TxEncodeResponse.typeUrl, TxEncodeResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(TxEncodeResponse.aminoType, TxEncodeResponse.typeUrl);
 function createBaseTxEncodeAminoRequest(): TxEncodeAminoRequest {
   return {
     aminoJson: ""
@@ -2698,10 +2711,9 @@ export const TxEncodeAminoRequest = {
       typeUrl: "/cosmos.tx.v1beta1.TxEncodeAminoRequest",
       value: TxEncodeAminoRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(TxEncodeAminoRequest.typeUrl, TxEncodeAminoRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(TxEncodeAminoRequest.aminoType, TxEncodeAminoRequest.typeUrl);
 function createBaseTxEncodeAminoResponse(): TxEncodeAminoResponse {
   return {
     aminoBinary: new Uint8Array()
@@ -2799,10 +2811,9 @@ export const TxEncodeAminoResponse = {
       typeUrl: "/cosmos.tx.v1beta1.TxEncodeAminoResponse",
       value: TxEncodeAminoResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(TxEncodeAminoResponse.typeUrl, TxEncodeAminoResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(TxEncodeAminoResponse.aminoType, TxEncodeAminoResponse.typeUrl);
 function createBaseTxDecodeAminoRequest(): TxDecodeAminoRequest {
   return {
     aminoBinary: new Uint8Array()
@@ -2900,10 +2911,9 @@ export const TxDecodeAminoRequest = {
       typeUrl: "/cosmos.tx.v1beta1.TxDecodeAminoRequest",
       value: TxDecodeAminoRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(TxDecodeAminoRequest.typeUrl, TxDecodeAminoRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(TxDecodeAminoRequest.aminoType, TxDecodeAminoRequest.typeUrl);
 function createBaseTxDecodeAminoResponse(): TxDecodeAminoResponse {
   return {
     aminoJson: ""
@@ -3001,7 +3011,6 @@ export const TxDecodeAminoResponse = {
       typeUrl: "/cosmos.tx.v1beta1.TxDecodeAminoResponse",
       value: TxDecodeAminoResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(TxDecodeAminoResponse.typeUrl, TxDecodeAminoResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(TxDecodeAminoResponse.aminoType, TxDecodeAminoResponse.typeUrl);

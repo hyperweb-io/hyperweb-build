@@ -9,9 +9,9 @@ import { BlockAmino as Block2Amino } from "./types";
 import { BlockSDKType as Block2SDKType } from "./types";
 import { DefaultNodeInfo, DefaultNodeInfoAmino, DefaultNodeInfoSDKType } from "../../../../tendermint/p2p/types";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.base.tendermint.v1beta1";
 /** GetValidatorSetByHeightRequest is the request type for the Query/GetValidatorSetByHeight RPC method. */
 export interface GetValidatorSetByHeightRequest {
@@ -25,7 +25,7 @@ export interface GetValidatorSetByHeightRequestProtoMsg {
 }
 /** GetValidatorSetByHeightRequest is the request type for the Query/GetValidatorSetByHeight RPC method. */
 export interface GetValidatorSetByHeightRequestAmino {
-  height?: string;
+  height: string;
   /** pagination defines an pagination for the request. */
   pagination?: PageRequestAmino;
 }
@@ -51,8 +51,8 @@ export interface GetValidatorSetByHeightResponseProtoMsg {
 }
 /** GetValidatorSetByHeightResponse is the response type for the Query/GetValidatorSetByHeight RPC method. */
 export interface GetValidatorSetByHeightResponseAmino {
-  block_height?: string;
-  validators?: ValidatorAmino[];
+  block_height: string;
+  validators: ValidatorAmino[];
   /** pagination defines an pagination for the response. */
   pagination?: PageResponseAmino;
 }
@@ -101,8 +101,8 @@ export interface GetLatestValidatorSetResponseProtoMsg {
 }
 /** GetLatestValidatorSetResponse is the response type for the Query/GetValidatorSetByHeight RPC method. */
 export interface GetLatestValidatorSetResponseAmino {
-  block_height?: string;
-  validators?: ValidatorAmino[];
+  block_height: string;
+  validators: ValidatorAmino[];
   /** pagination defines an pagination for the response. */
   pagination?: PageResponseAmino;
 }
@@ -129,10 +129,10 @@ export interface ValidatorProtoMsg {
 }
 /** Validator is the type for the validator-set. */
 export interface ValidatorAmino {
-  address?: string;
+  address: string;
   pub_key?: AnyAmino;
-  voting_power?: string;
-  proposer_priority?: string;
+  voting_power: string;
+  proposer_priority: string;
 }
 export interface ValidatorAminoMsg {
   type: "cosmos-sdk/Validator";
@@ -155,7 +155,7 @@ export interface GetBlockByHeightRequestProtoMsg {
 }
 /** GetBlockByHeightRequest is the request type for the Query/GetBlockByHeight RPC method. */
 export interface GetBlockByHeightRequestAmino {
-  height?: string;
+  height: string;
 }
 export interface GetBlockByHeightRequestAminoMsg {
   type: "cosmos-sdk/GetBlockByHeightRequest";
@@ -263,7 +263,7 @@ export interface GetSyncingResponseProtoMsg {
 }
 /** GetSyncingResponse is the response type for the Query/GetSyncing RPC method. */
 export interface GetSyncingResponseAmino {
-  syncing?: boolean;
+  syncing: boolean;
 }
 export interface GetSyncingResponseAminoMsg {
   type: "cosmos-sdk/GetSyncingResponse";
@@ -328,15 +328,15 @@ export interface VersionInfoProtoMsg {
 }
 /** VersionInfo is the type for the GetNodeInfoResponse message. */
 export interface VersionInfoAmino {
-  name?: string;
-  app_name?: string;
-  version?: string;
-  git_commit?: string;
-  build_tags?: string;
-  go_version?: string;
-  build_deps?: ModuleAmino[];
+  name: string;
+  app_name: string;
+  version: string;
+  git_commit: string;
+  build_tags: string;
+  go_version: string;
+  build_deps: ModuleAmino[];
   /** Since: cosmos-sdk 0.43 */
-  cosmos_sdk_version?: string;
+  cosmos_sdk_version: string;
 }
 export interface VersionInfoAminoMsg {
   type: "cosmos-sdk/VersionInfo";
@@ -369,11 +369,11 @@ export interface ModuleProtoMsg {
 /** Module is the type for VersionInfo */
 export interface ModuleAmino {
   /** module path */
-  path?: string;
+  path: string;
   /** module version */
-  version?: string;
+  version: string;
   /** checksum */
-  sum?: string;
+  sum: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
@@ -398,10 +398,10 @@ export interface ABCIQueryRequestProtoMsg {
 }
 /** ABCIQueryRequest defines the request structure for the ABCIQuery gRPC query. */
 export interface ABCIQueryRequestAmino {
-  data?: string;
-  path?: string;
-  height?: string;
-  prove?: boolean;
+  data: string;
+  path: string;
+  height: string;
+  prove: boolean;
 }
 export interface ABCIQueryRequestAminoMsg {
   type: "cosmos-sdk/ABCIQueryRequest";
@@ -444,17 +444,17 @@ export interface ABCIQueryResponseProtoMsg {
  * Tendermint.
  */
 export interface ABCIQueryResponseAmino {
-  code?: number;
+  code: number;
   /** nondeterministic */
-  log?: string;
+  log: string;
   /** nondeterministic */
-  info?: string;
-  index?: string;
-  key?: string;
-  value?: string;
+  info: string;
+  index: string;
+  key: string;
+  value: string;
   proof_ops?: ProofOpsAmino;
-  height?: string;
-  codespace?: string;
+  height: string;
+  codespace: string;
 }
 export interface ABCIQueryResponseAminoMsg {
   type: "cosmos-sdk/ABCIQueryResponse";
@@ -501,9 +501,9 @@ export interface ProofOpProtoMsg {
  * Note: This type is a duplicate of the ProofOp proto type defined in Tendermint.
  */
 export interface ProofOpAmino {
-  type?: string;
-  key?: string;
-  data?: string;
+  type: string;
+  key: string;
+  data: string;
 }
 export interface ProofOpAminoMsg {
   type: "cosmos-sdk/ProofOp";
@@ -646,7 +646,7 @@ export const GetValidatorSetByHeightRequest = {
   },
   toAmino(message: GetValidatorSetByHeightRequest): GetValidatorSetByHeightRequestAmino {
     const obj: any = {};
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
     return obj;
   },
@@ -670,10 +670,11 @@ export const GetValidatorSetByHeightRequest = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetValidatorSetByHeightRequest",
       value: GetValidatorSetByHeightRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetValidatorSetByHeightRequest.typeUrl, GetValidatorSetByHeightRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetValidatorSetByHeightRequest.aminoType, GetValidatorSetByHeightRequest.typeUrl);
 function createBaseGetValidatorSetByHeightResponse(): GetValidatorSetByHeightResponse {
   return {
     blockHeight: BigInt(0),
@@ -788,7 +789,7 @@ export const GetValidatorSetByHeightResponse = {
   },
   toAmino(message: GetValidatorSetByHeightResponse): GetValidatorSetByHeightResponseAmino {
     const obj: any = {};
-    obj.block_height = message.blockHeight !== BigInt(0) ? (message.blockHeight?.toString)() : undefined;
+    obj.block_height = message.blockHeight !== BigInt(0) ? message.blockHeight?.toString() : undefined;
     if (message.validators) {
       obj.validators = message.validators.map(e => e ? Validator.toAmino(e) : undefined);
     } else {
@@ -817,10 +818,12 @@ export const GetValidatorSetByHeightResponse = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetValidatorSetByHeightResponse",
       value: GetValidatorSetByHeightResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Validator.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetValidatorSetByHeightResponse.typeUrl, GetValidatorSetByHeightResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetValidatorSetByHeightResponse.aminoType, GetValidatorSetByHeightResponse.typeUrl);
 function createBaseGetLatestValidatorSetRequest(): GetLatestValidatorSetRequest {
   return {
     pagination: undefined
@@ -920,10 +923,11 @@ export const GetLatestValidatorSetRequest = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetLatestValidatorSetRequest",
       value: GetLatestValidatorSetRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetLatestValidatorSetRequest.typeUrl, GetLatestValidatorSetRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetLatestValidatorSetRequest.aminoType, GetLatestValidatorSetRequest.typeUrl);
 function createBaseGetLatestValidatorSetResponse(): GetLatestValidatorSetResponse {
   return {
     blockHeight: BigInt(0),
@@ -1038,7 +1042,7 @@ export const GetLatestValidatorSetResponse = {
   },
   toAmino(message: GetLatestValidatorSetResponse): GetLatestValidatorSetResponseAmino {
     const obj: any = {};
-    obj.block_height = message.blockHeight !== BigInt(0) ? (message.blockHeight?.toString)() : undefined;
+    obj.block_height = message.blockHeight !== BigInt(0) ? message.blockHeight?.toString() : undefined;
     if (message.validators) {
       obj.validators = message.validators.map(e => e ? Validator.toAmino(e) : undefined);
     } else {
@@ -1067,10 +1071,12 @@ export const GetLatestValidatorSetResponse = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetLatestValidatorSetResponse",
       value: GetLatestValidatorSetResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Validator.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetLatestValidatorSetResponse.typeUrl, GetLatestValidatorSetResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetLatestValidatorSetResponse.aminoType, GetLatestValidatorSetResponse.typeUrl);
 function createBaseValidator(): Validator {
   return {
     address: "",
@@ -1198,8 +1204,8 @@ export const Validator = {
     const obj: any = {};
     obj.address = message.address === "" ? undefined : message.address;
     obj.pub_key = message.pubKey ? Any.toAmino(message.pubKey) : undefined;
-    obj.voting_power = message.votingPower !== BigInt(0) ? (message.votingPower?.toString)() : undefined;
-    obj.proposer_priority = message.proposerPriority !== BigInt(0) ? (message.proposerPriority?.toString)() : undefined;
+    obj.voting_power = message.votingPower !== BigInt(0) ? message.votingPower?.toString() : undefined;
+    obj.proposer_priority = message.proposerPriority !== BigInt(0) ? message.proposerPriority?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ValidatorAminoMsg): Validator {
@@ -1222,10 +1228,9 @@ export const Validator = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.Validator",
       value: Validator.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Validator.typeUrl, Validator);
-GlobalDecoderRegistry.registerAminoProtoMapping(Validator.aminoType, Validator.typeUrl);
 function createBaseGetBlockByHeightRequest(): GetBlockByHeightRequest {
   return {
     height: BigInt(0)
@@ -1302,7 +1307,7 @@ export const GetBlockByHeightRequest = {
   },
   toAmino(message: GetBlockByHeightRequest): GetBlockByHeightRequestAmino {
     const obj: any = {};
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: GetBlockByHeightRequestAminoMsg): GetBlockByHeightRequest {
@@ -1325,10 +1330,9 @@ export const GetBlockByHeightRequest = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetBlockByHeightRequest",
       value: GetBlockByHeightRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetBlockByHeightRequest.typeUrl, GetBlockByHeightRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetBlockByHeightRequest.aminoType, GetBlockByHeightRequest.typeUrl);
 function createBaseGetBlockByHeightResponse(): GetBlockByHeightResponse {
   return {
     blockId: undefined,
@@ -1464,10 +1468,13 @@ export const GetBlockByHeightResponse = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetBlockByHeightResponse",
       value: GetBlockByHeightResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    BlockID.registerTypeUrl();
+    Block1.registerTypeUrl();
+    Block2.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetBlockByHeightResponse.typeUrl, GetBlockByHeightResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetBlockByHeightResponse.aminoType, GetBlockByHeightResponse.typeUrl);
 function createBaseGetLatestBlockRequest(): GetLatestBlockRequest {
   return {};
 }
@@ -1547,10 +1554,9 @@ export const GetLatestBlockRequest = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetLatestBlockRequest",
       value: GetLatestBlockRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetLatestBlockRequest.typeUrl, GetLatestBlockRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetLatestBlockRequest.aminoType, GetLatestBlockRequest.typeUrl);
 function createBaseGetLatestBlockResponse(): GetLatestBlockResponse {
   return {
     blockId: undefined,
@@ -1686,10 +1692,13 @@ export const GetLatestBlockResponse = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetLatestBlockResponse",
       value: GetLatestBlockResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    BlockID.registerTypeUrl();
+    Block1.registerTypeUrl();
+    Block2.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetLatestBlockResponse.typeUrl, GetLatestBlockResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetLatestBlockResponse.aminoType, GetLatestBlockResponse.typeUrl);
 function createBaseGetSyncingRequest(): GetSyncingRequest {
   return {};
 }
@@ -1769,10 +1778,9 @@ export const GetSyncingRequest = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetSyncingRequest",
       value: GetSyncingRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetSyncingRequest.typeUrl, GetSyncingRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetSyncingRequest.aminoType, GetSyncingRequest.typeUrl);
 function createBaseGetSyncingResponse(): GetSyncingResponse {
   return {
     syncing: false
@@ -1870,10 +1878,9 @@ export const GetSyncingResponse = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetSyncingResponse",
       value: GetSyncingResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetSyncingResponse.typeUrl, GetSyncingResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetSyncingResponse.aminoType, GetSyncingResponse.typeUrl);
 function createBaseGetNodeInfoRequest(): GetNodeInfoRequest {
   return {};
 }
@@ -1953,10 +1960,9 @@ export const GetNodeInfoRequest = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetNodeInfoRequest",
       value: GetNodeInfoRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetNodeInfoRequest.typeUrl, GetNodeInfoRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetNodeInfoRequest.aminoType, GetNodeInfoRequest.typeUrl);
 function createBaseGetNodeInfoResponse(): GetNodeInfoResponse {
   return {
     defaultNodeInfo: undefined,
@@ -2074,10 +2080,12 @@ export const GetNodeInfoResponse = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.GetNodeInfoResponse",
       value: GetNodeInfoResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    DefaultNodeInfo.registerTypeUrl();
+    VersionInfo.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetNodeInfoResponse.typeUrl, GetNodeInfoResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetNodeInfoResponse.aminoType, GetNodeInfoResponse.typeUrl);
 function createBaseVersionInfo(): VersionInfo {
   return {
     name: "",
@@ -2297,10 +2305,11 @@ export const VersionInfo = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.VersionInfo",
       value: VersionInfo.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Module.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(VersionInfo.typeUrl, VersionInfo);
-GlobalDecoderRegistry.registerAminoProtoMapping(VersionInfo.aminoType, VersionInfo.typeUrl);
 function createBaseModule(): Module {
   return {
     path: "",
@@ -2430,10 +2439,9 @@ export const Module = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.Module",
       value: Module.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Module.typeUrl, Module);
-GlobalDecoderRegistry.registerAminoProtoMapping(Module.aminoType, Module.typeUrl);
 function createBaseABCIQueryRequest(): ABCIQueryRequest {
   return {
     data: new Uint8Array(),
@@ -2557,7 +2565,7 @@ export const ABCIQueryRequest = {
     const obj: any = {};
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     obj.path = message.path === "" ? undefined : message.path;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.prove = message.prove === false ? undefined : message.prove;
     return obj;
   },
@@ -2581,10 +2589,9 @@ export const ABCIQueryRequest = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.ABCIQueryRequest",
       value: ABCIQueryRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ABCIQueryRequest.typeUrl, ABCIQueryRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(ABCIQueryRequest.aminoType, ABCIQueryRequest.typeUrl);
 function createBaseABCIQueryResponse(): ABCIQueryResponse {
   return {
     code: 0,
@@ -2788,11 +2795,11 @@ export const ABCIQueryResponse = {
     obj.code = message.code === 0 ? undefined : message.code;
     obj.log = message.log === "" ? undefined : message.log;
     obj.info = message.info === "" ? undefined : message.info;
-    obj.index = message.index !== BigInt(0) ? (message.index?.toString)() : undefined;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     obj.key = message.key ? base64FromBytes(message.key) : undefined;
     obj.value = message.value ? base64FromBytes(message.value) : undefined;
     obj.proof_ops = message.proofOps ? ProofOps.toAmino(message.proofOps) : undefined;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.codespace = message.codespace === "" ? undefined : message.codespace;
     return obj;
   },
@@ -2816,10 +2823,11 @@ export const ABCIQueryResponse = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.ABCIQueryResponse",
       value: ABCIQueryResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ProofOps.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ABCIQueryResponse.typeUrl, ABCIQueryResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(ABCIQueryResponse.aminoType, ABCIQueryResponse.typeUrl);
 function createBaseProofOp(): ProofOp {
   return {
     type: "",
@@ -2949,10 +2957,9 @@ export const ProofOp = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.ProofOp",
       value: ProofOp.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ProofOp.typeUrl, ProofOp);
-GlobalDecoderRegistry.registerAminoProtoMapping(ProofOp.aminoType, ProofOp.typeUrl);
 function createBaseProofOps(): ProofOps {
   return {
     ops: []
@@ -3060,7 +3067,8 @@ export const ProofOps = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.ProofOps",
       value: ProofOps.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ProofOp.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ProofOps.typeUrl, ProofOps);
-GlobalDecoderRegistry.registerAminoProtoMapping(ProofOps.aminoType, ProofOps.typeUrl);

@@ -1,7 +1,6 @@
 import { ModuleOptions, ModuleOptionsSDKType } from "./options";
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { AppOptionsRequest, AppOptionsRequestSDKType, AppOptionsResponse, AppOptionsResponseSDKType } from "./query";
 /** RemoteInfoService provides clients with the information they need
  to build dynamically CLI clients for remote chains. */
@@ -21,12 +20,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => AppOptionsResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    appOptions(request?: AppOptionsRequest): Promise<AppOptionsResponse> {
-      return queryService.appOptions(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };

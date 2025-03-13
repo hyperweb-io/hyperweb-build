@@ -4,7 +4,6 @@ import { Timestamp, TimestampSDKType } from "../../../../google/protobuf/timesta
 import { Duration, DurationSDKType } from "../../../../google/protobuf/duration";
 import { TxRpc } from "../../../../types";
 import { BinaryReader } from "../../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { GetRequest, GetRequestSDKType, GetResponse, GetResponseSDKType, ListRequest, ListRequestSDKType, ListResponse, ListResponseSDKType } from "./query";
 /** Query is a generic gRPC service for querying ORM data. */
 export interface Query {
@@ -31,15 +30,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => ListResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    get(request: GetRequest): Promise<GetResponse> {
-      return queryService.get(request);
-    },
-    list(request: ListRequest): Promise<ListResponse> {
-      return queryService.list(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };

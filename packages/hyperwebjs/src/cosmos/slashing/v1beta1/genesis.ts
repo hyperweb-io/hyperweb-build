@@ -1,8 +1,8 @@
 import { Params, ParamsAmino, ParamsSDKType, ValidatorSigningInfo, ValidatorSigningInfoAmino, ValidatorSigningInfoSDKType } from "./slashing";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.slashing.v1beta1";
 /** GenesisState defines the slashing module's genesis state. */
 export interface GenesisState {
@@ -62,7 +62,7 @@ export interface SigningInfoProtoMsg {
 /** SigningInfo stores validator signing info of corresponding address. */
 export interface SigningInfoAmino {
   /** address is the validator address. */
-  address?: string;
+  address: string;
   /** validator_signing_info represents the signing info of this validator. */
   validator_signing_info: ValidatorSigningInfoAmino;
 }
@@ -95,7 +95,7 @@ export interface ValidatorMissedBlocksProtoMsg {
  */
 export interface ValidatorMissedBlocksAmino {
   /** address is the validator address. */
-  address?: string;
+  address: string;
   /** missed_blocks is an array of missed blocks by the validator. */
   missed_blocks: MissedBlockAmino[];
 }
@@ -125,9 +125,9 @@ export interface MissedBlockProtoMsg {
 /** MissedBlock contains height and missed status as boolean. */
 export interface MissedBlockAmino {
   /** index is the height at which the block was missed. */
-  index?: string;
+  index: string;
   /** missed is the missed status. */
-  missed?: boolean;
+  missed: boolean;
 }
 export interface MissedBlockAminoMsg {
   type: "cosmos-sdk/MissedBlock";
@@ -289,10 +289,13 @@ export const GenesisState = {
       typeUrl: "/cosmos.slashing.v1beta1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
+    SigningInfo.registerTypeUrl();
+    ValidatorMissedBlocks.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);
 function createBaseSigningInfo(): SigningInfo {
   return {
     address: "",
@@ -408,10 +411,11 @@ export const SigningInfo = {
       typeUrl: "/cosmos.slashing.v1beta1.SigningInfo",
       value: SigningInfo.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ValidatorSigningInfo.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(SigningInfo.typeUrl, SigningInfo);
-GlobalDecoderRegistry.registerAminoProtoMapping(SigningInfo.aminoType, SigningInfo.typeUrl);
 function createBaseValidatorMissedBlocks(): ValidatorMissedBlocks {
   return {
     address: "",
@@ -535,10 +539,11 @@ export const ValidatorMissedBlocks = {
       typeUrl: "/cosmos.slashing.v1beta1.ValidatorMissedBlocks",
       value: ValidatorMissedBlocks.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    MissedBlock.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ValidatorMissedBlocks.typeUrl, ValidatorMissedBlocks);
-GlobalDecoderRegistry.registerAminoProtoMapping(ValidatorMissedBlocks.aminoType, ValidatorMissedBlocks.typeUrl);
 function createBaseMissedBlock(): MissedBlock {
   return {
     index: BigInt(0),
@@ -630,7 +635,7 @@ export const MissedBlock = {
   },
   toAmino(message: MissedBlock): MissedBlockAmino {
     const obj: any = {};
-    obj.index = message.index !== BigInt(0) ? (message.index?.toString)() : undefined;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     obj.missed = message.missed === false ? undefined : message.missed;
     return obj;
   },
@@ -654,7 +659,6 @@ export const MissedBlock = {
       typeUrl: "/cosmos.slashing.v1beta1.MissedBlock",
       value: MissedBlock.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MissedBlock.typeUrl, MissedBlock);
-GlobalDecoderRegistry.registerAminoProtoMapping(MissedBlock.aminoType, MissedBlock.typeUrl);

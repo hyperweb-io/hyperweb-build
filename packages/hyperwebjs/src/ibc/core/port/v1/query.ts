@@ -1,8 +1,8 @@
 import { Order, OrderSDKType, Counterparty, CounterpartyAmino, CounterpartySDKType, orderFromJSON, orderToJSON } from "../../channel/v1/channel";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { JsonSafe } from "../../../../json-safe";
 import { GlobalDecoderRegistry } from "../../../../registry";
+import { JsonSafe } from "../../../../json-safe";
 export const protobufPackage = "ibc.core.port.v1";
 /** QueryAppVersionRequest is the request type for the Query/AppVersion RPC method */
 export interface QueryAppVersionRequest {
@@ -24,15 +24,15 @@ export interface QueryAppVersionRequestProtoMsg {
 /** QueryAppVersionRequest is the request type for the Query/AppVersion RPC method */
 export interface QueryAppVersionRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** connection unique identifier */
-  connection_id?: string;
+  connection_id: string;
   /** whether the channel is ordered or unordered */
-  ordering?: Order;
+  ordering: Order;
   /** counterparty channel end */
   counterparty?: CounterpartyAmino;
   /** proposed version */
-  proposed_version?: string;
+  proposed_version: string;
 }
 export interface QueryAppVersionRequestAminoMsg {
   type: "cosmos-sdk/QueryAppVersionRequest";
@@ -60,9 +60,9 @@ export interface QueryAppVersionResponseProtoMsg {
 /** QueryAppVersionResponse is the response type for the Query/AppVersion RPC method. */
 export interface QueryAppVersionResponseAmino {
   /** port id associated with the request identifiers */
-  port_id?: string;
+  port_id: string;
   /** supported app version */
-  version?: string;
+  version: string;
 }
 export interface QueryAppVersionResponseAminoMsg {
   type: "cosmos-sdk/QueryAppVersionResponse";
@@ -236,10 +236,11 @@ export const QueryAppVersionRequest = {
       typeUrl: "/ibc.core.port.v1.QueryAppVersionRequest",
       value: QueryAppVersionRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Counterparty.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryAppVersionRequest.typeUrl, QueryAppVersionRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAppVersionRequest.aminoType, QueryAppVersionRequest.typeUrl);
 function createBaseQueryAppVersionResponse(): QueryAppVersionResponse {
   return {
     portId: "",
@@ -353,7 +354,6 @@ export const QueryAppVersionResponse = {
       typeUrl: "/ibc.core.port.v1.QueryAppVersionResponse",
       value: QueryAppVersionResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryAppVersionResponse.typeUrl, QueryAppVersionResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAppVersionResponse.aminoType, QueryAppVersionResponse.typeUrl);

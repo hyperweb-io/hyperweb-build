@@ -3,9 +3,9 @@ import { EvidenceList, EvidenceListAmino, EvidenceListSDKType } from "../../../.
 import { Consensus, ConsensusAmino, ConsensusSDKType } from "../../../../tendermint/version/types";
 import { Timestamp, TimestampAmino, TimestampSDKType } from "../../../../google/protobuf/timestamp";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.base.tendermint.v1beta1";
 /**
  * Block is tendermint type Block, with the Header proposer address
@@ -85,33 +85,33 @@ export interface HeaderProtoMsg {
 export interface HeaderAmino {
   /** basic block info */
   version: ConsensusAmino;
-  chain_id?: string;
-  height?: string;
+  chain_id: string;
+  height: string;
   time: string;
   /** prev block info */
   last_block_id: BlockIDAmino;
   /** hashes of block data */
-  last_commit_hash?: string;
+  last_commit_hash: string;
   /** transactions */
-  data_hash?: string;
+  data_hash: string;
   /** hashes from the app output from the prev block */
-  validators_hash?: string;
+  validators_hash: string;
   /** validators for the next block */
-  next_validators_hash?: string;
+  next_validators_hash: string;
   /** consensus params for current block */
-  consensus_hash?: string;
+  consensus_hash: string;
   /** state after txs from the previous block */
-  app_hash?: string;
+  app_hash: string;
   /** root hash of all results from the txs from the previous block */
-  last_results_hash?: string;
+  last_results_hash: string;
   /** consensus info */
-  evidence_hash?: string;
+  evidence_hash: string;
   /**
    * proposer_address is the original block proposer address, formatted as a Bech32 string.
    * In Tendermint, this type is `bytes`, but in the SDK, we convert it to a Bech32 string
    * for better UX.
    */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface HeaderAminoMsg {
   type: "cosmos-sdk/Header";
@@ -287,10 +287,14 @@ export const Block = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.Block",
       value: Block.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Header.registerTypeUrl();
+    Data.registerTypeUrl();
+    EvidenceList.registerTypeUrl();
+    Commit.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Block.typeUrl, Block);
-GlobalDecoderRegistry.registerAminoProtoMapping(Block.aminoType, Block.typeUrl);
 function createBaseHeader(): Header {
   return {
     version: Consensus.fromPartial({}),
@@ -568,7 +572,7 @@ export const Header = {
     const obj: any = {};
     obj.version = message.version ? Consensus.toAmino(message.version) : Consensus.toAmino(Consensus.fromPartial({}));
     obj.chain_id = message.chainId === "" ? undefined : message.chainId;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : new Date();
     obj.last_block_id = message.lastBlockId ? BlockID.toAmino(message.lastBlockId) : BlockID.toAmino(BlockID.fromPartial({}));
     obj.last_commit_hash = message.lastCommitHash ? base64FromBytes(message.lastCommitHash) : undefined;
@@ -602,7 +606,9 @@ export const Header = {
       typeUrl: "/cosmos.base.tendermint.v1beta1.Header",
       value: Header.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Consensus.registerTypeUrl();
+    BlockID.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Header.typeUrl, Header);
-GlobalDecoderRegistry.registerAminoProtoMapping(Header.aminoType, Header.typeUrl);

@@ -2,7 +2,6 @@ import { IdentifiedChannel, IdentifiedChannelAmino, IdentifiedChannelSDKType, Pa
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.core.channel.v1";
 /** GenesisState defines the ibc channel submodule's genesis state. */
 export interface GenesisState {
@@ -22,15 +21,15 @@ export interface GenesisStateProtoMsg {
 }
 /** GenesisState defines the ibc channel submodule's genesis state. */
 export interface GenesisStateAmino {
-  channels?: IdentifiedChannelAmino[];
-  acknowledgements?: PacketStateAmino[];
-  commitments?: PacketStateAmino[];
-  receipts?: PacketStateAmino[];
-  send_sequences?: PacketSequenceAmino[];
-  recv_sequences?: PacketSequenceAmino[];
-  ack_sequences?: PacketSequenceAmino[];
+  channels: IdentifiedChannelAmino[];
+  acknowledgements: PacketStateAmino[];
+  commitments: PacketStateAmino[];
+  receipts: PacketStateAmino[];
+  send_sequences: PacketSequenceAmino[];
+  recv_sequences: PacketSequenceAmino[];
+  ack_sequences: PacketSequenceAmino[];
   /** the sequence for the next generated channel identifier */
-  next_channel_sequence?: string;
+  next_channel_sequence: string;
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -65,9 +64,9 @@ export interface PacketSequenceProtoMsg {
  * next send and receive sequences.
  */
 export interface PacketSequenceAmino {
-  port_id?: string;
-  channel_id?: string;
-  sequence?: string;
+  port_id: string;
+  channel_id: string;
+  sequence: string;
 }
 export interface PacketSequenceAminoMsg {
   type: "cosmos-sdk/PacketSequence";
@@ -340,7 +339,7 @@ export const GenesisState = {
     } else {
       obj.ack_sequences = message.ackSequences;
     }
-    obj.next_channel_sequence = message.nextChannelSequence !== BigInt(0) ? (message.nextChannelSequence?.toString)() : undefined;
+    obj.next_channel_sequence = message.nextChannelSequence !== BigInt(0) ? message.nextChannelSequence?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: GenesisStateAminoMsg): GenesisState {
@@ -363,10 +362,13 @@ export const GenesisState = {
       typeUrl: "/ibc.core.channel.v1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IdentifiedChannel.registerTypeUrl();
+    PacketState.registerTypeUrl();
+    PacketSequence.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);
 function createBasePacketSequence(): PacketSequence {
   return {
     portId: "",
@@ -475,7 +477,7 @@ export const PacketSequence = {
     const obj: any = {};
     obj.port_id = message.portId === "" ? undefined : message.portId;
     obj.channel_id = message.channelId === "" ? undefined : message.channelId;
-    obj.sequence = message.sequence !== BigInt(0) ? (message.sequence?.toString)() : undefined;
+    obj.sequence = message.sequence !== BigInt(0) ? message.sequence?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: PacketSequenceAminoMsg): PacketSequence {
@@ -498,7 +500,6 @@ export const PacketSequence = {
       typeUrl: "/ibc.core.channel.v1.PacketSequence",
       value: PacketSequence.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PacketSequence.typeUrl, PacketSequence);
-GlobalDecoderRegistry.registerAminoProtoMapping(PacketSequence.aminoType, PacketSequence.typeUrl);

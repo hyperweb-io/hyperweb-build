@@ -1,9 +1,9 @@
 import { Params, ParamsAmino, ParamsSDKType } from "./params";
 import { Contracts, ContractsAmino, ContractsSDKType } from "./contracts";
 import { BinaryReader, BinaryWriter } from "../../binary";
+import { GlobalDecoderRegistry } from "../../registry";
 import { isSet, DeepPartial } from "../../helpers";
 import { JsonSafe } from "../../json-safe";
-import { GlobalDecoderRegistry } from "../../registry";
 export const protobufPackage = "hyperweb.hvm";
 /** GenesisState defines the hvm module's genesis state. */
 export interface GenesisState {
@@ -19,7 +19,7 @@ export interface GenesisStateProtoMsg {
 export interface GenesisStateAmino {
   /** params */
   params: ParamsAmino;
-  contracts_list?: ContractsAmino[];
+  contracts_list: ContractsAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "/hyperweb.hvm.GenesisState";
@@ -148,6 +148,9 @@ export const GenesisState = {
       typeUrl: "/hyperweb.hvm.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
+    Contracts.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);

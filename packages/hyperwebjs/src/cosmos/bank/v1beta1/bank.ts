@@ -31,8 +31,8 @@ export interface ParamsAmino {
    * As of cosmos-sdk 0.47, this only exists for backwards compatibility of genesis files.
    */
   /** @deprecated */
-  send_enabled?: SendEnabledAmino[];
-  default_send_enabled?: boolean;
+  send_enabled: SendEnabledAmino[];
+  default_send_enabled: boolean;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/x/bank/Params";
@@ -61,8 +61,8 @@ export interface SendEnabledProtoMsg {
  * sendable).
  */
 export interface SendEnabledAmino {
-  denom?: string;
-  enabled?: boolean;
+  denom: string;
+  enabled: boolean;
 }
 export interface SendEnabledAminoMsg {
   type: "cosmos-sdk/SendEnabled";
@@ -87,7 +87,7 @@ export interface InputProtoMsg {
 }
 /** Input models transaction input. */
 export interface InputAmino {
-  address?: string;
+  address: string;
   coins: CoinAmino[];
 }
 export interface InputAminoMsg {
@@ -110,7 +110,7 @@ export interface OutputProtoMsg {
 }
 /** Output models transaction outputs. */
 export interface OutputAmino {
-  address?: string;
+  address: string;
   coins: CoinAmino[];
 }
 export interface OutputAminoMsg {
@@ -187,7 +187,7 @@ export interface DenomUnitProtoMsg {
  */
 export interface DenomUnitAmino {
   /** denom represents the string name of the given denom unit (e.g uatom). */
-  denom?: string;
+  denom: string;
   /**
    * exponent represents power of 10 exponent that one must
    * raise the base_denom to in order to equal the given DenomUnit's denom
@@ -195,9 +195,9 @@ export interface DenomUnitAmino {
    * (e.g. with a base_denom of uatom, one can create a DenomUnit of 'atom' with
    * exponent = 6, thus: 1 atom = 10^6 uatom).
    */
-  exponent?: number;
+  exponent: number;
   /** aliases is a list of string aliases for the given denom */
-  aliases?: string[];
+  aliases: string[];
 }
 export interface DenomUnitAminoMsg {
   type: "cosmos-sdk/DenomUnit";
@@ -263,42 +263,42 @@ export interface MetadataProtoMsg {
  * a basic token.
  */
 export interface MetadataAmino {
-  description?: string;
+  description: string;
   /** denom_units represents the list of DenomUnit's for a given coin */
-  denom_units?: DenomUnitAmino[];
+  denom_units: DenomUnitAmino[];
   /** base represents the base denom (should be the DenomUnit with exponent = 0). */
-  base?: string;
+  base: string;
   /**
    * display indicates the suggested denom that should be
    * displayed in clients.
    */
-  display?: string;
+  display: string;
   /**
    * name defines the name of the token (eg: Cosmos Atom)
    * 
    * Since: cosmos-sdk 0.43
    */
-  name?: string;
+  name: string;
   /**
    * symbol is the token symbol usually shown on exchanges (eg: ATOM). This can
    * be the same as the display.
    * 
    * Since: cosmos-sdk 0.43
    */
-  symbol?: string;
+  symbol: string;
   /**
    * URI to a document (on or off-chain) that contains additional information. Optional.
    * 
    * Since: cosmos-sdk 0.46
    */
-  uri?: string;
+  uri: string;
   /**
    * URIHash is a sha256 hash of a document pointed by URI. It's used to verify that
    * the document didn't change. Optional.
    * 
    * Since: cosmos-sdk 0.46
    */
-  uri_hash?: string;
+  uri_hash: string;
 }
 export interface MetadataAminoMsg {
   type: "cosmos-sdk/Metadata";
@@ -441,10 +441,11 @@ export const Params = {
       typeUrl: "/cosmos.bank.v1beta1.Params",
       value: Params.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    SendEnabled.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Params.typeUrl, Params);
-GlobalDecoderRegistry.registerAminoProtoMapping(Params.aminoType, Params.typeUrl);
 function createBaseSendEnabled(): SendEnabled {
   return {
     denom: "",
@@ -558,10 +559,9 @@ export const SendEnabled = {
       typeUrl: "/cosmos.bank.v1beta1.SendEnabled",
       value: SendEnabled.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(SendEnabled.typeUrl, SendEnabled);
-GlobalDecoderRegistry.registerAminoProtoMapping(SendEnabled.aminoType, SendEnabled.typeUrl);
 function createBaseInput(): Input {
   return {
     address: "",
@@ -685,10 +685,11 @@ export const Input = {
       typeUrl: "/cosmos.bank.v1beta1.Input",
       value: Input.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Input.typeUrl, Input);
-GlobalDecoderRegistry.registerAminoProtoMapping(Input.aminoType, Input.typeUrl);
 function createBaseOutput(): Output {
   return {
     address: "",
@@ -812,10 +813,11 @@ export const Output = {
       typeUrl: "/cosmos.bank.v1beta1.Output",
       value: Output.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Output.typeUrl, Output);
-GlobalDecoderRegistry.registerAminoProtoMapping(Output.aminoType, Output.typeUrl);
 function createBaseSupply(): Supply {
   return {
     $typeUrl: "/cosmos.bank.v1beta1.Supply",
@@ -924,10 +926,13 @@ export const Supply = {
       typeUrl: "/cosmos.bank.v1beta1.Supply",
       value: Supply.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(Supply.typeUrl, Supply);
+    GlobalDecoderRegistry.registerAminoProtoMapping(Supply.aminoType, Supply.typeUrl);
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Supply.typeUrl, Supply);
-GlobalDecoderRegistry.registerAminoProtoMapping(Supply.aminoType, Supply.typeUrl);
 function createBaseDenomUnit(): DenomUnit {
   return {
     denom: "",
@@ -1067,10 +1072,9 @@ export const DenomUnit = {
       typeUrl: "/cosmos.bank.v1beta1.DenomUnit",
       value: DenomUnit.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(DenomUnit.typeUrl, DenomUnit);
-GlobalDecoderRegistry.registerAminoProtoMapping(DenomUnit.aminoType, DenomUnit.typeUrl);
 function createBaseMetadata(): Metadata {
   return {
     description: "",
@@ -1290,7 +1294,8 @@ export const Metadata = {
       typeUrl: "/cosmos.bank.v1beta1.Metadata",
       value: Metadata.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    DenomUnit.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Metadata.typeUrl, Metadata);
-GlobalDecoderRegistry.registerAminoProtoMapping(Metadata.aminoType, Metadata.typeUrl);

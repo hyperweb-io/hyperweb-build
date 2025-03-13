@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.auth.module.v1";
 /** Module is the config object for the auth module. */
 export interface Module {
@@ -19,11 +18,11 @@ export interface ModuleProtoMsg {
 /** Module is the config object for the auth module. */
 export interface ModuleAmino {
   /** bech32_prefix is the bech32 account prefix for the app. */
-  bech32_prefix?: string;
+  bech32_prefix: string;
   /** module_account_permissions are module account permissions. */
-  module_account_permissions?: ModuleAccountPermissionAmino[];
+  module_account_permissions: ModuleAccountPermissionAmino[];
   /** authority defines the custom module authority. If not set, defaults to the governance module. */
-  authority?: string;
+  authority: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
@@ -52,12 +51,12 @@ export interface ModuleAccountPermissionProtoMsg {
 /** ModuleAccountPermission represents permissions for a module account. */
 export interface ModuleAccountPermissionAmino {
   /** account is the name of the module. */
-  account?: string;
+  account: string;
   /**
    * permissions are the permissions this module has. Currently recognized
    * values are minter, burner and staking.
    */
-  permissions?: string[];
+  permissions: string[];
 }
 export interface ModuleAccountPermissionAminoMsg {
   type: "cosmos-sdk/ModuleAccountPermission";
@@ -207,10 +206,11 @@ export const Module = {
       typeUrl: "/cosmos.auth.module.v1.Module",
       value: Module.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ModuleAccountPermission.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Module.typeUrl, Module);
-GlobalDecoderRegistry.registerAminoProtoMapping(Module.aminoType, Module.typeUrl);
 function createBaseModuleAccountPermission(): ModuleAccountPermission {
   return {
     account: "",
@@ -334,7 +334,6 @@ export const ModuleAccountPermission = {
       typeUrl: "/cosmos.auth.module.v1.ModuleAccountPermission",
       value: ModuleAccountPermission.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ModuleAccountPermission.typeUrl, ModuleAccountPermission);
-GlobalDecoderRegistry.registerAminoProtoMapping(ModuleAccountPermission.aminoType, ModuleAccountPermission.typeUrl);

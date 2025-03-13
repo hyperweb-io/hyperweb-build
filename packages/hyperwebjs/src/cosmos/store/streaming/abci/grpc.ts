@@ -1,9 +1,9 @@
 import { RequestFinalizeBlock, RequestFinalizeBlockAmino, RequestFinalizeBlockSDKType, ResponseFinalizeBlock, ResponseFinalizeBlockAmino, ResponseFinalizeBlockSDKType, ResponseCommit, ResponseCommitAmino, ResponseCommitSDKType } from "../../../../tendermint/abci/types";
 import { StoreKVPair, StoreKVPairAmino, StoreKVPairSDKType } from "../../v1beta1/listening";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.store.streaming.abci";
 /** ListenEndBlockRequest is the request type for the ListenEndBlock RPC method */
 export interface ListenFinalizeBlockRequest {
@@ -56,9 +56,9 @@ export interface ListenCommitRequestProtoMsg {
 /** ListenCommitRequest is the request type for the ListenCommit RPC method */
 export interface ListenCommitRequestAmino {
   /** explicitly pass in block height as ResponseCommit does not contain this info */
-  block_height?: string;
+  block_height: string;
   res?: ResponseCommitAmino;
-  change_set?: StoreKVPairAmino[];
+  change_set: StoreKVPairAmino[];
 }
 export interface ListenCommitRequestAminoMsg {
   type: "cosmos-sdk/ListenCommitRequest";
@@ -201,10 +201,12 @@ export const ListenFinalizeBlockRequest = {
       typeUrl: "/cosmos.store.streaming.abci.ListenFinalizeBlockRequest",
       value: ListenFinalizeBlockRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    RequestFinalizeBlock.registerTypeUrl();
+    ResponseFinalizeBlock.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ListenFinalizeBlockRequest.typeUrl, ListenFinalizeBlockRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(ListenFinalizeBlockRequest.aminoType, ListenFinalizeBlockRequest.typeUrl);
 function createBaseListenFinalizeBlockResponse(): ListenFinalizeBlockResponse {
   return {};
 }
@@ -284,10 +286,9 @@ export const ListenFinalizeBlockResponse = {
       typeUrl: "/cosmos.store.streaming.abci.ListenFinalizeBlockResponse",
       value: ListenFinalizeBlockResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ListenFinalizeBlockResponse.typeUrl, ListenFinalizeBlockResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(ListenFinalizeBlockResponse.aminoType, ListenFinalizeBlockResponse.typeUrl);
 function createBaseListenCommitRequest(): ListenCommitRequest {
   return {
     blockHeight: BigInt(0),
@@ -402,7 +403,7 @@ export const ListenCommitRequest = {
   },
   toAmino(message: ListenCommitRequest): ListenCommitRequestAmino {
     const obj: any = {};
-    obj.block_height = message.blockHeight !== BigInt(0) ? (message.blockHeight?.toString)() : undefined;
+    obj.block_height = message.blockHeight !== BigInt(0) ? message.blockHeight?.toString() : undefined;
     obj.res = message.res ? ResponseCommit.toAmino(message.res) : undefined;
     if (message.changeSet) {
       obj.change_set = message.changeSet.map(e => e ? StoreKVPair.toAmino(e) : undefined);
@@ -431,10 +432,12 @@ export const ListenCommitRequest = {
       typeUrl: "/cosmos.store.streaming.abci.ListenCommitRequest",
       value: ListenCommitRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ResponseCommit.registerTypeUrl();
+    StoreKVPair.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ListenCommitRequest.typeUrl, ListenCommitRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(ListenCommitRequest.aminoType, ListenCommitRequest.typeUrl);
 function createBaseListenCommitResponse(): ListenCommitResponse {
   return {};
 }
@@ -514,7 +517,6 @@ export const ListenCommitResponse = {
       typeUrl: "/cosmos.store.streaming.abci.ListenCommitResponse",
       value: ListenCommitResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ListenCommitResponse.typeUrl, ListenCommitResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(ListenCommitResponse.aminoType, ListenCommitResponse.typeUrl);

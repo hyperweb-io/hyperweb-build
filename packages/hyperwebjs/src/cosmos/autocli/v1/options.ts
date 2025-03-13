@@ -1,7 +1,7 @@
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, DeepPartial, isObject } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.autocli.v1";
 /** ModuleOptions describes the CLI options for a Cosmos SDK module. */
 export interface ModuleOptions {
@@ -39,7 +39,7 @@ export interface ServiceCommandDescriptor_SubCommandsEntryProtoMsg {
   value: Uint8Array;
 }
 export interface ServiceCommandDescriptor_SubCommandsEntryAmino {
-  key?: string;
+  key: string;
   value?: ServiceCommandDescriptorAmino;
 }
 export interface ServiceCommandDescriptor_SubCommandsEntryAminoMsg {
@@ -84,19 +84,19 @@ export interface ServiceCommandDescriptorAmino {
    * the command from. It can be left empty if sub_commands are used instead
    * which may be the case if a module provides multiple tx and/or query services.
    */
-  service?: string;
+  service: string;
   /**
    * rpc_command_options are options for commands generated from rpc methods.
    * If no options are specified for a given rpc method on the service, a
    * command will be generated for that method with the default options.
    */
-  rpc_command_options?: RpcCommandOptionsAmino[];
+  rpc_command_options: RpcCommandOptionsAmino[];
   /**
    * sub_commands is a map of optional sub-commands for this command based on
    * different protobuf services. The map key is used as the name of the
    * sub-command.
    */
-  sub_commands?: {
+  sub_commands: {
     [key: string]: ServiceCommandDescriptorAmino;
   };
 }
@@ -121,7 +121,7 @@ export interface RpcCommandOptions_FlagOptionsEntryProtoMsg {
   value: Uint8Array;
 }
 export interface RpcCommandOptions_FlagOptionsEntryAmino {
-  key?: string;
+  key: string;
   value?: FlagOptionsAmino;
 }
 export interface RpcCommandOptions_FlagOptionsEntryAminoMsg {
@@ -198,7 +198,7 @@ export interface RpcCommandOptionsAmino {
    * rpc_method is short name of the protobuf rpc method that this command is
    * generated from.
    */
-  rpc_method?: string;
+  rpc_method: string;
   /**
    * use is the one-line usage method. It also allows specifying an alternate
    * name for the command as the first word of the usage text.
@@ -206,41 +206,41 @@ export interface RpcCommandOptionsAmino {
    * By default the name of an rpc command is the kebab-case short name of the
    * rpc method.
    */
-  use?: string;
+  use: string;
   /** long is the long message shown in the 'help <this-command>' output. */
-  long?: string;
+  long: string;
   /** short is the short description shown in the 'help' output. */
-  short?: string;
+  short: string;
   /** example is examples of how to use the command. */
-  example?: string;
+  example: string;
   /** alias is an array of aliases that can be used instead of the first word in Use. */
-  alias?: string[];
+  alias: string[];
   /**
    * suggest_for is an array of command names for which this command will be suggested -
    * similar to aliases but only suggests.
    */
-  suggest_for?: string[];
+  suggest_for: string[];
   /** deprecated defines, if this command is deprecated and should print this string when used. */
-  deprecated?: string;
+  deprecated: string;
   /**
    * version defines the version for this command. If this value is non-empty and the command does not
    * define a "version" flag, a "version" boolean flag will be added to the command and, if specified,
    * will print content of the "Version" variable. A shorthand "v" flag will also be added if the
    * command does not define one.
    */
-  version?: string;
+  version: string;
   /**
    * flag_options are options for flags generated from rpc request fields.
    * By default all request fields are configured as flags. They can
    * also be configured as positional args instead using positional_args.
    */
-  flag_options?: {
+  flag_options: {
     [key: string]: FlagOptionsAmino;
   };
   /** positional_args specifies positional arguments for the command. */
-  positional_args?: PositionalArgDescriptorAmino[];
+  positional_args: PositionalArgDescriptorAmino[];
   /** skip specifies whether to skip this rpc method when generating commands. */
-  skip?: boolean;
+  skip: boolean;
 }
 export interface RpcCommandOptionsAminoMsg {
   type: "cosmos-sdk/RpcCommandOptions";
@@ -300,19 +300,19 @@ export interface FlagOptionsProtoMsg {
  */
 export interface FlagOptionsAmino {
   /** name is an alternate name to use for the field flag. */
-  name?: string;
+  name: string;
   /** shorthand is a one-letter abbreviated flag. */
-  shorthand?: string;
+  shorthand: string;
   /** usage is the help message. */
-  usage?: string;
+  usage: string;
   /** default_value is the default value as text. */
-  default_value?: string;
+  default_value: string;
   /** deprecated is the usage text to show if this flag is deprecated. */
-  deprecated?: string;
+  deprecated: string;
   /** shorthand_deprecated is the usage text to show if the shorthand of this flag is deprecated. */
-  shorthand_deprecated?: string;
+  shorthand_deprecated: string;
   /** hidden hides the flag from help/usage text */
-  hidden?: boolean;
+  hidden: boolean;
 }
 export interface FlagOptionsAminoMsg {
   type: "cosmos-sdk/FlagOptions";
@@ -357,13 +357,13 @@ export interface PositionalArgDescriptorAmino {
    * proto_field specifies the proto field to use as the positional arg. Any
    * fields used as positional args will not have a flag generated.
    */
-  proto_field?: string;
+  proto_field: string;
   /**
    * varargs makes a positional parameter a varargs parameter. This can only be
    * applied to last positional parameter and the proto_field must a repeated
    * field.
    */
-  varargs?: boolean;
+  varargs: boolean;
 }
 export interface PositionalArgDescriptorAminoMsg {
   type: "cosmos-sdk/PositionalArgDescriptor";
@@ -491,10 +491,11 @@ export const ModuleOptions = {
       typeUrl: "/cosmos.autocli.v1.ModuleOptions",
       value: ModuleOptions.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ServiceCommandDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ModuleOptions.typeUrl, ModuleOptions);
-GlobalDecoderRegistry.registerAminoProtoMapping(ModuleOptions.aminoType, ModuleOptions.typeUrl);
 function createBaseServiceCommandDescriptor_SubCommandsEntry(): ServiceCommandDescriptor_SubCommandsEntry {
   return {
     key: "",
@@ -587,6 +588,9 @@ export const ServiceCommandDescriptor_SubCommandsEntry = {
   },
   toProto(message: ServiceCommandDescriptor_SubCommandsEntry): Uint8Array {
     return ServiceCommandDescriptor_SubCommandsEntry.encode(message).finish();
+  },
+  registerTypeUrl() {
+    ServiceCommandDescriptor.registerTypeUrl();
   }
 };
 function createBaseServiceCommandDescriptor(): ServiceCommandDescriptor {
@@ -771,10 +775,12 @@ export const ServiceCommandDescriptor = {
       typeUrl: "/cosmos.autocli.v1.ServiceCommandDescriptor",
       value: ServiceCommandDescriptor.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    RpcCommandOptions.registerTypeUrl();
+    ServiceCommandDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ServiceCommandDescriptor.typeUrl, ServiceCommandDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(ServiceCommandDescriptor.aminoType, ServiceCommandDescriptor.typeUrl);
 function createBaseRpcCommandOptions_FlagOptionsEntry(): RpcCommandOptions_FlagOptionsEntry {
   return {
     key: "",
@@ -867,6 +873,9 @@ export const RpcCommandOptions_FlagOptionsEntry = {
   },
   toProto(message: RpcCommandOptions_FlagOptionsEntry): Uint8Array {
     return RpcCommandOptions_FlagOptionsEntry.encode(message).finish();
+  },
+  registerTypeUrl() {
+    FlagOptions.registerTypeUrl();
   }
 };
 function createBaseRpcCommandOptions(): RpcCommandOptions {
@@ -1215,10 +1224,12 @@ export const RpcCommandOptions = {
       typeUrl: "/cosmos.autocli.v1.RpcCommandOptions",
       value: RpcCommandOptions.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    FlagOptions.registerTypeUrl();
+    PositionalArgDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(RpcCommandOptions.typeUrl, RpcCommandOptions);
-GlobalDecoderRegistry.registerAminoProtoMapping(RpcCommandOptions.aminoType, RpcCommandOptions.typeUrl);
 function createBaseFlagOptions(): FlagOptions {
   return {
     name: "",
@@ -1412,10 +1423,9 @@ export const FlagOptions = {
       typeUrl: "/cosmos.autocli.v1.FlagOptions",
       value: FlagOptions.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(FlagOptions.typeUrl, FlagOptions);
-GlobalDecoderRegistry.registerAminoProtoMapping(FlagOptions.aminoType, FlagOptions.typeUrl);
 function createBasePositionalArgDescriptor(): PositionalArgDescriptor {
   return {
     protoField: "",
@@ -1529,7 +1539,6 @@ export const PositionalArgDescriptor = {
       typeUrl: "/cosmos.autocli.v1.PositionalArgDescriptor",
       value: PositionalArgDescriptor.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PositionalArgDescriptor.typeUrl, PositionalArgDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(PositionalArgDescriptor.aminoType, PositionalArgDescriptor.typeUrl);

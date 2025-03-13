@@ -42,49 +42,9 @@ export interface ParamsResponseAminoMsg {
 export interface ParamsResponseSDKType {
   params: ParamsSDKType;
 }
-/** request to get contract by index */
-export interface GetContractByIndexRequest {
-  index: bigint;
-}
-export interface GetContractByIndexRequestProtoMsg {
-  typeUrl: "/hyperweb.hvm.GetContractByIndexRequest";
-  value: Uint8Array;
-}
-/** request to get contract by index */
-export interface GetContractByIndexRequestAmino {
-  index?: string;
-}
-export interface GetContractByIndexRequestAminoMsg {
-  type: "/hyperweb.hvm.GetContractByIndexRequest";
-  value: GetContractByIndexRequestAmino;
-}
-/** request to get contract by index */
-export interface GetContractByIndexRequestSDKType {
-  index: bigint;
-}
-/** response with contract by index */
-export interface GetContractByIndexResponse {
-  contract: Contracts;
-}
-export interface GetContractByIndexResponseProtoMsg {
-  typeUrl: "/hyperweb.hvm.GetContractByIndexResponse";
-  value: Uint8Array;
-}
-/** response with contract by index */
-export interface GetContractByIndexResponseAmino {
-  contract?: ContractsAmino;
-}
-export interface GetContractByIndexResponseAminoMsg {
-  type: "/hyperweb.hvm.GetContractByIndexResponse";
-  value: GetContractByIndexResponseAmino;
-}
-/** response with contract by index */
-export interface GetContractByIndexResponseSDKType {
-  contract: ContractsSDKType;
-}
 /** request to get a single contract */
 export interface GetContractRequest {
-  address: string;
+  index: bigint;
 }
 export interface GetContractRequestProtoMsg {
   typeUrl: "/hyperweb.hvm.GetContractRequest";
@@ -92,7 +52,7 @@ export interface GetContractRequestProtoMsg {
 }
 /** request to get a single contract */
 export interface GetContractRequestAmino {
-  address?: string;
+  index: string;
 }
 export interface GetContractRequestAminoMsg {
   type: "/hyperweb.hvm.GetContractRequest";
@@ -100,7 +60,7 @@ export interface GetContractRequestAminoMsg {
 }
 /** request to get a single contract */
 export interface GetContractRequestSDKType {
-  address: string;
+  index: bigint;
 }
 /** response with a single contract */
 export interface GetContractResponse {
@@ -112,7 +72,7 @@ export interface GetContractResponseProtoMsg {
 }
 /** response with a single contract */
 export interface GetContractResponseAmino {
-  contract?: ContractsAmino;
+  contract: ContractsAmino;
 }
 export interface GetContractResponseAminoMsg {
   type: "/hyperweb.hvm.GetContractResponse";
@@ -153,7 +113,7 @@ export interface ListContractsResponseProtoMsg {
 }
 /** response with list of contracts */
 export interface ListContractsResponseAmino {
-  contracts?: ContractsAmino[];
+  contracts: ContractsAmino[];
   pagination?: PageResponseAmino;
 }
 export interface ListContractsResponseAminoMsg {
@@ -167,7 +127,7 @@ export interface ListContractsResponseSDKType {
 }
 /** request to evaluate contract function */
 export interface EvalRequest {
-  address: string;
+  index: bigint;
   fnName: string;
   arg: string;
 }
@@ -177,9 +137,9 @@ export interface EvalRequestProtoMsg {
 }
 /** request to evaluate contract function */
 export interface EvalRequestAmino {
-  address?: string;
-  fn_name?: string;
-  arg?: string;
+  index: string;
+  fn_name: string;
+  arg: string;
 }
 export interface EvalRequestAminoMsg {
   type: "/hyperweb.hvm.EvalRequest";
@@ -187,7 +147,7 @@ export interface EvalRequestAminoMsg {
 }
 /** request to evaluate contract function */
 export interface EvalRequestSDKType {
-  address: string;
+  index: bigint;
   fn_name: string;
   arg: string;
 }
@@ -201,7 +161,7 @@ export interface EvalResponseProtoMsg {
 }
 /** response from contract function evaluation */
 export interface EvalResponseAmino {
-  result?: string;
+  result: string;
 }
 export interface EvalResponseAminoMsg {
   type: "/hyperweb.hvm.EvalResponse";
@@ -213,7 +173,7 @@ export interface EvalResponseSDKType {
 }
 /** request to get contract local state */
 export interface LocalStateRequest {
-  address: string;
+  index: bigint;
   key: string;
 }
 export interface LocalStateRequestProtoMsg {
@@ -222,8 +182,8 @@ export interface LocalStateRequestProtoMsg {
 }
 /** request to get contract local state */
 export interface LocalStateRequestAmino {
-  address?: string;
-  key?: string;
+  index: string;
+  key: string;
 }
 export interface LocalStateRequestAminoMsg {
   type: "/hyperweb.hvm.LocalStateRequest";
@@ -231,7 +191,7 @@ export interface LocalStateRequestAminoMsg {
 }
 /** request to get contract local state */
 export interface LocalStateRequestSDKType {
-  address: string;
+  index: bigint;
   key: string;
 }
 /** response with contract local state */
@@ -244,7 +204,7 @@ export interface LocalStateResponseProtoMsg {
 }
 /** response with contract local state */
 export interface LocalStateResponseAmino {
-  value?: string;
+  value: string;
 }
 export interface LocalStateResponseAminoMsg {
   type: "/hyperweb.hvm.LocalStateResponse";
@@ -256,7 +216,7 @@ export interface LocalStateResponseSDKType {
 }
 /** request to get contract source code */
 export interface GetContractSourceRequest {
-  address: string;
+  index: bigint;
 }
 export interface GetContractSourceRequestProtoMsg {
   typeUrl: "/hyperweb.hvm.GetContractSourceRequest";
@@ -264,7 +224,7 @@ export interface GetContractSourceRequestProtoMsg {
 }
 /** request to get contract source code */
 export interface GetContractSourceRequestAmino {
-  address?: string;
+  index: string;
 }
 export interface GetContractSourceRequestAminoMsg {
   type: "/hyperweb.hvm.GetContractSourceRequest";
@@ -272,7 +232,7 @@ export interface GetContractSourceRequestAminoMsg {
 }
 /** request to get contract source code */
 export interface GetContractSourceRequestSDKType {
-  address: string;
+  index: bigint;
 }
 /** response with contract source code */
 export interface GetContractSourceResponse {
@@ -284,7 +244,7 @@ export interface GetContractSourceResponseProtoMsg {
 }
 /** response with contract source code */
 export interface GetContractSourceResponseAmino {
-  source?: string;
+  source: string;
 }
 export interface GetContractSourceResponseAminoMsg {
   type: "/hyperweb.hvm.GetContractSourceResponse";
@@ -366,9 +326,9 @@ export const ParamsRequest = {
       typeUrl: "/hyperweb.hvm.ParamsRequest",
       value: ParamsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ParamsRequest.typeUrl, ParamsRequest);
 function createBaseParamsResponse(): ParamsResponse {
   return {
     params: Params.fromPartial({})
@@ -461,35 +421,37 @@ export const ParamsResponse = {
       typeUrl: "/hyperweb.hvm.ParamsResponse",
       value: ParamsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ParamsResponse.typeUrl, ParamsResponse);
-function createBaseGetContractByIndexRequest(): GetContractByIndexRequest {
+function createBaseGetContractRequest(): GetContractRequest {
   return {
     index: BigInt(0)
   };
 }
-export const GetContractByIndexRequest = {
-  typeUrl: "/hyperweb.hvm.GetContractByIndexRequest",
-  is(o: any): o is GetContractByIndexRequest {
-    return o && (o.$typeUrl === GetContractByIndexRequest.typeUrl || typeof o.index === "bigint");
+export const GetContractRequest = {
+  typeUrl: "/hyperweb.hvm.GetContractRequest",
+  is(o: any): o is GetContractRequest {
+    return o && (o.$typeUrl === GetContractRequest.typeUrl || typeof o.index === "bigint");
   },
-  isSDK(o: any): o is GetContractByIndexRequestSDKType {
-    return o && (o.$typeUrl === GetContractByIndexRequest.typeUrl || typeof o.index === "bigint");
+  isSDK(o: any): o is GetContractRequestSDKType {
+    return o && (o.$typeUrl === GetContractRequest.typeUrl || typeof o.index === "bigint");
   },
-  isAmino(o: any): o is GetContractByIndexRequestAmino {
-    return o && (o.$typeUrl === GetContractByIndexRequest.typeUrl || typeof o.index === "bigint");
+  isAmino(o: any): o is GetContractRequestAmino {
+    return o && (o.$typeUrl === GetContractRequest.typeUrl || typeof o.index === "bigint");
   },
-  encode(message: GetContractByIndexRequest, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+  encode(message: GetContractRequest, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.index !== undefined) {
       writer.uint32(8).uint64(message.index);
     }
     return writer;
   },
-  decode(input: BinaryReader | Uint8Array, length?: number): GetContractByIndexRequest {
+  decode(input: BinaryReader | Uint8Array, length?: number): GetContractRequest {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetContractByIndexRequest();
+    const message = createBaseGetContractRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -503,231 +465,43 @@ export const GetContractByIndexRequest = {
     }
     return message;
   },
-  fromJSON(object: any): GetContractByIndexRequest {
-    const obj = createBaseGetContractByIndexRequest();
+  fromJSON(object: any): GetContractRequest {
+    const obj = createBaseGetContractRequest();
     if (isSet(object.index)) obj.index = BigInt(object.index.toString());
     return obj;
   },
-  toJSON(message: GetContractByIndexRequest): JsonSafe<GetContractByIndexRequest> {
+  toJSON(message: GetContractRequest): JsonSafe<GetContractRequest> {
     const obj: any = {};
     message.index !== undefined && (obj.index = (message.index || BigInt(0)).toString());
     return obj;
   },
-  fromPartial(object: DeepPartial<GetContractByIndexRequest>): GetContractByIndexRequest {
-    const message = createBaseGetContractByIndexRequest();
+  fromPartial(object: DeepPartial<GetContractRequest>): GetContractRequest {
+    const message = createBaseGetContractRequest();
     if (object.index !== undefined && object.index !== null) {
       message.index = BigInt(object.index.toString());
     }
     return message;
   },
-  fromSDK(object: GetContractByIndexRequestSDKType): GetContractByIndexRequest {
+  fromSDK(object: GetContractRequestSDKType): GetContractRequest {
     return {
       index: object?.index
     };
   },
-  toSDK(message: GetContractByIndexRequest): GetContractByIndexRequestSDKType {
+  toSDK(message: GetContractRequest): GetContractRequestSDKType {
     const obj: any = {};
     obj.index = message.index;
     return obj;
   },
-  fromAmino(object: GetContractByIndexRequestAmino): GetContractByIndexRequest {
-    const message = createBaseGetContractByIndexRequest();
+  fromAmino(object: GetContractRequestAmino): GetContractRequest {
+    const message = createBaseGetContractRequest();
     if (object.index !== undefined && object.index !== null) {
       message.index = BigInt(object.index);
     }
     return message;
   },
-  toAmino(message: GetContractByIndexRequest): GetContractByIndexRequestAmino {
-    const obj: any = {};
-    obj.index = message.index !== BigInt(0) ? (message.index?.toString)() : undefined;
-    return obj;
-  },
-  fromAminoMsg(object: GetContractByIndexRequestAminoMsg): GetContractByIndexRequest {
-    return GetContractByIndexRequest.fromAmino(object.value);
-  },
-  fromProtoMsg(message: GetContractByIndexRequestProtoMsg): GetContractByIndexRequest {
-    return GetContractByIndexRequest.decode(message.value);
-  },
-  toProto(message: GetContractByIndexRequest): Uint8Array {
-    return GetContractByIndexRequest.encode(message).finish();
-  },
-  toProtoMsg(message: GetContractByIndexRequest): GetContractByIndexRequestProtoMsg {
-    return {
-      typeUrl: "/hyperweb.hvm.GetContractByIndexRequest",
-      value: GetContractByIndexRequest.encode(message).finish()
-    };
-  }
-};
-GlobalDecoderRegistry.register(GetContractByIndexRequest.typeUrl, GetContractByIndexRequest);
-function createBaseGetContractByIndexResponse(): GetContractByIndexResponse {
-  return {
-    contract: Contracts.fromPartial({})
-  };
-}
-export const GetContractByIndexResponse = {
-  typeUrl: "/hyperweb.hvm.GetContractByIndexResponse",
-  is(o: any): o is GetContractByIndexResponse {
-    return o && (o.$typeUrl === GetContractByIndexResponse.typeUrl || Contracts.is(o.contract));
-  },
-  isSDK(o: any): o is GetContractByIndexResponseSDKType {
-    return o && (o.$typeUrl === GetContractByIndexResponse.typeUrl || Contracts.isSDK(o.contract));
-  },
-  isAmino(o: any): o is GetContractByIndexResponseAmino {
-    return o && (o.$typeUrl === GetContractByIndexResponse.typeUrl || Contracts.isAmino(o.contract));
-  },
-  encode(message: GetContractByIndexResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
-    if (message.contract !== undefined) {
-      Contracts.encode(message.contract, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input: BinaryReader | Uint8Array, length?: number): GetContractByIndexResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetContractByIndexResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.contract = Contracts.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object: any): GetContractByIndexResponse {
-    const obj = createBaseGetContractByIndexResponse();
-    if (isSet(object.contract)) obj.contract = Contracts.fromJSON(object.contract);
-    return obj;
-  },
-  toJSON(message: GetContractByIndexResponse): JsonSafe<GetContractByIndexResponse> {
-    const obj: any = {};
-    message.contract !== undefined && (obj.contract = message.contract ? Contracts.toJSON(message.contract) : undefined);
-    return obj;
-  },
-  fromPartial(object: DeepPartial<GetContractByIndexResponse>): GetContractByIndexResponse {
-    const message = createBaseGetContractByIndexResponse();
-    if (object.contract !== undefined && object.contract !== null) {
-      message.contract = Contracts.fromPartial(object.contract);
-    }
-    return message;
-  },
-  fromSDK(object: GetContractByIndexResponseSDKType): GetContractByIndexResponse {
-    return {
-      contract: object.contract ? Contracts.fromSDK(object.contract) : undefined
-    };
-  },
-  toSDK(message: GetContractByIndexResponse): GetContractByIndexResponseSDKType {
-    const obj: any = {};
-    message.contract !== undefined && (obj.contract = message.contract ? Contracts.toSDK(message.contract) : undefined);
-    return obj;
-  },
-  fromAmino(object: GetContractByIndexResponseAmino): GetContractByIndexResponse {
-    const message = createBaseGetContractByIndexResponse();
-    if (object.contract !== undefined && object.contract !== null) {
-      message.contract = Contracts.fromAmino(object.contract);
-    }
-    return message;
-  },
-  toAmino(message: GetContractByIndexResponse): GetContractByIndexResponseAmino {
-    const obj: any = {};
-    obj.contract = message.contract ? Contracts.toAmino(message.contract) : undefined;
-    return obj;
-  },
-  fromAminoMsg(object: GetContractByIndexResponseAminoMsg): GetContractByIndexResponse {
-    return GetContractByIndexResponse.fromAmino(object.value);
-  },
-  fromProtoMsg(message: GetContractByIndexResponseProtoMsg): GetContractByIndexResponse {
-    return GetContractByIndexResponse.decode(message.value);
-  },
-  toProto(message: GetContractByIndexResponse): Uint8Array {
-    return GetContractByIndexResponse.encode(message).finish();
-  },
-  toProtoMsg(message: GetContractByIndexResponse): GetContractByIndexResponseProtoMsg {
-    return {
-      typeUrl: "/hyperweb.hvm.GetContractByIndexResponse",
-      value: GetContractByIndexResponse.encode(message).finish()
-    };
-  }
-};
-GlobalDecoderRegistry.register(GetContractByIndexResponse.typeUrl, GetContractByIndexResponse);
-function createBaseGetContractRequest(): GetContractRequest {
-  return {
-    address: ""
-  };
-}
-export const GetContractRequest = {
-  typeUrl: "/hyperweb.hvm.GetContractRequest",
-  is(o: any): o is GetContractRequest {
-    return o && (o.$typeUrl === GetContractRequest.typeUrl || typeof o.address === "string");
-  },
-  isSDK(o: any): o is GetContractRequestSDKType {
-    return o && (o.$typeUrl === GetContractRequest.typeUrl || typeof o.address === "string");
-  },
-  isAmino(o: any): o is GetContractRequestAmino {
-    return o && (o.$typeUrl === GetContractRequest.typeUrl || typeof o.address === "string");
-  },
-  encode(message: GetContractRequest, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
-    if (message.address !== undefined) {
-      writer.uint32(10).string(message.address);
-    }
-    return writer;
-  },
-  decode(input: BinaryReader | Uint8Array, length?: number): GetContractRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetContractRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.address = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object: any): GetContractRequest {
-    const obj = createBaseGetContractRequest();
-    if (isSet(object.address)) obj.address = String(object.address);
-    return obj;
-  },
-  toJSON(message: GetContractRequest): JsonSafe<GetContractRequest> {
-    const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-  fromPartial(object: DeepPartial<GetContractRequest>): GetContractRequest {
-    const message = createBaseGetContractRequest();
-    message.address = object.address ?? "";
-    return message;
-  },
-  fromSDK(object: GetContractRequestSDKType): GetContractRequest {
-    return {
-      address: object?.address
-    };
-  },
-  toSDK(message: GetContractRequest): GetContractRequestSDKType {
-    const obj: any = {};
-    obj.address = message.address;
-    return obj;
-  },
-  fromAmino(object: GetContractRequestAmino): GetContractRequest {
-    const message = createBaseGetContractRequest();
-    if (object.address !== undefined && object.address !== null) {
-      message.address = object.address;
-    }
-    return message;
-  },
   toAmino(message: GetContractRequest): GetContractRequestAmino {
     const obj: any = {};
-    obj.address = message.address === "" ? undefined : message.address;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: GetContractRequestAminoMsg): GetContractRequest {
@@ -744,9 +518,9 @@ export const GetContractRequest = {
       typeUrl: "/hyperweb.hvm.GetContractRequest",
       value: GetContractRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetContractRequest.typeUrl, GetContractRequest);
 function createBaseGetContractResponse(): GetContractResponse {
   return {
     contract: Contracts.fromPartial({})
@@ -839,9 +613,11 @@ export const GetContractResponse = {
       typeUrl: "/hyperweb.hvm.GetContractResponse",
       value: GetContractResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Contracts.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetContractResponse.typeUrl, GetContractResponse);
 function createBaseListContractsRequest(): ListContractsRequest {
   return {
     pagination: undefined
@@ -934,9 +710,11 @@ export const ListContractsRequest = {
       typeUrl: "/hyperweb.hvm.ListContractsRequest",
       value: ListContractsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ListContractsRequest.typeUrl, ListContractsRequest);
 function createBaseListContractsResponse(): ListContractsResponse {
   return {
     contracts: [],
@@ -1055,12 +833,15 @@ export const ListContractsResponse = {
       typeUrl: "/hyperweb.hvm.ListContractsResponse",
       value: ListContractsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Contracts.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ListContractsResponse.typeUrl, ListContractsResponse);
 function createBaseEvalRequest(): EvalRequest {
   return {
-    address: "",
+    index: BigInt(0),
     fnName: "",
     arg: ""
   };
@@ -1068,17 +849,17 @@ function createBaseEvalRequest(): EvalRequest {
 export const EvalRequest = {
   typeUrl: "/hyperweb.hvm.EvalRequest",
   is(o: any): o is EvalRequest {
-    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.address === "string" && typeof o.fnName === "string" && typeof o.arg === "string");
+    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.index === "bigint" && typeof o.fnName === "string" && typeof o.arg === "string");
   },
   isSDK(o: any): o is EvalRequestSDKType {
-    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.address === "string" && typeof o.fn_name === "string" && typeof o.arg === "string");
+    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.index === "bigint" && typeof o.fn_name === "string" && typeof o.arg === "string");
   },
   isAmino(o: any): o is EvalRequestAmino {
-    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.address === "string" && typeof o.fn_name === "string" && typeof o.arg === "string");
+    return o && (o.$typeUrl === EvalRequest.typeUrl || typeof o.index === "bigint" && typeof o.fn_name === "string" && typeof o.arg === "string");
   },
   encode(message: EvalRequest, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
-    if (message.address !== undefined) {
-      writer.uint32(10).string(message.address);
+    if (message.index !== undefined) {
+      writer.uint32(8).uint64(message.index);
     }
     if (message.fnName !== undefined) {
       writer.uint32(18).string(message.fnName);
@@ -1096,7 +877,7 @@ export const EvalRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.address = reader.string();
+          message.index = reader.uint64();
           break;
         case 2:
           message.fnName = reader.string();
@@ -1113,43 +894,45 @@ export const EvalRequest = {
   },
   fromJSON(object: any): EvalRequest {
     const obj = createBaseEvalRequest();
-    if (isSet(object.address)) obj.address = String(object.address);
+    if (isSet(object.index)) obj.index = BigInt(object.index.toString());
     if (isSet(object.fnName)) obj.fnName = String(object.fnName);
     if (isSet(object.arg)) obj.arg = String(object.arg);
     return obj;
   },
   toJSON(message: EvalRequest): JsonSafe<EvalRequest> {
     const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
+    message.index !== undefined && (obj.index = (message.index || BigInt(0)).toString());
     message.fnName !== undefined && (obj.fnName = message.fnName);
     message.arg !== undefined && (obj.arg = message.arg);
     return obj;
   },
   fromPartial(object: DeepPartial<EvalRequest>): EvalRequest {
     const message = createBaseEvalRequest();
-    message.address = object.address ?? "";
+    if (object.index !== undefined && object.index !== null) {
+      message.index = BigInt(object.index.toString());
+    }
     message.fnName = object.fnName ?? "";
     message.arg = object.arg ?? "";
     return message;
   },
   fromSDK(object: EvalRequestSDKType): EvalRequest {
     return {
-      address: object?.address,
+      index: object?.index,
       fnName: object?.fn_name,
       arg: object?.arg
     };
   },
   toSDK(message: EvalRequest): EvalRequestSDKType {
     const obj: any = {};
-    obj.address = message.address;
+    obj.index = message.index;
     obj.fn_name = message.fnName;
     obj.arg = message.arg;
     return obj;
   },
   fromAmino(object: EvalRequestAmino): EvalRequest {
     const message = createBaseEvalRequest();
-    if (object.address !== undefined && object.address !== null) {
-      message.address = object.address;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = BigInt(object.index);
     }
     if (object.fn_name !== undefined && object.fn_name !== null) {
       message.fnName = object.fn_name;
@@ -1161,7 +944,7 @@ export const EvalRequest = {
   },
   toAmino(message: EvalRequest): EvalRequestAmino {
     const obj: any = {};
-    obj.address = message.address === "" ? undefined : message.address;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     obj.fn_name = message.fnName === "" ? undefined : message.fnName;
     obj.arg = message.arg === "" ? undefined : message.arg;
     return obj;
@@ -1180,9 +963,9 @@ export const EvalRequest = {
       typeUrl: "/hyperweb.hvm.EvalRequest",
       value: EvalRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(EvalRequest.typeUrl, EvalRequest);
 function createBaseEvalResponse(): EvalResponse {
   return {
     result: ""
@@ -1273,29 +1056,29 @@ export const EvalResponse = {
       typeUrl: "/hyperweb.hvm.EvalResponse",
       value: EvalResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(EvalResponse.typeUrl, EvalResponse);
 function createBaseLocalStateRequest(): LocalStateRequest {
   return {
-    address: "",
+    index: BigInt(0),
     key: ""
   };
 }
 export const LocalStateRequest = {
   typeUrl: "/hyperweb.hvm.LocalStateRequest",
   is(o: any): o is LocalStateRequest {
-    return o && (o.$typeUrl === LocalStateRequest.typeUrl || typeof o.address === "string" && typeof o.key === "string");
+    return o && (o.$typeUrl === LocalStateRequest.typeUrl || typeof o.index === "bigint" && typeof o.key === "string");
   },
   isSDK(o: any): o is LocalStateRequestSDKType {
-    return o && (o.$typeUrl === LocalStateRequest.typeUrl || typeof o.address === "string" && typeof o.key === "string");
+    return o && (o.$typeUrl === LocalStateRequest.typeUrl || typeof o.index === "bigint" && typeof o.key === "string");
   },
   isAmino(o: any): o is LocalStateRequestAmino {
-    return o && (o.$typeUrl === LocalStateRequest.typeUrl || typeof o.address === "string" && typeof o.key === "string");
+    return o && (o.$typeUrl === LocalStateRequest.typeUrl || typeof o.index === "bigint" && typeof o.key === "string");
   },
   encode(message: LocalStateRequest, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
-    if (message.address !== undefined) {
-      writer.uint32(10).string(message.address);
+    if (message.index !== undefined) {
+      writer.uint32(8).uint64(message.index);
     }
     if (message.key !== undefined) {
       writer.uint32(18).string(message.key);
@@ -1310,7 +1093,7 @@ export const LocalStateRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.address = reader.string();
+          message.index = reader.uint64();
           break;
         case 2:
           message.key = reader.string();
@@ -1324,38 +1107,40 @@ export const LocalStateRequest = {
   },
   fromJSON(object: any): LocalStateRequest {
     const obj = createBaseLocalStateRequest();
-    if (isSet(object.address)) obj.address = String(object.address);
+    if (isSet(object.index)) obj.index = BigInt(object.index.toString());
     if (isSet(object.key)) obj.key = String(object.key);
     return obj;
   },
   toJSON(message: LocalStateRequest): JsonSafe<LocalStateRequest> {
     const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
+    message.index !== undefined && (obj.index = (message.index || BigInt(0)).toString());
     message.key !== undefined && (obj.key = message.key);
     return obj;
   },
   fromPartial(object: DeepPartial<LocalStateRequest>): LocalStateRequest {
     const message = createBaseLocalStateRequest();
-    message.address = object.address ?? "";
+    if (object.index !== undefined && object.index !== null) {
+      message.index = BigInt(object.index.toString());
+    }
     message.key = object.key ?? "";
     return message;
   },
   fromSDK(object: LocalStateRequestSDKType): LocalStateRequest {
     return {
-      address: object?.address,
+      index: object?.index,
       key: object?.key
     };
   },
   toSDK(message: LocalStateRequest): LocalStateRequestSDKType {
     const obj: any = {};
-    obj.address = message.address;
+    obj.index = message.index;
     obj.key = message.key;
     return obj;
   },
   fromAmino(object: LocalStateRequestAmino): LocalStateRequest {
     const message = createBaseLocalStateRequest();
-    if (object.address !== undefined && object.address !== null) {
-      message.address = object.address;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = BigInt(object.index);
     }
     if (object.key !== undefined && object.key !== null) {
       message.key = object.key;
@@ -1364,7 +1149,7 @@ export const LocalStateRequest = {
   },
   toAmino(message: LocalStateRequest): LocalStateRequestAmino {
     const obj: any = {};
-    obj.address = message.address === "" ? undefined : message.address;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     obj.key = message.key === "" ? undefined : message.key;
     return obj;
   },
@@ -1382,9 +1167,9 @@ export const LocalStateRequest = {
       typeUrl: "/hyperweb.hvm.LocalStateRequest",
       value: LocalStateRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(LocalStateRequest.typeUrl, LocalStateRequest);
 function createBaseLocalStateResponse(): LocalStateResponse {
   return {
     value: ""
@@ -1475,28 +1260,28 @@ export const LocalStateResponse = {
       typeUrl: "/hyperweb.hvm.LocalStateResponse",
       value: LocalStateResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(LocalStateResponse.typeUrl, LocalStateResponse);
 function createBaseGetContractSourceRequest(): GetContractSourceRequest {
   return {
-    address: ""
+    index: BigInt(0)
   };
 }
 export const GetContractSourceRequest = {
   typeUrl: "/hyperweb.hvm.GetContractSourceRequest",
   is(o: any): o is GetContractSourceRequest {
-    return o && (o.$typeUrl === GetContractSourceRequest.typeUrl || typeof o.address === "string");
+    return o && (o.$typeUrl === GetContractSourceRequest.typeUrl || typeof o.index === "bigint");
   },
   isSDK(o: any): o is GetContractSourceRequestSDKType {
-    return o && (o.$typeUrl === GetContractSourceRequest.typeUrl || typeof o.address === "string");
+    return o && (o.$typeUrl === GetContractSourceRequest.typeUrl || typeof o.index === "bigint");
   },
   isAmino(o: any): o is GetContractSourceRequestAmino {
-    return o && (o.$typeUrl === GetContractSourceRequest.typeUrl || typeof o.address === "string");
+    return o && (o.$typeUrl === GetContractSourceRequest.typeUrl || typeof o.index === "bigint");
   },
   encode(message: GetContractSourceRequest, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
-    if (message.address !== undefined) {
-      writer.uint32(10).string(message.address);
+    if (message.index !== undefined) {
+      writer.uint32(8).uint64(message.index);
     }
     return writer;
   },
@@ -1508,7 +1293,7 @@ export const GetContractSourceRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.address = reader.string();
+          message.index = reader.uint64();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1519,39 +1304,41 @@ export const GetContractSourceRequest = {
   },
   fromJSON(object: any): GetContractSourceRequest {
     const obj = createBaseGetContractSourceRequest();
-    if (isSet(object.address)) obj.address = String(object.address);
+    if (isSet(object.index)) obj.index = BigInt(object.index.toString());
     return obj;
   },
   toJSON(message: GetContractSourceRequest): JsonSafe<GetContractSourceRequest> {
     const obj: any = {};
-    message.address !== undefined && (obj.address = message.address);
+    message.index !== undefined && (obj.index = (message.index || BigInt(0)).toString());
     return obj;
   },
   fromPartial(object: DeepPartial<GetContractSourceRequest>): GetContractSourceRequest {
     const message = createBaseGetContractSourceRequest();
-    message.address = object.address ?? "";
+    if (object.index !== undefined && object.index !== null) {
+      message.index = BigInt(object.index.toString());
+    }
     return message;
   },
   fromSDK(object: GetContractSourceRequestSDKType): GetContractSourceRequest {
     return {
-      address: object?.address
+      index: object?.index
     };
   },
   toSDK(message: GetContractSourceRequest): GetContractSourceRequestSDKType {
     const obj: any = {};
-    obj.address = message.address;
+    obj.index = message.index;
     return obj;
   },
   fromAmino(object: GetContractSourceRequestAmino): GetContractSourceRequest {
     const message = createBaseGetContractSourceRequest();
-    if (object.address !== undefined && object.address !== null) {
-      message.address = object.address;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = BigInt(object.index);
     }
     return message;
   },
   toAmino(message: GetContractSourceRequest): GetContractSourceRequestAmino {
     const obj: any = {};
-    obj.address = message.address === "" ? undefined : message.address;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: GetContractSourceRequestAminoMsg): GetContractSourceRequest {
@@ -1568,9 +1355,9 @@ export const GetContractSourceRequest = {
       typeUrl: "/hyperweb.hvm.GetContractSourceRequest",
       value: GetContractSourceRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetContractSourceRequest.typeUrl, GetContractSourceRequest);
 function createBaseGetContractSourceResponse(): GetContractSourceResponse {
   return {
     source: ""
@@ -1661,6 +1448,6 @@ export const GetContractSourceResponse = {
       typeUrl: "/hyperweb.hvm.GetContractSourceResponse",
       value: GetContractSourceResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetContractSourceResponse.typeUrl, GetContractSourceResponse);

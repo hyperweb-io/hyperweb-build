@@ -2,7 +2,6 @@ import { FileDescriptorProto, FileDescriptorProtoAmino, FileDescriptorProtoSDKTy
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { JsonSafe } from "../../../json-safe";
 import { DeepPartial } from "../../../helpers";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.reflection.v1";
 /** FileDescriptorsRequest is the Query/FileDescriptors request type. */
 export interface FileDescriptorsRequest {}
@@ -30,7 +29,7 @@ export interface FileDescriptorsResponseProtoMsg {
 /** FileDescriptorsResponse is the Query/FileDescriptors response type. */
 export interface FileDescriptorsResponseAmino {
   /** files is the file descriptors. */
-  files?: FileDescriptorProtoAmino[];
+  files: FileDescriptorProtoAmino[];
 }
 export interface FileDescriptorsResponseAminoMsg {
   type: "cosmos-sdk/FileDescriptorsResponse";
@@ -119,10 +118,9 @@ export const FileDescriptorsRequest = {
       typeUrl: "/cosmos.reflection.v1.FileDescriptorsRequest",
       value: FileDescriptorsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(FileDescriptorsRequest.typeUrl, FileDescriptorsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(FileDescriptorsRequest.aminoType, FileDescriptorsRequest.typeUrl);
 function createBaseFileDescriptorsResponse(): FileDescriptorsResponse {
   return {
     files: []
@@ -230,7 +228,8 @@ export const FileDescriptorsResponse = {
       typeUrl: "/cosmos.reflection.v1.FileDescriptorsResponse",
       value: FileDescriptorsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    FileDescriptorProto.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(FileDescriptorsResponse.typeUrl, FileDescriptorsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(FileDescriptorsResponse.aminoType, FileDescriptorsResponse.typeUrl);

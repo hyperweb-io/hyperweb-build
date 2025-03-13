@@ -31,13 +31,13 @@ export interface QueryEvidenceRequestAmino {
    * Deprecated: Use hash, a HEX encoded string, instead.
    */
   /** @deprecated */
-  evidence_hash?: string;
+  evidence_hash: string;
   /**
    * hash defines the evidence hash of the requested evidence.
    * 
    * Since: cosmos-sdk 0.47
    */
-  hash?: string;
+  hash: string;
 }
 export interface QueryEvidenceRequestAminoMsg {
   type: "cosmos-sdk/QueryEvidenceRequest";
@@ -122,7 +122,7 @@ export interface QueryAllEvidenceResponseProtoMsg {
  */
 export interface QueryAllEvidenceResponseAmino {
   /** evidence returns all evidences. */
-  evidence?: AnyAmino[];
+  evidence: AnyAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
 }
@@ -251,10 +251,9 @@ export const QueryEvidenceRequest = {
       typeUrl: "/cosmos.evidence.v1beta1.QueryEvidenceRequest",
       value: QueryEvidenceRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryEvidenceRequest.typeUrl, QueryEvidenceRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryEvidenceRequest.aminoType, QueryEvidenceRequest.typeUrl);
 function createBaseQueryEvidenceResponse(): QueryEvidenceResponse {
   return {
     evidence: undefined
@@ -354,10 +353,9 @@ export const QueryEvidenceResponse = {
       typeUrl: "/cosmos.evidence.v1beta1.QueryEvidenceResponse",
       value: QueryEvidenceResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryEvidenceResponse.typeUrl, QueryEvidenceResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryEvidenceResponse.aminoType, QueryEvidenceResponse.typeUrl);
 function createBaseQueryAllEvidenceRequest(): QueryAllEvidenceRequest {
   return {
     pagination: undefined
@@ -457,10 +455,11 @@ export const QueryAllEvidenceRequest = {
       typeUrl: "/cosmos.evidence.v1beta1.QueryAllEvidenceRequest",
       value: QueryAllEvidenceRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryAllEvidenceRequest.typeUrl, QueryAllEvidenceRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAllEvidenceRequest.aminoType, QueryAllEvidenceRequest.typeUrl);
 function createBaseQueryAllEvidenceResponse(): QueryAllEvidenceResponse {
   return {
     evidence: [],
@@ -586,7 +585,8 @@ export const QueryAllEvidenceResponse = {
       typeUrl: "/cosmos.evidence.v1beta1.QueryAllEvidenceResponse",
       value: QueryAllEvidenceResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryAllEvidenceResponse.typeUrl, QueryAllEvidenceResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAllEvidenceResponse.aminoType, QueryAllEvidenceResponse.typeUrl);

@@ -4,9 +4,9 @@ import { ProofOps, ProofOpsAmino, ProofOpsSDKType } from "../crypto/proof";
 import { PublicKey, PublicKeyAmino, PublicKeySDKType } from "../crypto/keys";
 import { BlockIDFlag, BlockIDFlagSDKType, blockIDFlagFromJSON, blockIDFlagToJSON } from "../types/validator";
 import { BinaryReader, BinaryWriter } from "../../binary";
+import { GlobalDecoderRegistry } from "../../registry";
 import { isSet, DeepPartial, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../helpers";
 import { JsonSafe } from "../../json-safe";
-import { GlobalDecoderRegistry } from "../../registry";
 export const protobufPackage = "tendermint.abci";
 export enum CheckTxType {
   NEW = 0,
@@ -354,7 +354,7 @@ export interface RequestEchoProtoMsg {
   value: Uint8Array;
 }
 export interface RequestEchoAmino {
-  message?: string;
+  message: string;
 }
 export interface RequestEchoAminoMsg {
   type: "/tendermint.abci.RequestEcho";
@@ -385,10 +385,10 @@ export interface RequestInfoProtoMsg {
   value: Uint8Array;
 }
 export interface RequestInfoAmino {
-  version?: string;
-  block_version?: string;
-  p2p_version?: string;
-  abci_version?: string;
+  version: string;
+  block_version: string;
+  p2p_version: string;
+  abci_version: string;
 }
 export interface RequestInfoAminoMsg {
   type: "/tendermint.abci.RequestInfo";
@@ -413,12 +413,12 @@ export interface RequestInitChainProtoMsg {
   value: Uint8Array;
 }
 export interface RequestInitChainAmino {
-  time?: string;
-  chain_id?: string;
+  time: string;
+  chain_id: string;
   consensus_params?: ConsensusParamsAmino;
-  validators?: ValidatorUpdateAmino[];
-  app_state_bytes?: string;
-  initial_height?: string;
+  validators: ValidatorUpdateAmino[];
+  app_state_bytes: string;
+  initial_height: string;
 }
 export interface RequestInitChainAminoMsg {
   type: "/tendermint.abci.RequestInitChain";
@@ -443,10 +443,10 @@ export interface RequestQueryProtoMsg {
   value: Uint8Array;
 }
 export interface RequestQueryAmino {
-  data?: string;
-  path?: string;
-  height?: string;
-  prove?: boolean;
+  data: string;
+  path: string;
+  height: string;
+  prove: boolean;
 }
 export interface RequestQueryAminoMsg {
   type: "/tendermint.abci.RequestQuery";
@@ -467,8 +467,8 @@ export interface RequestCheckTxProtoMsg {
   value: Uint8Array;
 }
 export interface RequestCheckTxAmino {
-  tx?: string;
-  type?: CheckTxType;
+  tx: string;
+  type: CheckTxType;
 }
 export interface RequestCheckTxAminoMsg {
   type: "/tendermint.abci.RequestCheckTx";
@@ -519,7 +519,7 @@ export interface RequestOfferSnapshotAmino {
   /** snapshot offered by peers */
   snapshot?: SnapshotAmino;
   /** light client-verified app hash for snapshot height */
-  app_hash?: string;
+  app_hash: string;
 }
 export interface RequestOfferSnapshotAminoMsg {
   type: "/tendermint.abci.RequestOfferSnapshot";
@@ -542,9 +542,9 @@ export interface RequestLoadSnapshotChunkProtoMsg {
 }
 /** loads a snapshot chunk */
 export interface RequestLoadSnapshotChunkAmino {
-  height?: string;
-  format?: number;
-  chunk?: number;
+  height: string;
+  format: number;
+  chunk: number;
 }
 export interface RequestLoadSnapshotChunkAminoMsg {
   type: "/tendermint.abci.RequestLoadSnapshotChunk";
@@ -568,9 +568,9 @@ export interface RequestApplySnapshotChunkProtoMsg {
 }
 /** Applies a snapshot chunk */
 export interface RequestApplySnapshotChunkAmino {
-  index?: number;
-  chunk?: string;
-  sender?: string;
+  index: number;
+  chunk: string;
+  sender: string;
 }
 export interface RequestApplySnapshotChunkAminoMsg {
   type: "/tendermint.abci.RequestApplySnapshotChunk";
@@ -604,19 +604,19 @@ export interface RequestPrepareProposalProtoMsg {
 }
 export interface RequestPrepareProposalAmino {
   /** the modified transactions cannot exceed this size. */
-  max_tx_bytes?: string;
+  max_tx_bytes: string;
   /**
    * txs is an array of transactions that will be included in a block,
    * sent to the app for possible modifications.
    */
-  txs?: string[];
-  local_last_commit?: ExtendedCommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
-  height?: string;
-  time?: string;
-  next_validators_hash?: string;
+  txs: string[];
+  local_last_commit: ExtendedCommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
+  height: string;
+  time: string;
+  next_validators_hash: string;
   /** address of the public key of the validator proposing the block. */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface RequestPrepareProposalAminoMsg {
   type: "/tendermint.abci.RequestPrepareProposal";
@@ -649,16 +649,16 @@ export interface RequestProcessProposalProtoMsg {
   value: Uint8Array;
 }
 export interface RequestProcessProposalAmino {
-  txs?: string[];
-  proposed_last_commit?: CommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
+  txs: string[];
+  proposed_last_commit: CommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
   /** hash is the merkle root hash of the fields of the proposed block. */
-  hash?: string;
-  height?: string;
-  time?: string;
-  next_validators_hash?: string;
+  hash: string;
+  height: string;
+  time: string;
+  next_validators_hash: string;
   /** address of the public key of the original proposer of the block. */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface RequestProcessProposalAminoMsg {
   type: "/tendermint.abci.RequestProcessProposal";
@@ -696,17 +696,17 @@ export interface RequestExtendVoteProtoMsg {
 /** Extends a vote with application-injected data */
 export interface RequestExtendVoteAmino {
   /** the hash of the block that this vote may be referring to */
-  hash?: string;
+  hash: string;
   /** the height of the extended vote */
-  height?: string;
+  height: string;
   /** info of the block that this vote may be referring to */
-  time?: string;
-  txs?: string[];
-  proposed_last_commit?: CommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
-  next_validators_hash?: string;
+  time: string;
+  txs: string[];
+  proposed_last_commit: CommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
+  next_validators_hash: string;
   /** address of the public key of the original proposer of the block. */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface RequestExtendVoteAminoMsg {
   type: "/tendermint.abci.RequestExtendVote";
@@ -739,11 +739,11 @@ export interface RequestVerifyVoteExtensionProtoMsg {
 /** Verify the vote extension */
 export interface RequestVerifyVoteExtensionAmino {
   /** the hash of the block that this received vote corresponds to */
-  hash?: string;
+  hash: string;
   /** the validator that signed the vote extension */
-  validator_address?: string;
-  height?: string;
-  vote_extension?: string;
+  validator_address: string;
+  height: string;
+  vote_extension: string;
 }
 export interface RequestVerifyVoteExtensionAminoMsg {
   type: "/tendermint.abci.RequestVerifyVoteExtension";
@@ -773,16 +773,16 @@ export interface RequestFinalizeBlockProtoMsg {
   value: Uint8Array;
 }
 export interface RequestFinalizeBlockAmino {
-  txs?: string[];
-  decided_last_commit?: CommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
+  txs: string[];
+  decided_last_commit: CommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
   /** hash is the merkle root hash of the fields of the decided block. */
-  hash?: string;
-  height?: string;
-  time?: string;
-  next_validators_hash?: string;
+  hash: string;
+  height: string;
+  time: string;
+  next_validators_hash: string;
   /** proposer_address is the address of the public key of the original proposer of the block. */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface RequestFinalizeBlockAminoMsg {
   type: "/tendermint.abci.RequestFinalizeBlock";
@@ -873,7 +873,7 @@ export interface ResponseExceptionProtoMsg {
 }
 /** nondeterministic */
 export interface ResponseExceptionAmino {
-  error?: string;
+  error: string;
 }
 export interface ResponseExceptionAminoMsg {
   type: "/tendermint.abci.ResponseException";
@@ -891,7 +891,7 @@ export interface ResponseEchoProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseEchoAmino {
-  message?: string;
+  message: string;
 }
 export interface ResponseEchoAminoMsg {
   type: "/tendermint.abci.ResponseEcho";
@@ -923,11 +923,11 @@ export interface ResponseInfoProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseInfoAmino {
-  data?: string;
-  version?: string;
-  app_version?: string;
-  last_block_height?: string;
-  last_block_app_hash?: string;
+  data: string;
+  version: string;
+  app_version: string;
+  last_block_height: string;
+  last_block_app_hash: string;
 }
 export interface ResponseInfoAminoMsg {
   type: "/tendermint.abci.ResponseInfo";
@@ -951,8 +951,8 @@ export interface ResponseInitChainProtoMsg {
 }
 export interface ResponseInitChainAmino {
   consensus_params?: ConsensusParamsAmino;
-  validators?: ValidatorUpdateAmino[];
-  app_hash?: string;
+  validators: ValidatorUpdateAmino[];
+  app_hash: string;
 }
 export interface ResponseInitChainAminoMsg {
   type: "/tendermint.abci.ResponseInitChain";
@@ -981,17 +981,17 @@ export interface ResponseQueryProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseQueryAmino {
-  code?: number;
+  code: number;
   /** bytes data = 2; // use "value" instead. */
-  log?: string;
+  log: string;
   /** nondeterministic */
-  info?: string;
-  index?: string;
-  key?: string;
-  value?: string;
+  info: string;
+  index: string;
+  key: string;
+  value: string;
   proof_ops?: ProofOpsAmino;
-  height?: string;
-  codespace?: string;
+  height: string;
+  codespace: string;
 }
 export interface ResponseQueryAminoMsg {
   type: "/tendermint.abci.ResponseQuery";
@@ -1025,16 +1025,16 @@ export interface ResponseCheckTxProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseCheckTxAmino {
-  code?: number;
-  data?: string;
+  code: number;
+  data: string;
   /** nondeterministic */
-  log?: string;
+  log: string;
   /** nondeterministic */
-  info?: string;
-  gas_wanted?: string;
-  gas_used?: string;
-  events?: EventAmino[];
-  codespace?: string;
+  info: string;
+  gas_wanted: string;
+  gas_used: string;
+  events: EventAmino[];
+  codespace: string;
 }
 export interface ResponseCheckTxAminoMsg {
   type: "/tendermint.abci.ResponseCheckTx";
@@ -1058,7 +1058,7 @@ export interface ResponseCommitProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseCommitAmino {
-  retain_height?: string;
+  retain_height: string;
 }
 export interface ResponseCommitAminoMsg {
   type: "/tendermint.abci.ResponseCommit";
@@ -1075,7 +1075,7 @@ export interface ResponseListSnapshotsProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseListSnapshotsAmino {
-  snapshots?: SnapshotAmino[];
+  snapshots: SnapshotAmino[];
 }
 export interface ResponseListSnapshotsAminoMsg {
   type: "/tendermint.abci.ResponseListSnapshots";
@@ -1092,7 +1092,7 @@ export interface ResponseOfferSnapshotProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseOfferSnapshotAmino {
-  result?: ResponseOfferSnapshot_Result;
+  result: ResponseOfferSnapshot_Result;
 }
 export interface ResponseOfferSnapshotAminoMsg {
   type: "/tendermint.abci.ResponseOfferSnapshot";
@@ -1109,7 +1109,7 @@ export interface ResponseLoadSnapshotChunkProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseLoadSnapshotChunkAmino {
-  chunk?: string;
+  chunk: string;
 }
 export interface ResponseLoadSnapshotChunkAminoMsg {
   type: "/tendermint.abci.ResponseLoadSnapshotChunk";
@@ -1130,11 +1130,11 @@ export interface ResponseApplySnapshotChunkProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseApplySnapshotChunkAmino {
-  result?: ResponseApplySnapshotChunk_Result;
+  result: ResponseApplySnapshotChunk_Result;
   /** Chunks to refetch and reapply */
-  refetch_chunks?: number[];
+  refetch_chunks: number[];
   /** Chunk senders to reject and ban */
-  reject_senders?: string[];
+  reject_senders: string[];
 }
 export interface ResponseApplySnapshotChunkAminoMsg {
   type: "/tendermint.abci.ResponseApplySnapshotChunk";
@@ -1153,7 +1153,7 @@ export interface ResponsePrepareProposalProtoMsg {
   value: Uint8Array;
 }
 export interface ResponsePrepareProposalAmino {
-  txs?: string[];
+  txs: string[];
 }
 export interface ResponsePrepareProposalAminoMsg {
   type: "/tendermint.abci.ResponsePrepareProposal";
@@ -1170,7 +1170,7 @@ export interface ResponseProcessProposalProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseProcessProposalAmino {
-  status?: ResponseProcessProposal_ProposalStatus;
+  status: ResponseProcessProposal_ProposalStatus;
 }
 export interface ResponseProcessProposalAminoMsg {
   type: "/tendermint.abci.ResponseProcessProposal";
@@ -1187,7 +1187,7 @@ export interface ResponseExtendVoteProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseExtendVoteAmino {
-  vote_extension?: string;
+  vote_extension: string;
 }
 export interface ResponseExtendVoteAminoMsg {
   type: "/tendermint.abci.ResponseExtendVote";
@@ -1204,7 +1204,7 @@ export interface ResponseVerifyVoteExtensionProtoMsg {
   value: Uint8Array;
 }
 export interface ResponseVerifyVoteExtensionAmino {
-  status?: ResponseVerifyVoteExtension_VerifyStatus;
+  status: ResponseVerifyVoteExtension_VerifyStatus;
 }
 export interface ResponseVerifyVoteExtensionAminoMsg {
   type: "/tendermint.abci.ResponseVerifyVoteExtension";
@@ -1238,22 +1238,22 @@ export interface ResponseFinalizeBlockProtoMsg {
 }
 export interface ResponseFinalizeBlockAmino {
   /** set of block events emmitted as part of executing the block */
-  events?: EventAmino[];
+  events: EventAmino[];
   /**
    * the result of executing each transaction including the events
    * the particular transction emitted. This should match the order
    * of the transactions delivered in the block itself
    */
-  tx_results?: ExecTxResultAmino[];
+  tx_results: ExecTxResultAmino[];
   /** a list of updates to the validator set. These will reflect the validator set at current height + 2. */
-  validator_updates?: ValidatorUpdateAmino[];
+  validator_updates: ValidatorUpdateAmino[];
   /** updates to the consensus params, if any. */
   consensus_param_updates?: ConsensusParamsAmino;
   /**
    * app_hash is the hash of the applications' state which is used to confirm that execution of the transactions was
    * deterministic. It is up to the application to decide which algorithm to use.
    */
-  app_hash?: string;
+  app_hash: string;
 }
 export interface ResponseFinalizeBlockAminoMsg {
   type: "/tendermint.abci.ResponseFinalizeBlock";
@@ -1275,8 +1275,8 @@ export interface CommitInfoProtoMsg {
   value: Uint8Array;
 }
 export interface CommitInfoAmino {
-  round?: number;
-  votes?: VoteInfoAmino[];
+  round: number;
+  votes: VoteInfoAmino[];
 }
 export interface CommitInfoAminoMsg {
   type: "/tendermint.abci.CommitInfo";
@@ -1311,12 +1311,12 @@ export interface ExtendedCommitInfoProtoMsg {
  */
 export interface ExtendedCommitInfoAmino {
   /** The round at which the block proposer decided in the previous height. */
-  round?: number;
+  round: number;
   /**
    * List of validators' addresses in the last validator set with their voting
    * information, including vote extensions.
    */
-  votes?: ExtendedVoteInfoAmino[];
+  votes: ExtendedVoteInfoAmino[];
 }
 export interface ExtendedCommitInfoAminoMsg {
   type: "/tendermint.abci.ExtendedCommitInfo";
@@ -1350,8 +1350,8 @@ export interface EventProtoMsg {
  * Later, transactions may be queried using these events.
  */
 export interface EventAmino {
-  type?: string;
-  attributes?: EventAttributeAmino[];
+  type: string;
+  attributes: EventAttributeAmino[];
 }
 export interface EventAminoMsg {
   type: "/tendermint.abci.Event";
@@ -1379,10 +1379,10 @@ export interface EventAttributeProtoMsg {
 }
 /** EventAttribute is a single key-value pair, associated with an event. */
 export interface EventAttributeAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
   /** nondeterministic */
-  index?: boolean;
+  index: boolean;
 }
 export interface EventAttributeAminoMsg {
   type: "/tendermint.abci.EventAttribute";
@@ -1421,16 +1421,16 @@ export interface ExecTxResultProtoMsg {
  * * Its structure is equivalent to #ResponseDeliverTx which will be deprecated/deleted
  */
 export interface ExecTxResultAmino {
-  code?: number;
-  data?: string;
+  code: number;
+  data: string;
   /** nondeterministic */
-  log?: string;
+  log: string;
   /** nondeterministic */
-  info?: string;
-  gas_wanted?: string;
-  gas_used?: string;
-  events?: EventAmino[];
-  codespace?: string;
+  info: string;
+  gas_wanted: string;
+  gas_used: string;
+  events: EventAmino[];
+  codespace: string;
 }
 export interface ExecTxResultAminoMsg {
   type: "/tendermint.abci.ExecTxResult";
@@ -1472,10 +1472,10 @@ export interface TxResultProtoMsg {
  * One usage is indexing transaction results.
  */
 export interface TxResultAmino {
-  height?: string;
-  index?: number;
-  tx?: string;
-  result?: ExecTxResultAmino;
+  height: string;
+  index: number;
+  tx: string;
+  result: ExecTxResultAmino;
 }
 export interface TxResultAminoMsg {
   type: "/tendermint.abci.TxResult";
@@ -1504,9 +1504,9 @@ export interface ValidatorProtoMsg {
 }
 export interface ValidatorAmino {
   /** The first 20 bytes of SHA256(public key) */
-  address?: string;
+  address: string;
   /** PubKey pub_key = 2 [(gogoproto.nullable)=false]; */
-  power?: string;
+  power: string;
 }
 export interface ValidatorAminoMsg {
   type: "/tendermint.abci.Validator";
@@ -1525,8 +1525,8 @@ export interface ValidatorUpdateProtoMsg {
   value: Uint8Array;
 }
 export interface ValidatorUpdateAmino {
-  pub_key?: PublicKeyAmino;
-  power?: string;
+  pub_key: PublicKeyAmino;
+  power: string;
 }
 export interface ValidatorUpdateAminoMsg {
   type: "/tendermint.abci.ValidatorUpdate";
@@ -1545,8 +1545,8 @@ export interface VoteInfoProtoMsg {
   value: Uint8Array;
 }
 export interface VoteInfoAmino {
-  validator?: ValidatorAmino;
-  block_id_flag?: BlockIDFlag;
+  validator: ValidatorAmino;
+  block_id_flag: BlockIDFlag;
 }
 export interface VoteInfoAminoMsg {
   type: "/tendermint.abci.VoteInfo";
@@ -1572,13 +1572,13 @@ export interface ExtendedVoteInfoProtoMsg {
 }
 export interface ExtendedVoteInfoAmino {
   /** The validator that sent the vote. */
-  validator?: ValidatorAmino;
+  validator: ValidatorAmino;
   /** Non-deterministic extension provided by the sending validator's application. */
-  vote_extension?: string;
+  vote_extension: string;
   /** Vote extension signature created by CometBFT */
-  extension_signature?: string;
+  extension_signature: string;
   /** block_id_flag indicates whether the validator voted for a block, nil, or did not vote at all */
-  block_id_flag?: BlockIDFlag;
+  block_id_flag: BlockIDFlag;
 }
 export interface ExtendedVoteInfoAminoMsg {
   type: "/tendermint.abci.ExtendedVoteInfo";
@@ -1610,19 +1610,19 @@ export interface MisbehaviorProtoMsg {
   value: Uint8Array;
 }
 export interface MisbehaviorAmino {
-  type?: MisbehaviorType;
+  type: MisbehaviorType;
   /** The offending validator */
-  validator?: ValidatorAmino;
+  validator: ValidatorAmino;
   /** The height when the offense occurred */
-  height?: string;
+  height: string;
   /** The corresponding time where the offense occurred */
-  time?: string;
+  time: string;
   /**
    * Total voting power of the validator set in case the ABCI application does
    * not store historical validators.
    * https://github.com/tendermint/tendermint/issues/4581
    */
-  total_voting_power?: string;
+  total_voting_power: string;
 }
 export interface MisbehaviorAminoMsg {
   type: "/tendermint.abci.Misbehavior";
@@ -1653,15 +1653,15 @@ export interface SnapshotProtoMsg {
 }
 export interface SnapshotAmino {
   /** The height at which the snapshot was taken */
-  height?: string;
+  height: string;
   /** The application-specific snapshot format */
-  format?: number;
+  format: number;
   /** Number of chunks in the snapshot */
-  chunks?: number;
+  chunks: number;
   /** Arbitrary snapshot hash, equal only if identical */
-  hash?: string;
+  hash: string;
   /** Arbitrary application metadata */
-  metadata?: string;
+  metadata: string;
 }
 export interface SnapshotAminoMsg {
   type: "/tendermint.abci.Snapshot";
@@ -2036,9 +2036,26 @@ export const Request = {
       typeUrl: "/tendermint.abci.Request",
       value: Request.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    RequestEcho.registerTypeUrl();
+    RequestFlush.registerTypeUrl();
+    RequestInfo.registerTypeUrl();
+    RequestInitChain.registerTypeUrl();
+    RequestQuery.registerTypeUrl();
+    RequestCheckTx.registerTypeUrl();
+    RequestCommit.registerTypeUrl();
+    RequestListSnapshots.registerTypeUrl();
+    RequestOfferSnapshot.registerTypeUrl();
+    RequestLoadSnapshotChunk.registerTypeUrl();
+    RequestApplySnapshotChunk.registerTypeUrl();
+    RequestPrepareProposal.registerTypeUrl();
+    RequestProcessProposal.registerTypeUrl();
+    RequestExtendVote.registerTypeUrl();
+    RequestVerifyVoteExtension.registerTypeUrl();
+    RequestFinalizeBlock.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Request.typeUrl, Request);
 function createBaseRequestEcho(): RequestEcho {
   return {
     message: ""
@@ -2129,9 +2146,9 @@ export const RequestEcho = {
       typeUrl: "/tendermint.abci.RequestEcho",
       value: RequestEcho.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestEcho.typeUrl, RequestEcho);
 function createBaseRequestFlush(): RequestFlush {
   return {};
 }
@@ -2204,9 +2221,9 @@ export const RequestFlush = {
       typeUrl: "/tendermint.abci.RequestFlush",
       value: RequestFlush.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestFlush.typeUrl, RequestFlush);
 function createBaseRequestInfo(): RequestInfo {
   return {
     version: "",
@@ -2330,8 +2347,8 @@ export const RequestInfo = {
   toAmino(message: RequestInfo): RequestInfoAmino {
     const obj: any = {};
     obj.version = message.version === "" ? undefined : message.version;
-    obj.block_version = message.blockVersion !== BigInt(0) ? (message.blockVersion?.toString)() : undefined;
-    obj.p2p_version = message.p2pVersion !== BigInt(0) ? (message.p2pVersion?.toString)() : undefined;
+    obj.block_version = message.blockVersion !== BigInt(0) ? message.blockVersion?.toString() : undefined;
+    obj.p2p_version = message.p2pVersion !== BigInt(0) ? message.p2pVersion?.toString() : undefined;
     obj.abci_version = message.abciVersion === "" ? undefined : message.abciVersion;
     return obj;
   },
@@ -2349,9 +2366,9 @@ export const RequestInfo = {
       typeUrl: "/tendermint.abci.RequestInfo",
       value: RequestInfo.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestInfo.typeUrl, RequestInfo);
 function createBaseRequestInitChain(): RequestInitChain {
   return {
     time: new Date(),
@@ -2519,7 +2536,7 @@ export const RequestInitChain = {
       obj.validators = message.validators;
     }
     obj.app_state_bytes = message.appStateBytes ? base64FromBytes(message.appStateBytes) : undefined;
-    obj.initial_height = message.initialHeight !== BigInt(0) ? (message.initialHeight?.toString)() : undefined;
+    obj.initial_height = message.initialHeight !== BigInt(0) ? message.initialHeight?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: RequestInitChainAminoMsg): RequestInitChain {
@@ -2536,9 +2553,12 @@ export const RequestInitChain = {
       typeUrl: "/tendermint.abci.RequestInitChain",
       value: RequestInitChain.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ConsensusParams.registerTypeUrl();
+    ValidatorUpdate.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(RequestInitChain.typeUrl, RequestInitChain);
 function createBaseRequestQuery(): RequestQuery {
   return {
     data: new Uint8Array(),
@@ -2661,7 +2681,7 @@ export const RequestQuery = {
     const obj: any = {};
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     obj.path = message.path === "" ? undefined : message.path;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.prove = message.prove === false ? undefined : message.prove;
     return obj;
   },
@@ -2679,9 +2699,9 @@ export const RequestQuery = {
       typeUrl: "/tendermint.abci.RequestQuery",
       value: RequestQuery.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestQuery.typeUrl, RequestQuery);
 function createBaseRequestCheckTx(): RequestCheckTx {
   return {
     tx: new Uint8Array(),
@@ -2788,9 +2808,9 @@ export const RequestCheckTx = {
       typeUrl: "/tendermint.abci.RequestCheckTx",
       value: RequestCheckTx.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestCheckTx.typeUrl, RequestCheckTx);
 function createBaseRequestCommit(): RequestCommit {
   return {};
 }
@@ -2863,9 +2883,9 @@ export const RequestCommit = {
       typeUrl: "/tendermint.abci.RequestCommit",
       value: RequestCommit.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestCommit.typeUrl, RequestCommit);
 function createBaseRequestListSnapshots(): RequestListSnapshots {
   return {};
 }
@@ -2938,9 +2958,9 @@ export const RequestListSnapshots = {
       typeUrl: "/tendermint.abci.RequestListSnapshots",
       value: RequestListSnapshots.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestListSnapshots.typeUrl, RequestListSnapshots);
 function createBaseRequestOfferSnapshot(): RequestOfferSnapshot {
   return {
     snapshot: undefined,
@@ -3049,9 +3069,11 @@ export const RequestOfferSnapshot = {
       typeUrl: "/tendermint.abci.RequestOfferSnapshot",
       value: RequestOfferSnapshot.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Snapshot.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(RequestOfferSnapshot.typeUrl, RequestOfferSnapshot);
 function createBaseRequestLoadSnapshotChunk(): RequestLoadSnapshotChunk {
   return {
     height: BigInt(0),
@@ -3157,7 +3179,7 @@ export const RequestLoadSnapshotChunk = {
   },
   toAmino(message: RequestLoadSnapshotChunk): RequestLoadSnapshotChunkAmino {
     const obj: any = {};
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.format = message.format === 0 ? undefined : message.format;
     obj.chunk = message.chunk === 0 ? undefined : message.chunk;
     return obj;
@@ -3176,9 +3198,9 @@ export const RequestLoadSnapshotChunk = {
       typeUrl: "/tendermint.abci.RequestLoadSnapshotChunk",
       value: RequestLoadSnapshotChunk.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestLoadSnapshotChunk.typeUrl, RequestLoadSnapshotChunk);
 function createBaseRequestApplySnapshotChunk(): RequestApplySnapshotChunk {
   return {
     index: 0,
@@ -3301,9 +3323,9 @@ export const RequestApplySnapshotChunk = {
       typeUrl: "/tendermint.abci.RequestApplySnapshotChunk",
       value: RequestApplySnapshotChunk.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestApplySnapshotChunk.typeUrl, RequestApplySnapshotChunk);
 function createBaseRequestPrepareProposal(): RequestPrepareProposal {
   return {
     maxTxBytes: BigInt(0),
@@ -3500,7 +3522,7 @@ export const RequestPrepareProposal = {
   },
   toAmino(message: RequestPrepareProposal): RequestPrepareProposalAmino {
     const obj: any = {};
-    obj.max_tx_bytes = message.maxTxBytes !== BigInt(0) ? (message.maxTxBytes?.toString)() : undefined;
+    obj.max_tx_bytes = message.maxTxBytes !== BigInt(0) ? message.maxTxBytes?.toString() : undefined;
     if (message.txs) {
       obj.txs = message.txs.map(e => base64FromBytes(e));
     } else {
@@ -3512,7 +3534,7 @@ export const RequestPrepareProposal = {
     } else {
       obj.misbehavior = message.misbehavior;
     }
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
     obj.next_validators_hash = message.nextValidatorsHash ? base64FromBytes(message.nextValidatorsHash) : undefined;
     obj.proposer_address = message.proposerAddress ? base64FromBytes(message.proposerAddress) : undefined;
@@ -3532,9 +3554,12 @@ export const RequestPrepareProposal = {
       typeUrl: "/tendermint.abci.RequestPrepareProposal",
       value: RequestPrepareProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ExtendedCommitInfo.registerTypeUrl();
+    Misbehavior.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(RequestPrepareProposal.typeUrl, RequestPrepareProposal);
 function createBaseRequestProcessProposal(): RequestProcessProposal {
   return {
     txs: [],
@@ -3741,7 +3766,7 @@ export const RequestProcessProposal = {
       obj.misbehavior = message.misbehavior;
     }
     obj.hash = message.hash ? base64FromBytes(message.hash) : undefined;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
     obj.next_validators_hash = message.nextValidatorsHash ? base64FromBytes(message.nextValidatorsHash) : undefined;
     obj.proposer_address = message.proposerAddress ? base64FromBytes(message.proposerAddress) : undefined;
@@ -3761,9 +3786,12 @@ export const RequestProcessProposal = {
       typeUrl: "/tendermint.abci.RequestProcessProposal",
       value: RequestProcessProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CommitInfo.registerTypeUrl();
+    Misbehavior.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(RequestProcessProposal.typeUrl, RequestProcessProposal);
 function createBaseRequestExtendVote(): RequestExtendVote {
   return {
     hash: new Uint8Array(),
@@ -3959,7 +3987,7 @@ export const RequestExtendVote = {
   toAmino(message: RequestExtendVote): RequestExtendVoteAmino {
     const obj: any = {};
     obj.hash = message.hash ? base64FromBytes(message.hash) : undefined;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
     if (message.txs) {
       obj.txs = message.txs.map(e => base64FromBytes(e));
@@ -3990,9 +4018,12 @@ export const RequestExtendVote = {
       typeUrl: "/tendermint.abci.RequestExtendVote",
       value: RequestExtendVote.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CommitInfo.registerTypeUrl();
+    Misbehavior.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(RequestExtendVote.typeUrl, RequestExtendVote);
 function createBaseRequestVerifyVoteExtension(): RequestVerifyVoteExtension {
   return {
     hash: new Uint8Array(),
@@ -4115,7 +4146,7 @@ export const RequestVerifyVoteExtension = {
     const obj: any = {};
     obj.hash = message.hash ? base64FromBytes(message.hash) : undefined;
     obj.validator_address = message.validatorAddress ? base64FromBytes(message.validatorAddress) : undefined;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.vote_extension = message.voteExtension ? base64FromBytes(message.voteExtension) : undefined;
     return obj;
   },
@@ -4133,9 +4164,9 @@ export const RequestVerifyVoteExtension = {
       typeUrl: "/tendermint.abci.RequestVerifyVoteExtension",
       value: RequestVerifyVoteExtension.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(RequestVerifyVoteExtension.typeUrl, RequestVerifyVoteExtension);
 function createBaseRequestFinalizeBlock(): RequestFinalizeBlock {
   return {
     txs: [],
@@ -4342,7 +4373,7 @@ export const RequestFinalizeBlock = {
       obj.misbehavior = message.misbehavior;
     }
     obj.hash = message.hash ? base64FromBytes(message.hash) : undefined;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
     obj.next_validators_hash = message.nextValidatorsHash ? base64FromBytes(message.nextValidatorsHash) : undefined;
     obj.proposer_address = message.proposerAddress ? base64FromBytes(message.proposerAddress) : undefined;
@@ -4362,9 +4393,12 @@ export const RequestFinalizeBlock = {
       typeUrl: "/tendermint.abci.RequestFinalizeBlock",
       value: RequestFinalizeBlock.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CommitInfo.registerTypeUrl();
+    Misbehavior.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(RequestFinalizeBlock.typeUrl, RequestFinalizeBlock);
 function createBaseResponse(): Response {
   return {
     exception: undefined,
@@ -4745,9 +4779,27 @@ export const Response = {
       typeUrl: "/tendermint.abci.Response",
       value: Response.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ResponseException.registerTypeUrl();
+    ResponseEcho.registerTypeUrl();
+    ResponseFlush.registerTypeUrl();
+    ResponseInfo.registerTypeUrl();
+    ResponseInitChain.registerTypeUrl();
+    ResponseQuery.registerTypeUrl();
+    ResponseCheckTx.registerTypeUrl();
+    ResponseCommit.registerTypeUrl();
+    ResponseListSnapshots.registerTypeUrl();
+    ResponseOfferSnapshot.registerTypeUrl();
+    ResponseLoadSnapshotChunk.registerTypeUrl();
+    ResponseApplySnapshotChunk.registerTypeUrl();
+    ResponsePrepareProposal.registerTypeUrl();
+    ResponseProcessProposal.registerTypeUrl();
+    ResponseExtendVote.registerTypeUrl();
+    ResponseVerifyVoteExtension.registerTypeUrl();
+    ResponseFinalizeBlock.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Response.typeUrl, Response);
 function createBaseResponseException(): ResponseException {
   return {
     error: ""
@@ -4838,9 +4890,9 @@ export const ResponseException = {
       typeUrl: "/tendermint.abci.ResponseException",
       value: ResponseException.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseException.typeUrl, ResponseException);
 function createBaseResponseEcho(): ResponseEcho {
   return {
     message: ""
@@ -4931,9 +4983,9 @@ export const ResponseEcho = {
       typeUrl: "/tendermint.abci.ResponseEcho",
       value: ResponseEcho.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseEcho.typeUrl, ResponseEcho);
 function createBaseResponseFlush(): ResponseFlush {
   return {};
 }
@@ -5006,9 +5058,9 @@ export const ResponseFlush = {
       typeUrl: "/tendermint.abci.ResponseFlush",
       value: ResponseFlush.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseFlush.typeUrl, ResponseFlush);
 function createBaseResponseInfo(): ResponseInfo {
   return {
     data: "",
@@ -5148,8 +5200,8 @@ export const ResponseInfo = {
     const obj: any = {};
     obj.data = message.data === "" ? undefined : message.data;
     obj.version = message.version === "" ? undefined : message.version;
-    obj.app_version = message.appVersion !== BigInt(0) ? (message.appVersion?.toString)() : undefined;
-    obj.last_block_height = message.lastBlockHeight !== BigInt(0) ? (message.lastBlockHeight?.toString)() : undefined;
+    obj.app_version = message.appVersion !== BigInt(0) ? message.appVersion?.toString() : undefined;
+    obj.last_block_height = message.lastBlockHeight !== BigInt(0) ? message.lastBlockHeight?.toString() : undefined;
     obj.last_block_app_hash = message.lastBlockAppHash ? base64FromBytes(message.lastBlockAppHash) : undefined;
     return obj;
   },
@@ -5167,9 +5219,9 @@ export const ResponseInfo = {
       typeUrl: "/tendermint.abci.ResponseInfo",
       value: ResponseInfo.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseInfo.typeUrl, ResponseInfo);
 function createBaseResponseInitChain(): ResponseInitChain {
   return {
     consensusParams: undefined,
@@ -5304,9 +5356,12 @@ export const ResponseInitChain = {
       typeUrl: "/tendermint.abci.ResponseInitChain",
       value: ResponseInitChain.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ConsensusParams.registerTypeUrl();
+    ValidatorUpdate.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ResponseInitChain.typeUrl, ResponseInitChain);
 function createBaseResponseQuery(): ResponseQuery {
   return {
     code: 0,
@@ -5509,11 +5564,11 @@ export const ResponseQuery = {
     obj.code = message.code === 0 ? undefined : message.code;
     obj.log = message.log === "" ? undefined : message.log;
     obj.info = message.info === "" ? undefined : message.info;
-    obj.index = message.index !== BigInt(0) ? (message.index?.toString)() : undefined;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     obj.key = message.key ? base64FromBytes(message.key) : undefined;
     obj.value = message.value ? base64FromBytes(message.value) : undefined;
     obj.proof_ops = message.proofOps ? ProofOps.toAmino(message.proofOps) : undefined;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.codespace = message.codespace === "" ? undefined : message.codespace;
     return obj;
   },
@@ -5531,9 +5586,11 @@ export const ResponseQuery = {
       typeUrl: "/tendermint.abci.ResponseQuery",
       value: ResponseQuery.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ProofOps.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ResponseQuery.typeUrl, ResponseQuery);
 function createBaseResponseCheckTx(): ResponseCheckTx {
   return {
     code: 0,
@@ -5726,8 +5783,8 @@ export const ResponseCheckTx = {
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     obj.log = message.log === "" ? undefined : message.log;
     obj.info = message.info === "" ? undefined : message.info;
-    obj.gas_wanted = message.gasWanted !== BigInt(0) ? (message.gasWanted?.toString)() : undefined;
-    obj.gas_used = message.gasUsed !== BigInt(0) ? (message.gasUsed?.toString)() : undefined;
+    obj.gas_wanted = message.gasWanted !== BigInt(0) ? message.gasWanted?.toString() : undefined;
+    obj.gas_used = message.gasUsed !== BigInt(0) ? message.gasUsed?.toString() : undefined;
     if (message.events) {
       obj.events = message.events.map(e => e ? Event.toAmino(e) : undefined);
     } else {
@@ -5750,9 +5807,11 @@ export const ResponseCheckTx = {
       typeUrl: "/tendermint.abci.ResponseCheckTx",
       value: ResponseCheckTx.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Event.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ResponseCheckTx.typeUrl, ResponseCheckTx);
 function createBaseResponseCommit(): ResponseCommit {
   return {
     retainHeight: BigInt(0)
@@ -5828,7 +5887,7 @@ export const ResponseCommit = {
   },
   toAmino(message: ResponseCommit): ResponseCommitAmino {
     const obj: any = {};
-    obj.retain_height = message.retainHeight !== BigInt(0) ? (message.retainHeight?.toString)() : undefined;
+    obj.retain_height = message.retainHeight !== BigInt(0) ? message.retainHeight?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ResponseCommitAminoMsg): ResponseCommit {
@@ -5845,9 +5904,9 @@ export const ResponseCommit = {
       typeUrl: "/tendermint.abci.ResponseCommit",
       value: ResponseCommit.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseCommit.typeUrl, ResponseCommit);
 function createBaseResponseListSnapshots(): ResponseListSnapshots {
   return {
     snapshots: []
@@ -5948,9 +6007,11 @@ export const ResponseListSnapshots = {
       typeUrl: "/tendermint.abci.ResponseListSnapshots",
       value: ResponseListSnapshots.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Snapshot.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ResponseListSnapshots.typeUrl, ResponseListSnapshots);
 function createBaseResponseOfferSnapshot(): ResponseOfferSnapshot {
   return {
     result: 0
@@ -6041,9 +6102,9 @@ export const ResponseOfferSnapshot = {
       typeUrl: "/tendermint.abci.ResponseOfferSnapshot",
       value: ResponseOfferSnapshot.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseOfferSnapshot.typeUrl, ResponseOfferSnapshot);
 function createBaseResponseLoadSnapshotChunk(): ResponseLoadSnapshotChunk {
   return {
     chunk: new Uint8Array()
@@ -6134,9 +6195,9 @@ export const ResponseLoadSnapshotChunk = {
       typeUrl: "/tendermint.abci.ResponseLoadSnapshotChunk",
       value: ResponseLoadSnapshotChunk.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseLoadSnapshotChunk.typeUrl, ResponseLoadSnapshotChunk);
 function createBaseResponseApplySnapshotChunk(): ResponseApplySnapshotChunk {
   return {
     result: 0,
@@ -6288,9 +6349,9 @@ export const ResponseApplySnapshotChunk = {
       typeUrl: "/tendermint.abci.ResponseApplySnapshotChunk",
       value: ResponseApplySnapshotChunk.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseApplySnapshotChunk.typeUrl, ResponseApplySnapshotChunk);
 function createBaseResponsePrepareProposal(): ResponsePrepareProposal {
   return {
     txs: []
@@ -6391,9 +6452,9 @@ export const ResponsePrepareProposal = {
       typeUrl: "/tendermint.abci.ResponsePrepareProposal",
       value: ResponsePrepareProposal.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponsePrepareProposal.typeUrl, ResponsePrepareProposal);
 function createBaseResponseProcessProposal(): ResponseProcessProposal {
   return {
     status: 0
@@ -6484,9 +6545,9 @@ export const ResponseProcessProposal = {
       typeUrl: "/tendermint.abci.ResponseProcessProposal",
       value: ResponseProcessProposal.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseProcessProposal.typeUrl, ResponseProcessProposal);
 function createBaseResponseExtendVote(): ResponseExtendVote {
   return {
     voteExtension: new Uint8Array()
@@ -6577,9 +6638,9 @@ export const ResponseExtendVote = {
       typeUrl: "/tendermint.abci.ResponseExtendVote",
       value: ResponseExtendVote.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseExtendVote.typeUrl, ResponseExtendVote);
 function createBaseResponseVerifyVoteExtension(): ResponseVerifyVoteExtension {
   return {
     status: 0
@@ -6670,9 +6731,9 @@ export const ResponseVerifyVoteExtension = {
       typeUrl: "/tendermint.abci.ResponseVerifyVoteExtension",
       value: ResponseVerifyVoteExtension.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ResponseVerifyVoteExtension.typeUrl, ResponseVerifyVoteExtension);
 function createBaseResponseFinalizeBlock(): ResponseFinalizeBlock {
   return {
     events: [],
@@ -6859,9 +6920,14 @@ export const ResponseFinalizeBlock = {
       typeUrl: "/tendermint.abci.ResponseFinalizeBlock",
       value: ResponseFinalizeBlock.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Event.registerTypeUrl();
+    ExecTxResult.registerTypeUrl();
+    ValidatorUpdate.registerTypeUrl();
+    ConsensusParams.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ResponseFinalizeBlock.typeUrl, ResponseFinalizeBlock);
 function createBaseCommitInfo(): CommitInfo {
   return {
     round: 0,
@@ -6978,9 +7044,11 @@ export const CommitInfo = {
       typeUrl: "/tendermint.abci.CommitInfo",
       value: CommitInfo.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    VoteInfo.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CommitInfo.typeUrl, CommitInfo);
 function createBaseExtendedCommitInfo(): ExtendedCommitInfo {
   return {
     round: 0,
@@ -7097,9 +7165,11 @@ export const ExtendedCommitInfo = {
       typeUrl: "/tendermint.abci.ExtendedCommitInfo",
       value: ExtendedCommitInfo.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ExtendedVoteInfo.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ExtendedCommitInfo.typeUrl, ExtendedCommitInfo);
 function createBaseEvent(): Event {
   return {
     type: "",
@@ -7216,9 +7286,11 @@ export const Event = {
       typeUrl: "/tendermint.abci.Event",
       value: Event.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    EventAttribute.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Event.typeUrl, Event);
 function createBaseEventAttribute(): EventAttribute {
   return {
     key: "",
@@ -7341,9 +7413,9 @@ export const EventAttribute = {
       typeUrl: "/tendermint.abci.EventAttribute",
       value: EventAttribute.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(EventAttribute.typeUrl, EventAttribute);
 function createBaseExecTxResult(): ExecTxResult {
   return {
     code: 0,
@@ -7536,8 +7608,8 @@ export const ExecTxResult = {
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     obj.log = message.log === "" ? undefined : message.log;
     obj.info = message.info === "" ? undefined : message.info;
-    obj.gas_wanted = message.gasWanted !== BigInt(0) ? (message.gasWanted?.toString)() : undefined;
-    obj.gas_used = message.gasUsed !== BigInt(0) ? (message.gasUsed?.toString)() : undefined;
+    obj.gas_wanted = message.gasWanted !== BigInt(0) ? message.gasWanted?.toString() : undefined;
+    obj.gas_used = message.gasUsed !== BigInt(0) ? message.gasUsed?.toString() : undefined;
     if (message.events) {
       obj.events = message.events.map(e => e ? Event.toAmino(e) : undefined);
     } else {
@@ -7560,9 +7632,11 @@ export const ExecTxResult = {
       typeUrl: "/tendermint.abci.ExecTxResult",
       value: ExecTxResult.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Event.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ExecTxResult.typeUrl, ExecTxResult);
 function createBaseTxResult(): TxResult {
   return {
     height: BigInt(0),
@@ -7685,7 +7759,7 @@ export const TxResult = {
   },
   toAmino(message: TxResult): TxResultAmino {
     const obj: any = {};
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.index = message.index === 0 ? undefined : message.index;
     obj.tx = message.tx ? base64FromBytes(message.tx) : undefined;
     obj.result = message.result ? ExecTxResult.toAmino(message.result) : undefined;
@@ -7705,9 +7779,11 @@ export const TxResult = {
       typeUrl: "/tendermint.abci.TxResult",
       value: TxResult.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ExecTxResult.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(TxResult.typeUrl, TxResult);
 function createBaseValidator(): Validator {
   return {
     address: new Uint8Array(),
@@ -7799,7 +7875,7 @@ export const Validator = {
   toAmino(message: Validator): ValidatorAmino {
     const obj: any = {};
     obj.address = message.address ? base64FromBytes(message.address) : undefined;
-    obj.power = message.power !== BigInt(0) ? (message.power?.toString)() : undefined;
+    obj.power = message.power !== BigInt(0) ? message.power?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ValidatorAminoMsg): Validator {
@@ -7816,9 +7892,9 @@ export const Validator = {
       typeUrl: "/tendermint.abci.Validator",
       value: Validator.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Validator.typeUrl, Validator);
 function createBaseValidatorUpdate(): ValidatorUpdate {
   return {
     pubKey: PublicKey.fromPartial({}),
@@ -7912,7 +7988,7 @@ export const ValidatorUpdate = {
   toAmino(message: ValidatorUpdate): ValidatorUpdateAmino {
     const obj: any = {};
     obj.pub_key = message.pubKey ? PublicKey.toAmino(message.pubKey) : undefined;
-    obj.power = message.power !== BigInt(0) ? (message.power?.toString)() : undefined;
+    obj.power = message.power !== BigInt(0) ? message.power?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ValidatorUpdateAminoMsg): ValidatorUpdate {
@@ -7929,9 +8005,11 @@ export const ValidatorUpdate = {
       typeUrl: "/tendermint.abci.ValidatorUpdate",
       value: ValidatorUpdate.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PublicKey.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ValidatorUpdate.typeUrl, ValidatorUpdate);
 function createBaseVoteInfo(): VoteInfo {
   return {
     validator: Validator.fromPartial({}),
@@ -8040,9 +8118,11 @@ export const VoteInfo = {
       typeUrl: "/tendermint.abci.VoteInfo",
       value: VoteInfo.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Validator.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(VoteInfo.typeUrl, VoteInfo);
 function createBaseExtendedVoteInfo(): ExtendedVoteInfo {
   return {
     validator: Validator.fromPartial({}),
@@ -8183,9 +8263,11 @@ export const ExtendedVoteInfo = {
       typeUrl: "/tendermint.abci.ExtendedVoteInfo",
       value: ExtendedVoteInfo.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Validator.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ExtendedVoteInfo.typeUrl, ExtendedVoteInfo);
 function createBaseMisbehavior(): Misbehavior {
   return {
     type: 0,
@@ -8327,9 +8409,9 @@ export const Misbehavior = {
     const obj: any = {};
     obj.type = message.type === 0 ? undefined : message.type;
     obj.validator = message.validator ? Validator.toAmino(message.validator) : undefined;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
-    obj.total_voting_power = message.totalVotingPower !== BigInt(0) ? (message.totalVotingPower?.toString)() : undefined;
+    obj.total_voting_power = message.totalVotingPower !== BigInt(0) ? message.totalVotingPower?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: MisbehaviorAminoMsg): Misbehavior {
@@ -8346,9 +8428,11 @@ export const Misbehavior = {
       typeUrl: "/tendermint.abci.Misbehavior",
       value: Misbehavior.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Validator.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Misbehavior.typeUrl, Misbehavior);
 function createBaseSnapshot(): Snapshot {
   return {
     height: BigInt(0),
@@ -8484,7 +8568,7 @@ export const Snapshot = {
   },
   toAmino(message: Snapshot): SnapshotAmino {
     const obj: any = {};
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.format = message.format === 0 ? undefined : message.format;
     obj.chunks = message.chunks === 0 ? undefined : message.chunks;
     obj.hash = message.hash ? base64FromBytes(message.hash) : undefined;
@@ -8505,6 +8589,6 @@ export const Snapshot = {
       typeUrl: "/tendermint.abci.Snapshot",
       value: Snapshot.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Snapshot.typeUrl, Snapshot);

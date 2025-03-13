@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.tx.config.v1";
 /** Config is the config object of the x/auth/tx package. */
 export interface Config {
@@ -26,12 +25,12 @@ export interface ConfigAmino {
    * skip_ante_handler defines whether the ante handler registration should be skipped in case an app wants to override
    * this functionality.
    */
-  skip_ante_handler?: boolean;
+  skip_ante_handler: boolean;
   /**
    * skip_post_handler defines whether the post handler registration should be skipped in case an app wants to override
    * this functionality.
    */
-  skip_post_handler?: boolean;
+  skip_post_handler: boolean;
 }
 export interface ConfigAminoMsg {
   type: "cosmos-sdk/Config";
@@ -155,7 +154,6 @@ export const Config = {
       typeUrl: "/cosmos.tx.config.v1.Config",
       value: Config.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Config.typeUrl, Config);
-GlobalDecoderRegistry.registerAminoProtoMapping(Config.aminoType, Config.typeUrl);

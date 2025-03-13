@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.base.query.v1beta1";
 /**
  * PageRequest is to be embedded in gRPC request messages for efficient
@@ -63,31 +62,31 @@ export interface PageRequestAmino {
    * querying the next page most efficiently. Only one of offset or key
    * should be set.
    */
-  key?: string;
+  key: string;
   /**
    * offset is a numeric offset that can be used when key is unavailable.
    * It is less efficient than using key. Only one of offset or key should
    * be set.
    */
-  offset?: string;
+  offset: string;
   /**
    * limit is the total number of results to be returned in the result page.
    * If left empty it will default to a value to be set by each app.
    */
-  limit?: string;
+  limit: string;
   /**
    * count_total is set to true  to indicate that the result set should include
    * a count of the total number of items available for pagination in UIs.
    * count_total is only respected when offset is used. It is ignored when key
    * is set.
    */
-  count_total?: boolean;
+  count_total: boolean;
   /**
    * reverse is set to true if results are to be returned in the descending order.
    * 
    * Since: cosmos-sdk 0.43
    */
-  reverse?: boolean;
+  reverse: boolean;
 }
 export interface PageRequestAminoMsg {
   type: "cosmos-sdk/PageRequest";
@@ -150,12 +149,12 @@ export interface PageResponseAmino {
    * query the next page most efficiently. It will be empty if
    * there are no more results.
    */
-  next_key?: string;
+  next_key: string;
   /**
    * total is total number of results available if PageRequest.count_total
    * was set, its value is undefined otherwise
    */
-  total?: string;
+  total: string;
 }
 export interface PageResponseAminoMsg {
   type: "cosmos-sdk/PageResponse";
@@ -313,8 +312,8 @@ export const PageRequest = {
   toAmino(message: PageRequest): PageRequestAmino {
     const obj: any = {};
     obj.key = message.key ? base64FromBytes(message.key) : undefined;
-    obj.offset = message.offset !== BigInt(0) ? (message.offset?.toString)() : undefined;
-    obj.limit = message.limit !== BigInt(0) ? (message.limit?.toString)() : undefined;
+    obj.offset = message.offset !== BigInt(0) ? message.offset?.toString() : undefined;
+    obj.limit = message.limit !== BigInt(0) ? message.limit?.toString() : undefined;
     obj.count_total = message.countTotal === false ? undefined : message.countTotal;
     obj.reverse = message.reverse === false ? undefined : message.reverse;
     return obj;
@@ -339,10 +338,9 @@ export const PageRequest = {
       typeUrl: "/cosmos.base.query.v1beta1.PageRequest",
       value: PageRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PageRequest.typeUrl, PageRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(PageRequest.aminoType, PageRequest.typeUrl);
 function createBasePageResponse(): PageResponse {
   return {
     nextKey: new Uint8Array(),
@@ -435,7 +433,7 @@ export const PageResponse = {
   toAmino(message: PageResponse): PageResponseAmino {
     const obj: any = {};
     obj.next_key = message.nextKey ? base64FromBytes(message.nextKey) : undefined;
-    obj.total = message.total !== BigInt(0) ? (message.total?.toString)() : undefined;
+    obj.total = message.total !== BigInt(0) ? message.total?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: PageResponseAminoMsg): PageResponse {
@@ -458,7 +456,6 @@ export const PageResponse = {
       typeUrl: "/cosmos.base.query.v1beta1.PageResponse",
       value: PageResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PageResponse.typeUrl, PageResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(PageResponse.aminoType, PageResponse.typeUrl);

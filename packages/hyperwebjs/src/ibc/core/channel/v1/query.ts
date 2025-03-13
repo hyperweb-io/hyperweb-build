@@ -21,9 +21,9 @@ export interface QueryChannelRequestProtoMsg {
 /** QueryChannelRequest is the request type for the Query/Channel RPC method */
 export interface QueryChannelRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
 }
 export interface QueryChannelRequestAminoMsg {
   type: "cosmos-sdk/QueryChannelRequest";
@@ -60,9 +60,9 @@ export interface QueryChannelResponseAmino {
   /** channel associated with the request identifiers */
   channel?: ChannelAmino;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryChannelResponseAminoMsg {
   type: "cosmos-sdk/QueryChannelResponse";
@@ -116,11 +116,11 @@ export interface QueryChannelsResponseProtoMsg {
 /** QueryChannelsResponse is the response type for the Query/Channels RPC method. */
 export interface QueryChannelsResponseAmino {
   /** list of stored channels of the chain. */
-  channels?: IdentifiedChannelAmino[];
+  channels: IdentifiedChannelAmino[];
   /** pagination response */
   pagination?: PageResponseAmino;
   /** query block height */
-  height?: HeightAmino;
+  height: HeightAmino;
 }
 export interface QueryChannelsResponseAminoMsg {
   type: "cosmos-sdk/QueryChannelsResponse";
@@ -152,7 +152,7 @@ export interface QueryConnectionChannelsRequestProtoMsg {
  */
 export interface QueryConnectionChannelsRequestAmino {
   /** connection unique identifier */
-  connection?: string;
+  connection: string;
   /** pagination request */
   pagination?: PageRequestAmino;
 }
@@ -190,11 +190,11 @@ export interface QueryConnectionChannelsResponseProtoMsg {
  */
 export interface QueryConnectionChannelsResponseAmino {
   /** list of channels associated with a connection. */
-  channels?: IdentifiedChannelAmino[];
+  channels: IdentifiedChannelAmino[];
   /** pagination response */
   pagination?: PageResponseAmino;
   /** query block height */
-  height?: HeightAmino;
+  height: HeightAmino;
 }
 export interface QueryConnectionChannelsResponseAminoMsg {
   type: "cosmos-sdk/QueryConnectionChannelsResponse";
@@ -229,9 +229,9 @@ export interface QueryChannelClientStateRequestProtoMsg {
  */
 export interface QueryChannelClientStateRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
 }
 export interface QueryChannelClientStateRequestAminoMsg {
   type: "cosmos-sdk/QueryChannelClientStateRequest";
@@ -269,9 +269,9 @@ export interface QueryChannelClientStateResponseAmino {
   /** client state associated with the channel */
   identified_client_state?: IdentifiedClientStateAmino;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryChannelClientStateResponseAminoMsg {
   type: "cosmos-sdk/QueryChannelClientStateResponse";
@@ -310,13 +310,13 @@ export interface QueryChannelConsensusStateRequestProtoMsg {
  */
 export interface QueryChannelConsensusStateRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
   /** revision number of the consensus state */
-  revision_number?: string;
+  revision_number: string;
   /** revision height of the consensus state */
-  revision_height?: string;
+  revision_height: string;
 }
 export interface QueryChannelConsensusStateRequestAminoMsg {
   type: "cosmos-sdk/QueryChannelConsensusStateRequest";
@@ -358,11 +358,11 @@ export interface QueryChannelConsensusStateResponseAmino {
   /** consensus state associated with the channel */
   consensus_state?: AnyAmino;
   /** client ID associated with the consensus state */
-  client_id?: string;
+  client_id: string;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryChannelConsensusStateResponseAminoMsg {
   type: "cosmos-sdk/QueryChannelConsensusStateResponse";
@@ -400,11 +400,11 @@ export interface QueryPacketCommitmentRequestProtoMsg {
  */
 export interface QueryPacketCommitmentRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
   /** packet sequence */
-  sequence?: string;
+  sequence: string;
 }
 export interface QueryPacketCommitmentRequestAminoMsg {
   type: "cosmos-sdk/QueryPacketCommitmentRequest";
@@ -443,11 +443,11 @@ export interface QueryPacketCommitmentResponseProtoMsg {
  */
 export interface QueryPacketCommitmentResponseAmino {
   /** packet associated with the request fields */
-  commitment?: string;
+  commitment: string;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryPacketCommitmentResponseAminoMsg {
   type: "cosmos-sdk/QueryPacketCommitmentResponse";
@@ -485,9 +485,9 @@ export interface QueryPacketCommitmentsRequestProtoMsg {
  */
 export interface QueryPacketCommitmentsRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
   /** pagination request */
   pagination?: PageRequestAmino;
 }
@@ -524,11 +524,11 @@ export interface QueryPacketCommitmentsResponseProtoMsg {
  * Query/QueryPacketCommitments RPC method
  */
 export interface QueryPacketCommitmentsResponseAmino {
-  commitments?: PacketStateAmino[];
+  commitments: PacketStateAmino[];
   /** pagination response */
   pagination?: PageResponseAmino;
   /** query block height */
-  height?: HeightAmino;
+  height: HeightAmino;
 }
 export interface QueryPacketCommitmentsResponseAminoMsg {
   type: "cosmos-sdk/QueryPacketCommitmentsResponse";
@@ -565,11 +565,11 @@ export interface QueryPacketReceiptRequestProtoMsg {
  */
 export interface QueryPacketReceiptRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
   /** packet sequence */
-  sequence?: string;
+  sequence: string;
 }
 export interface QueryPacketReceiptRequestAminoMsg {
   type: "cosmos-sdk/QueryPacketReceiptRequest";
@@ -608,11 +608,11 @@ export interface QueryPacketReceiptResponseProtoMsg {
  */
 export interface QueryPacketReceiptResponseAmino {
   /** success flag for if receipt exists */
-  received?: boolean;
+  received: boolean;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryPacketReceiptResponseAminoMsg {
   type: "cosmos-sdk/QueryPacketReceiptResponse";
@@ -650,11 +650,11 @@ export interface QueryPacketAcknowledgementRequestProtoMsg {
  */
 export interface QueryPacketAcknowledgementRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
   /** packet sequence */
-  sequence?: string;
+  sequence: string;
 }
 export interface QueryPacketAcknowledgementRequestAminoMsg {
   type: "cosmos-sdk/QueryPacketAcknowledgementRequest";
@@ -693,11 +693,11 @@ export interface QueryPacketAcknowledgementResponseProtoMsg {
  */
 export interface QueryPacketAcknowledgementResponseAmino {
   /** packet associated with the request fields */
-  acknowledgement?: string;
+  acknowledgement: string;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryPacketAcknowledgementResponseAminoMsg {
   type: "cosmos-sdk/QueryPacketAcknowledgementResponse";
@@ -737,13 +737,13 @@ export interface QueryPacketAcknowledgementsRequestProtoMsg {
  */
 export interface QueryPacketAcknowledgementsRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
   /** pagination request */
   pagination?: PageRequestAmino;
   /** list of packet sequences */
-  packet_commitment_sequences?: string[];
+  packet_commitment_sequences: string[];
 }
 export interface QueryPacketAcknowledgementsRequestAminoMsg {
   type: "cosmos-sdk/QueryPacketAcknowledgementsRequest";
@@ -779,11 +779,11 @@ export interface QueryPacketAcknowledgementsResponseProtoMsg {
  * Query/QueryPacketAcknowledgements RPC method
  */
 export interface QueryPacketAcknowledgementsResponseAmino {
-  acknowledgements?: PacketStateAmino[];
+  acknowledgements: PacketStateAmino[];
   /** pagination response */
   pagination?: PageResponseAmino;
   /** query block height */
-  height?: HeightAmino;
+  height: HeightAmino;
 }
 export interface QueryPacketAcknowledgementsResponseAminoMsg {
   type: "cosmos-sdk/QueryPacketAcknowledgementsResponse";
@@ -820,11 +820,11 @@ export interface QueryUnreceivedPacketsRequestProtoMsg {
  */
 export interface QueryUnreceivedPacketsRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
   /** list of packet sequences */
-  packet_commitment_sequences?: string[];
+  packet_commitment_sequences: string[];
 }
 export interface QueryUnreceivedPacketsRequestAminoMsg {
   type: "cosmos-sdk/QueryUnreceivedPacketsRequest";
@@ -859,9 +859,9 @@ export interface QueryUnreceivedPacketsResponseProtoMsg {
  */
 export interface QueryUnreceivedPacketsResponseAmino {
   /** list of unreceived packet sequences */
-  sequences?: string[];
+  sequences: string[];
   /** query block height */
-  height?: HeightAmino;
+  height: HeightAmino;
 }
 export interface QueryUnreceivedPacketsResponseAminoMsg {
   type: "cosmos-sdk/QueryUnreceivedPacketsResponse";
@@ -897,11 +897,11 @@ export interface QueryUnreceivedAcksRequestProtoMsg {
  */
 export interface QueryUnreceivedAcksRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
   /** list of acknowledgement sequences */
-  packet_ack_sequences?: string[];
+  packet_ack_sequences: string[];
 }
 export interface QueryUnreceivedAcksRequestAminoMsg {
   type: "cosmos-sdk/QueryUnreceivedAcksRequest";
@@ -936,9 +936,9 @@ export interface QueryUnreceivedAcksResponseProtoMsg {
  */
 export interface QueryUnreceivedAcksResponseAmino {
   /** list of unreceived acknowledgement sequences */
-  sequences?: string[];
+  sequences: string[];
   /** query block height */
-  height?: HeightAmino;
+  height: HeightAmino;
 }
 export interface QueryUnreceivedAcksResponseAminoMsg {
   type: "cosmos-sdk/QueryUnreceivedAcksResponse";
@@ -972,9 +972,9 @@ export interface QueryNextSequenceReceiveRequestProtoMsg {
  */
 export interface QueryNextSequenceReceiveRequestAmino {
   /** port unique identifier */
-  port_id?: string;
+  port_id: string;
   /** channel unique identifier */
-  channel_id?: string;
+  channel_id: string;
 }
 export interface QueryNextSequenceReceiveRequestAminoMsg {
   type: "cosmos-sdk/QueryNextSequenceReceiveRequest";
@@ -1010,11 +1010,11 @@ export interface QueryNextSequenceReceiveResponseProtoMsg {
  */
 export interface QueryNextSequenceReceiveResponseAmino {
   /** next sequence receive number */
-  next_sequence_receive?: string;
+  next_sequence_receive: string;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryNextSequenceReceiveResponseAminoMsg {
   type: "cosmos-sdk/QueryNextSequenceReceiveResponse";
@@ -1142,10 +1142,9 @@ export const QueryChannelRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryChannelRequest",
       value: QueryChannelRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryChannelRequest.typeUrl, QueryChannelRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryChannelRequest.aminoType, QueryChannelRequest.typeUrl);
 function createBaseQueryChannelResponse(): QueryChannelResponse {
   return {
     channel: undefined,
@@ -1279,10 +1278,12 @@ export const QueryChannelResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryChannelResponse",
       value: QueryChannelResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Channel.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryChannelResponse.typeUrl, QueryChannelResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryChannelResponse.aminoType, QueryChannelResponse.typeUrl);
 function createBaseQueryChannelsRequest(): QueryChannelsRequest {
   return {
     pagination: undefined
@@ -1382,10 +1383,11 @@ export const QueryChannelsRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryChannelsRequest",
       value: QueryChannelsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryChannelsRequest.typeUrl, QueryChannelsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryChannelsRequest.aminoType, QueryChannelsRequest.typeUrl);
 function createBaseQueryChannelsResponse(): QueryChannelsResponse {
   return {
     channels: [],
@@ -1529,10 +1531,13 @@ export const QueryChannelsResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryChannelsResponse",
       value: QueryChannelsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IdentifiedChannel.registerTypeUrl();
+    PageResponse.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryChannelsResponse.typeUrl, QueryChannelsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryChannelsResponse.aminoType, QueryChannelsResponse.typeUrl);
 function createBaseQueryConnectionChannelsRequest(): QueryConnectionChannelsRequest {
   return {
     connection: "",
@@ -1648,10 +1653,11 @@ export const QueryConnectionChannelsRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryConnectionChannelsRequest",
       value: QueryConnectionChannelsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConnectionChannelsRequest.typeUrl, QueryConnectionChannelsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionChannelsRequest.aminoType, QueryConnectionChannelsRequest.typeUrl);
 function createBaseQueryConnectionChannelsResponse(): QueryConnectionChannelsResponse {
   return {
     channels: [],
@@ -1795,10 +1801,13 @@ export const QueryConnectionChannelsResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryConnectionChannelsResponse",
       value: QueryConnectionChannelsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IdentifiedChannel.registerTypeUrl();
+    PageResponse.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConnectionChannelsResponse.typeUrl, QueryConnectionChannelsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConnectionChannelsResponse.aminoType, QueryConnectionChannelsResponse.typeUrl);
 function createBaseQueryChannelClientStateRequest(): QueryChannelClientStateRequest {
   return {
     portId: "",
@@ -1912,10 +1921,9 @@ export const QueryChannelClientStateRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryChannelClientStateRequest",
       value: QueryChannelClientStateRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryChannelClientStateRequest.typeUrl, QueryChannelClientStateRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryChannelClientStateRequest.aminoType, QueryChannelClientStateRequest.typeUrl);
 function createBaseQueryChannelClientStateResponse(): QueryChannelClientStateResponse {
   return {
     identifiedClientState: undefined,
@@ -2049,10 +2057,12 @@ export const QueryChannelClientStateResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryChannelClientStateResponse",
       value: QueryChannelClientStateResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IdentifiedClientState.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryChannelClientStateResponse.typeUrl, QueryChannelClientStateResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryChannelClientStateResponse.aminoType, QueryChannelClientStateResponse.typeUrl);
 function createBaseQueryChannelConsensusStateRequest(): QueryChannelConsensusStateRequest {
   return {
     portId: "",
@@ -2178,8 +2188,8 @@ export const QueryChannelConsensusStateRequest = {
     const obj: any = {};
     obj.port_id = message.portId === "" ? undefined : message.portId;
     obj.channel_id = message.channelId === "" ? undefined : message.channelId;
-    obj.revision_number = message.revisionNumber !== BigInt(0) ? (message.revisionNumber?.toString)() : undefined;
-    obj.revision_height = message.revisionHeight !== BigInt(0) ? (message.revisionHeight?.toString)() : undefined;
+    obj.revision_number = message.revisionNumber !== BigInt(0) ? message.revisionNumber?.toString() : undefined;
+    obj.revision_height = message.revisionHeight !== BigInt(0) ? message.revisionHeight?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: QueryChannelConsensusStateRequestAminoMsg): QueryChannelConsensusStateRequest {
@@ -2202,10 +2212,9 @@ export const QueryChannelConsensusStateRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryChannelConsensusStateRequest",
       value: QueryChannelConsensusStateRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryChannelConsensusStateRequest.typeUrl, QueryChannelConsensusStateRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryChannelConsensusStateRequest.aminoType, QueryChannelConsensusStateRequest.typeUrl);
 function createBaseQueryChannelConsensusStateResponse(): QueryChannelConsensusStateResponse {
   return {
     consensusState: undefined,
@@ -2355,10 +2364,11 @@ export const QueryChannelConsensusStateResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryChannelConsensusStateResponse",
       value: QueryChannelConsensusStateResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryChannelConsensusStateResponse.typeUrl, QueryChannelConsensusStateResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryChannelConsensusStateResponse.aminoType, QueryChannelConsensusStateResponse.typeUrl);
 function createBaseQueryPacketCommitmentRequest(): QueryPacketCommitmentRequest {
   return {
     portId: "",
@@ -2467,7 +2477,7 @@ export const QueryPacketCommitmentRequest = {
     const obj: any = {};
     obj.port_id = message.portId === "" ? undefined : message.portId;
     obj.channel_id = message.channelId === "" ? undefined : message.channelId;
-    obj.sequence = message.sequence !== BigInt(0) ? (message.sequence?.toString)() : undefined;
+    obj.sequence = message.sequence !== BigInt(0) ? message.sequence?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: QueryPacketCommitmentRequestAminoMsg): QueryPacketCommitmentRequest {
@@ -2490,10 +2500,9 @@ export const QueryPacketCommitmentRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketCommitmentRequest",
       value: QueryPacketCommitmentRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryPacketCommitmentRequest.typeUrl, QueryPacketCommitmentRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketCommitmentRequest.aminoType, QueryPacketCommitmentRequest.typeUrl);
 function createBaseQueryPacketCommitmentResponse(): QueryPacketCommitmentResponse {
   return {
     commitment: new Uint8Array(),
@@ -2625,10 +2634,11 @@ export const QueryPacketCommitmentResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketCommitmentResponse",
       value: QueryPacketCommitmentResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryPacketCommitmentResponse.typeUrl, QueryPacketCommitmentResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketCommitmentResponse.aminoType, QueryPacketCommitmentResponse.typeUrl);
 function createBaseQueryPacketCommitmentsRequest(): QueryPacketCommitmentsRequest {
   return {
     portId: "",
@@ -2760,10 +2770,11 @@ export const QueryPacketCommitmentsRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketCommitmentsRequest",
       value: QueryPacketCommitmentsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryPacketCommitmentsRequest.typeUrl, QueryPacketCommitmentsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketCommitmentsRequest.aminoType, QueryPacketCommitmentsRequest.typeUrl);
 function createBaseQueryPacketCommitmentsResponse(): QueryPacketCommitmentsResponse {
   return {
     commitments: [],
@@ -2907,10 +2918,13 @@ export const QueryPacketCommitmentsResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketCommitmentsResponse",
       value: QueryPacketCommitmentsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PacketState.registerTypeUrl();
+    PageResponse.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryPacketCommitmentsResponse.typeUrl, QueryPacketCommitmentsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketCommitmentsResponse.aminoType, QueryPacketCommitmentsResponse.typeUrl);
 function createBaseQueryPacketReceiptRequest(): QueryPacketReceiptRequest {
   return {
     portId: "",
@@ -3019,7 +3033,7 @@ export const QueryPacketReceiptRequest = {
     const obj: any = {};
     obj.port_id = message.portId === "" ? undefined : message.portId;
     obj.channel_id = message.channelId === "" ? undefined : message.channelId;
-    obj.sequence = message.sequence !== BigInt(0) ? (message.sequence?.toString)() : undefined;
+    obj.sequence = message.sequence !== BigInt(0) ? message.sequence?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: QueryPacketReceiptRequestAminoMsg): QueryPacketReceiptRequest {
@@ -3042,10 +3056,9 @@ export const QueryPacketReceiptRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketReceiptRequest",
       value: QueryPacketReceiptRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryPacketReceiptRequest.typeUrl, QueryPacketReceiptRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketReceiptRequest.aminoType, QueryPacketReceiptRequest.typeUrl);
 function createBaseQueryPacketReceiptResponse(): QueryPacketReceiptResponse {
   return {
     received: false,
@@ -3177,10 +3190,11 @@ export const QueryPacketReceiptResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketReceiptResponse",
       value: QueryPacketReceiptResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryPacketReceiptResponse.typeUrl, QueryPacketReceiptResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketReceiptResponse.aminoType, QueryPacketReceiptResponse.typeUrl);
 function createBaseQueryPacketAcknowledgementRequest(): QueryPacketAcknowledgementRequest {
   return {
     portId: "",
@@ -3289,7 +3303,7 @@ export const QueryPacketAcknowledgementRequest = {
     const obj: any = {};
     obj.port_id = message.portId === "" ? undefined : message.portId;
     obj.channel_id = message.channelId === "" ? undefined : message.channelId;
-    obj.sequence = message.sequence !== BigInt(0) ? (message.sequence?.toString)() : undefined;
+    obj.sequence = message.sequence !== BigInt(0) ? message.sequence?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: QueryPacketAcknowledgementRequestAminoMsg): QueryPacketAcknowledgementRequest {
@@ -3312,10 +3326,9 @@ export const QueryPacketAcknowledgementRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketAcknowledgementRequest",
       value: QueryPacketAcknowledgementRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryPacketAcknowledgementRequest.typeUrl, QueryPacketAcknowledgementRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketAcknowledgementRequest.aminoType, QueryPacketAcknowledgementRequest.typeUrl);
 function createBaseQueryPacketAcknowledgementResponse(): QueryPacketAcknowledgementResponse {
   return {
     acknowledgement: new Uint8Array(),
@@ -3447,10 +3460,11 @@ export const QueryPacketAcknowledgementResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketAcknowledgementResponse",
       value: QueryPacketAcknowledgementResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryPacketAcknowledgementResponse.typeUrl, QueryPacketAcknowledgementResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketAcknowledgementResponse.aminoType, QueryPacketAcknowledgementResponse.typeUrl);
 function createBaseQueryPacketAcknowledgementsRequest(): QueryPacketAcknowledgementsRequest {
   return {
     portId: "",
@@ -3617,10 +3631,11 @@ export const QueryPacketAcknowledgementsRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketAcknowledgementsRequest",
       value: QueryPacketAcknowledgementsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryPacketAcknowledgementsRequest.typeUrl, QueryPacketAcknowledgementsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketAcknowledgementsRequest.aminoType, QueryPacketAcknowledgementsRequest.typeUrl);
 function createBaseQueryPacketAcknowledgementsResponse(): QueryPacketAcknowledgementsResponse {
   return {
     acknowledgements: [],
@@ -3764,10 +3779,13 @@ export const QueryPacketAcknowledgementsResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryPacketAcknowledgementsResponse",
       value: QueryPacketAcknowledgementsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PacketState.registerTypeUrl();
+    PageResponse.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryPacketAcknowledgementsResponse.typeUrl, QueryPacketAcknowledgementsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryPacketAcknowledgementsResponse.aminoType, QueryPacketAcknowledgementsResponse.typeUrl);
 function createBaseQueryUnreceivedPacketsRequest(): QueryUnreceivedPacketsRequest {
   return {
     portId: "",
@@ -3916,10 +3934,9 @@ export const QueryUnreceivedPacketsRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryUnreceivedPacketsRequest",
       value: QueryUnreceivedPacketsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryUnreceivedPacketsRequest.typeUrl, QueryUnreceivedPacketsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryUnreceivedPacketsRequest.aminoType, QueryUnreceivedPacketsRequest.typeUrl);
 function createBaseQueryUnreceivedPacketsResponse(): QueryUnreceivedPacketsResponse {
   return {
     sequences: [],
@@ -4054,10 +4071,11 @@ export const QueryUnreceivedPacketsResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryUnreceivedPacketsResponse",
       value: QueryUnreceivedPacketsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryUnreceivedPacketsResponse.typeUrl, QueryUnreceivedPacketsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryUnreceivedPacketsResponse.aminoType, QueryUnreceivedPacketsResponse.typeUrl);
 function createBaseQueryUnreceivedAcksRequest(): QueryUnreceivedAcksRequest {
   return {
     portId: "",
@@ -4206,10 +4224,9 @@ export const QueryUnreceivedAcksRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryUnreceivedAcksRequest",
       value: QueryUnreceivedAcksRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryUnreceivedAcksRequest.typeUrl, QueryUnreceivedAcksRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryUnreceivedAcksRequest.aminoType, QueryUnreceivedAcksRequest.typeUrl);
 function createBaseQueryUnreceivedAcksResponse(): QueryUnreceivedAcksResponse {
   return {
     sequences: [],
@@ -4344,10 +4361,11 @@ export const QueryUnreceivedAcksResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryUnreceivedAcksResponse",
       value: QueryUnreceivedAcksResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryUnreceivedAcksResponse.typeUrl, QueryUnreceivedAcksResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryUnreceivedAcksResponse.aminoType, QueryUnreceivedAcksResponse.typeUrl);
 function createBaseQueryNextSequenceReceiveRequest(): QueryNextSequenceReceiveRequest {
   return {
     portId: "",
@@ -4461,10 +4479,9 @@ export const QueryNextSequenceReceiveRequest = {
       typeUrl: "/ibc.core.channel.v1.QueryNextSequenceReceiveRequest",
       value: QueryNextSequenceReceiveRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryNextSequenceReceiveRequest.typeUrl, QueryNextSequenceReceiveRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryNextSequenceReceiveRequest.aminoType, QueryNextSequenceReceiveRequest.typeUrl);
 function createBaseQueryNextSequenceReceiveResponse(): QueryNextSequenceReceiveResponse {
   return {
     nextSequenceReceive: BigInt(0),
@@ -4573,7 +4590,7 @@ export const QueryNextSequenceReceiveResponse = {
   },
   toAmino(message: QueryNextSequenceReceiveResponse): QueryNextSequenceReceiveResponseAmino {
     const obj: any = {};
-    obj.next_sequence_receive = message.nextSequenceReceive !== BigInt(0) ? (message.nextSequenceReceive?.toString)() : undefined;
+    obj.next_sequence_receive = message.nextSequenceReceive !== BigInt(0) ? message.nextSequenceReceive?.toString() : undefined;
     obj.proof = message.proof ? base64FromBytes(message.proof) : undefined;
     obj.proof_height = message.proofHeight ? Height.toAmino(message.proofHeight) : {};
     return obj;
@@ -4598,7 +4615,8 @@ export const QueryNextSequenceReceiveResponse = {
       typeUrl: "/ibc.core.channel.v1.QueryNextSequenceReceiveResponse",
       value: QueryNextSequenceReceiveResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryNextSequenceReceiveResponse.typeUrl, QueryNextSequenceReceiveResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryNextSequenceReceiveResponse.aminoType, QueryNextSequenceReceiveResponse.typeUrl);

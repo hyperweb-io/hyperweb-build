@@ -1,8 +1,8 @@
 import { CapabilityOwners, CapabilityOwnersAmino, CapabilityOwnersSDKType } from "./capability";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.capability.v1beta1";
 /** GenesisOwners defines the capability owners with their corresponding index. */
 export interface GenesisOwners {
@@ -18,9 +18,9 @@ export interface GenesisOwnersProtoMsg {
 /** GenesisOwners defines the capability owners with their corresponding index. */
 export interface GenesisOwnersAmino {
   /** index is the index of the capability owner. */
-  index?: string;
+  index: string;
   /** index_owners are the owners at the given index. */
-  index_owners?: CapabilityOwnersAmino;
+  index_owners: CapabilityOwnersAmino;
 }
 export interface GenesisOwnersAminoMsg {
   type: "cosmos-sdk/GenesisOwners";
@@ -48,12 +48,12 @@ export interface GenesisStateProtoMsg {
 /** GenesisState defines the capability module's genesis state. */
 export interface GenesisStateAmino {
   /** index is the capability global index. */
-  index?: string;
+  index: string;
   /**
    * owners represents a map from index to owners of the capability index
    * index key is string to allow amino marshalling.
    */
-  owners?: GenesisOwnersAmino[];
+  owners: GenesisOwnersAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -157,7 +157,7 @@ export const GenesisOwners = {
   },
   toAmino(message: GenesisOwners): GenesisOwnersAmino {
     const obj: any = {};
-    obj.index = message.index !== BigInt(0) ? (message.index?.toString)() : undefined;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     obj.index_owners = message.indexOwners ? CapabilityOwners.toAmino(message.indexOwners) : undefined;
     return obj;
   },
@@ -181,10 +181,11 @@ export const GenesisOwners = {
       typeUrl: "/cosmos.capability.v1beta1.GenesisOwners",
       value: GenesisOwners.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CapabilityOwners.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisOwners.typeUrl, GenesisOwners);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisOwners.aminoType, GenesisOwners.typeUrl);
 function createBaseGenesisState(): GenesisState {
   return {
     index: BigInt(0),
@@ -282,7 +283,7 @@ export const GenesisState = {
   },
   toAmino(message: GenesisState): GenesisStateAmino {
     const obj: any = {};
-    obj.index = message.index !== BigInt(0) ? (message.index?.toString)() : undefined;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     if (message.owners) {
       obj.owners = message.owners.map(e => e ? GenesisOwners.toAmino(e) : undefined);
     } else {
@@ -310,7 +311,8 @@ export const GenesisState = {
       typeUrl: "/cosmos.capability.v1beta1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GenesisOwners.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);

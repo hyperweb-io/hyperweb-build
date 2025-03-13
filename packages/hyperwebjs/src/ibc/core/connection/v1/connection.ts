@@ -1,8 +1,8 @@
 import { MerklePrefix, MerklePrefixAmino, MerklePrefixSDKType } from "../../commitment/v1/commitment";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { JsonSafe } from "../../../../json-safe";
 import { GlobalDecoderRegistry } from "../../../../registry";
+import { JsonSafe } from "../../../../json-safe";
 export const protobufPackage = "ibc.core.connection.v1";
 /**
  * State defines if a connection is in one of the following states:
@@ -96,22 +96,22 @@ export interface ConnectionEndProtoMsg {
  */
 export interface ConnectionEndAmino {
   /** client associated with this connection. */
-  client_id?: string;
+  client_id: string;
   /**
    * IBC version which can be utilised to determine encodings or protocols for
    * channels or packets utilising this connection.
    */
-  versions?: VersionAmino[];
+  versions: VersionAmino[];
   /** current state of the connection end. */
-  state?: State;
+  state: State;
   /** counterparty chain associated with this connection. */
-  counterparty?: CounterpartyAmino;
+  counterparty: CounterpartyAmino;
   /**
    * delay period that must pass before a consensus state can be used for
    * packet-verification NOTE: delay period logic is only implemented by some
    * clients.
    */
-  delay_period?: string;
+  delay_period: string;
 }
 export interface ConnectionEndAminoMsg {
   type: "cosmos-sdk/ConnectionEnd";
@@ -161,20 +161,20 @@ export interface IdentifiedConnectionProtoMsg {
  */
 export interface IdentifiedConnectionAmino {
   /** connection identifier. */
-  id?: string;
+  id: string;
   /** client associated with this connection. */
-  client_id?: string;
+  client_id: string;
   /**
    * IBC version which can be utilised to determine encodings or protocols for
    * channels or packets utilising this connection
    */
-  versions?: VersionAmino[];
+  versions: VersionAmino[];
   /** current state of the connection end. */
-  state?: State;
+  state: State;
   /** counterparty chain associated with this connection. */
-  counterparty?: CounterpartyAmino;
+  counterparty: CounterpartyAmino;
   /** delay period associated with this connection. */
-  delay_period?: string;
+  delay_period: string;
 }
 export interface IdentifiedConnectionAminoMsg {
   type: "cosmos-sdk/IdentifiedConnection";
@@ -217,14 +217,14 @@ export interface CounterpartyAmino {
    * identifies the client on the counterparty chain associated with a given
    * connection.
    */
-  client_id?: string;
+  client_id: string;
   /**
    * identifies the connection end on the counterparty chain associated with a
    * given connection.
    */
-  connection_id?: string;
+  connection_id: string;
   /** commitment merkle prefix of the counterparty chain. */
-  prefix?: MerklePrefixAmino;
+  prefix: MerklePrefixAmino;
 }
 export interface CounterpartyAminoMsg {
   type: "cosmos-sdk/Counterparty";
@@ -248,7 +248,7 @@ export interface ClientPathsProtoMsg {
 /** ClientPaths define all the connection paths for a client state. */
 export interface ClientPathsAmino {
   /** list of connection paths */
-  paths?: string[];
+  paths: string[];
 }
 export interface ClientPathsAminoMsg {
   type: "cosmos-sdk/ClientPaths";
@@ -272,9 +272,9 @@ export interface ConnectionPathsProtoMsg {
 /** ConnectionPaths define all the connection paths for a given client state. */
 export interface ConnectionPathsAmino {
   /** client state unique identifier */
-  client_id?: string;
+  client_id: string;
   /** list of connection paths */
-  paths?: string[];
+  paths: string[];
 }
 export interface ConnectionPathsAminoMsg {
   type: "cosmos-sdk/ConnectionPaths";
@@ -305,9 +305,9 @@ export interface VersionProtoMsg {
  */
 export interface VersionAmino {
   /** unique version identifier */
-  identifier?: string;
+  identifier: string;
   /** list of features compatible with the specified identifier */
-  features?: string[];
+  features: string[];
 }
 export interface VersionAminoMsg {
   type: "cosmos-sdk/Version";
@@ -341,7 +341,7 @@ export interface ParamsAmino {
    * largest amount of time that the chain might reasonably take to produce the next block under normal operating
    * conditions. A safe choice is 3-5x the expected time per block.
    */
-  max_expected_time_per_block?: string;
+  max_expected_time_per_block: string;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/Params";
@@ -503,7 +503,7 @@ export const ConnectionEnd = {
     }
     obj.state = message.state === 0 ? undefined : message.state;
     obj.counterparty = message.counterparty ? Counterparty.toAmino(message.counterparty) : undefined;
-    obj.delay_period = message.delayPeriod !== BigInt(0) ? (message.delayPeriod?.toString)() : undefined;
+    obj.delay_period = message.delayPeriod !== BigInt(0) ? message.delayPeriod?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ConnectionEndAminoMsg): ConnectionEnd {
@@ -526,10 +526,12 @@ export const ConnectionEnd = {
       typeUrl: "/ibc.core.connection.v1.ConnectionEnd",
       value: ConnectionEnd.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Version.registerTypeUrl();
+    Counterparty.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ConnectionEnd.typeUrl, ConnectionEnd);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConnectionEnd.aminoType, ConnectionEnd.typeUrl);
 function createBaseIdentifiedConnection(): IdentifiedConnection {
   return {
     id: "",
@@ -698,7 +700,7 @@ export const IdentifiedConnection = {
     }
     obj.state = message.state === 0 ? undefined : message.state;
     obj.counterparty = message.counterparty ? Counterparty.toAmino(message.counterparty) : undefined;
-    obj.delay_period = message.delayPeriod !== BigInt(0) ? (message.delayPeriod?.toString)() : undefined;
+    obj.delay_period = message.delayPeriod !== BigInt(0) ? message.delayPeriod?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: IdentifiedConnectionAminoMsg): IdentifiedConnection {
@@ -721,10 +723,12 @@ export const IdentifiedConnection = {
       typeUrl: "/ibc.core.connection.v1.IdentifiedConnection",
       value: IdentifiedConnection.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Version.registerTypeUrl();
+    Counterparty.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(IdentifiedConnection.typeUrl, IdentifiedConnection);
-GlobalDecoderRegistry.registerAminoProtoMapping(IdentifiedConnection.aminoType, IdentifiedConnection.typeUrl);
 function createBaseCounterparty(): Counterparty {
   return {
     clientId: "",
@@ -856,10 +860,11 @@ export const Counterparty = {
       typeUrl: "/ibc.core.connection.v1.Counterparty",
       value: Counterparty.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    MerklePrefix.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Counterparty.typeUrl, Counterparty);
-GlobalDecoderRegistry.registerAminoProtoMapping(Counterparty.aminoType, Counterparty.typeUrl);
 function createBaseClientPaths(): ClientPaths {
   return {
     paths: []
@@ -967,10 +972,9 @@ export const ClientPaths = {
       typeUrl: "/ibc.core.connection.v1.ClientPaths",
       value: ClientPaths.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ClientPaths.typeUrl, ClientPaths);
-GlobalDecoderRegistry.registerAminoProtoMapping(ClientPaths.aminoType, ClientPaths.typeUrl);
 function createBaseConnectionPaths(): ConnectionPaths {
   return {
     clientId: "",
@@ -1094,10 +1098,9 @@ export const ConnectionPaths = {
       typeUrl: "/ibc.core.connection.v1.ConnectionPaths",
       value: ConnectionPaths.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ConnectionPaths.typeUrl, ConnectionPaths);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConnectionPaths.aminoType, ConnectionPaths.typeUrl);
 function createBaseVersion(): Version {
   return {
     identifier: "",
@@ -1221,10 +1224,9 @@ export const Version = {
       typeUrl: "/ibc.core.connection.v1.Version",
       value: Version.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Version.typeUrl, Version);
-GlobalDecoderRegistry.registerAminoProtoMapping(Version.aminoType, Version.typeUrl);
 function createBaseParams(): Params {
   return {
     maxExpectedTimePerBlock: BigInt(0)
@@ -1301,7 +1303,7 @@ export const Params = {
   },
   toAmino(message: Params): ParamsAmino {
     const obj: any = {};
-    obj.max_expected_time_per_block = message.maxExpectedTimePerBlock !== BigInt(0) ? (message.maxExpectedTimePerBlock?.toString)() : undefined;
+    obj.max_expected_time_per_block = message.maxExpectedTimePerBlock !== BigInt(0) ? message.maxExpectedTimePerBlock?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ParamsAminoMsg): Params {
@@ -1324,7 +1326,6 @@ export const Params = {
       typeUrl: "/ibc.core.connection.v1.Params",
       value: Params.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Params.typeUrl, Params);
-GlobalDecoderRegistry.registerAminoProtoMapping(Params.aminoType, Params.typeUrl);

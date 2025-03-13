@@ -2,7 +2,6 @@ import { Timestamp, TimestampAmino, TimestampSDKType } from "../../../../google/
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { JsonSafe } from "../../../../json-safe";
 import { DeepPartial, isSet, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../../../helpers";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.base.node.v1beta1";
 /** ConfigRequest defines the request structure for the Config gRPC query. */
 export interface ConfigRequest {}
@@ -31,10 +30,10 @@ export interface ConfigResponseProtoMsg {
 }
 /** ConfigResponse defines the response structure for the Config gRPC query. */
 export interface ConfigResponseAmino {
-  minimum_gas_price?: string;
-  pruning_keep_recent?: string;
-  pruning_interval?: string;
-  halt_height?: string;
+  minimum_gas_price: string;
+  pruning_keep_recent: string;
+  pruning_interval: string;
+  halt_height: string;
 }
 export interface ConfigResponseAminoMsg {
   type: "cosmos-sdk/ConfigResponse";
@@ -81,15 +80,15 @@ export interface StatusResponseProtoMsg {
 /** StateResponse defines the response structure for the status of a node. */
 export interface StatusResponseAmino {
   /** earliest block height available in the store */
-  earliest_store_height?: string;
+  earliest_store_height: string;
   /** current block height */
-  height?: string;
+  height: string;
   /** block height timestamp */
   timestamp?: string;
   /** app hash of the current block */
-  app_hash?: string;
+  app_hash: string;
   /** validator hash provided by the consensus header */
-  validator_hash?: string;
+  validator_hash: string;
 }
 export interface StatusResponseAminoMsg {
   type: "cosmos-sdk/StatusResponse";
@@ -182,10 +181,9 @@ export const ConfigRequest = {
       typeUrl: "/cosmos.base.node.v1beta1.ConfigRequest",
       value: ConfigRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ConfigRequest.typeUrl, ConfigRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConfigRequest.aminoType, ConfigRequest.typeUrl);
 function createBaseConfigResponse(): ConfigResponse {
   return {
     minimumGasPrice: "",
@@ -310,7 +308,7 @@ export const ConfigResponse = {
     obj.minimum_gas_price = message.minimumGasPrice === "" ? undefined : message.minimumGasPrice;
     obj.pruning_keep_recent = message.pruningKeepRecent === "" ? undefined : message.pruningKeepRecent;
     obj.pruning_interval = message.pruningInterval === "" ? undefined : message.pruningInterval;
-    obj.halt_height = message.haltHeight !== BigInt(0) ? (message.haltHeight?.toString)() : undefined;
+    obj.halt_height = message.haltHeight !== BigInt(0) ? message.haltHeight?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ConfigResponseAminoMsg): ConfigResponse {
@@ -333,10 +331,9 @@ export const ConfigResponse = {
       typeUrl: "/cosmos.base.node.v1beta1.ConfigResponse",
       value: ConfigResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ConfigResponse.typeUrl, ConfigResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConfigResponse.aminoType, ConfigResponse.typeUrl);
 function createBaseStatusRequest(): StatusRequest {
   return {};
 }
@@ -416,10 +413,9 @@ export const StatusRequest = {
       typeUrl: "/cosmos.base.node.v1beta1.StatusRequest",
       value: StatusRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(StatusRequest.typeUrl, StatusRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(StatusRequest.aminoType, StatusRequest.typeUrl);
 function createBaseStatusResponse(): StatusResponse {
   return {
     earliestStoreHeight: BigInt(0),
@@ -558,8 +554,8 @@ export const StatusResponse = {
   },
   toAmino(message: StatusResponse): StatusResponseAmino {
     const obj: any = {};
-    obj.earliest_store_height = message.earliestStoreHeight !== BigInt(0) ? (message.earliestStoreHeight?.toString)() : undefined;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.earliest_store_height = message.earliestStoreHeight !== BigInt(0) ? message.earliestStoreHeight?.toString() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.timestamp = message.timestamp ? Timestamp.toAmino(toTimestamp(message.timestamp)) : undefined;
     obj.app_hash = message.appHash ? base64FromBytes(message.appHash) : undefined;
     obj.validator_hash = message.validatorHash ? base64FromBytes(message.validatorHash) : undefined;
@@ -585,7 +581,6 @@ export const StatusResponse = {
       typeUrl: "/cosmos.base.node.v1beta1.StatusResponse",
       value: StatusResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(StatusResponse.typeUrl, StatusResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(StatusResponse.aminoType, StatusResponse.typeUrl);

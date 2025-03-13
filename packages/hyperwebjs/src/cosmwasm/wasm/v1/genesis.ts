@@ -1,8 +1,8 @@
 import { Params, ParamsAmino, ParamsSDKType, CodeInfo, CodeInfoAmino, CodeInfoSDKType, ContractInfo, ContractInfoAmino, ContractInfoSDKType, Model, ModelAmino, ModelSDKType, ContractCodeHistoryEntry, ContractCodeHistoryEntryAmino, ContractCodeHistoryEntrySDKType } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmwasm.wasm.v1";
 /** GenesisState - genesis state of x/wasm */
 export interface GenesisState {
@@ -17,10 +17,10 @@ export interface GenesisStateProtoMsg {
 }
 /** GenesisState - genesis state of x/wasm */
 export interface GenesisStateAmino {
-  params?: ParamsAmino;
-  codes?: CodeAmino[];
-  contracts?: ContractAmino[];
-  sequences?: SequenceAmino[];
+  params: ParamsAmino;
+  codes: CodeAmino[];
+  contracts: ContractAmino[];
+  sequences: SequenceAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "wasm/GenesisState";
@@ -47,11 +47,11 @@ export interface CodeProtoMsg {
 }
 /** Code struct encompasses CodeInfo and CodeBytes */
 export interface CodeAmino {
-  code_id?: string;
-  code_info?: CodeInfoAmino;
-  code_bytes?: string;
+  code_id: string;
+  code_info: CodeInfoAmino;
+  code_bytes: string;
   /** Pinned to wasmvm cache */
-  pinned?: boolean;
+  pinned: boolean;
 }
 export interface CodeAminoMsg {
   type: "wasm/Code";
@@ -77,10 +77,10 @@ export interface ContractProtoMsg {
 }
 /** Contract struct encompasses ContractAddress, ContractInfo, and ContractState */
 export interface ContractAmino {
-  contract_address?: string;
-  contract_info?: ContractInfoAmino;
-  contract_state?: ModelAmino[];
-  contract_code_history?: ContractCodeHistoryEntryAmino[];
+  contract_address: string;
+  contract_info: ContractInfoAmino;
+  contract_state: ModelAmino[];
+  contract_code_history: ContractCodeHistoryEntryAmino[];
 }
 export interface ContractAminoMsg {
   type: "wasm/Contract";
@@ -104,8 +104,8 @@ export interface SequenceProtoMsg {
 }
 /** Sequence key and value of an id generation counter */
 export interface SequenceAmino {
-  id_key?: string;
-  value?: string;
+  id_key: string;
+  value: string;
 }
 export interface SequenceAminoMsg {
   type: "wasm/Sequence";
@@ -293,10 +293,14 @@ export const GenesisState = {
       typeUrl: "/cosmwasm.wasm.v1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
+    Code.registerTypeUrl();
+    Contract.registerTypeUrl();
+    Sequence.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);
 function createBaseCode(): Code {
   return {
     codeId: BigInt(0),
@@ -420,7 +424,7 @@ export const Code = {
   },
   toAmino(message: Code): CodeAmino {
     const obj: any = {};
-    obj.code_id = message.codeId !== BigInt(0) ? (message.codeId?.toString)() : undefined;
+    obj.code_id = message.codeId !== BigInt(0) ? message.codeId?.toString() : undefined;
     obj.code_info = message.codeInfo ? CodeInfo.toAmino(message.codeInfo) : undefined;
     obj.code_bytes = message.codeBytes ? base64FromBytes(message.codeBytes) : undefined;
     obj.pinned = message.pinned === false ? undefined : message.pinned;
@@ -446,10 +450,11 @@ export const Code = {
       typeUrl: "/cosmwasm.wasm.v1.Code",
       value: Code.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CodeInfo.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Code.typeUrl, Code);
-GlobalDecoderRegistry.registerAminoProtoMapping(Code.aminoType, Code.typeUrl);
 function createBaseContract(): Contract {
   return {
     contractAddress: "",
@@ -617,10 +622,13 @@ export const Contract = {
       typeUrl: "/cosmwasm.wasm.v1.Contract",
       value: Contract.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ContractInfo.registerTypeUrl();
+    Model.registerTypeUrl();
+    ContractCodeHistoryEntry.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Contract.typeUrl, Contract);
-GlobalDecoderRegistry.registerAminoProtoMapping(Contract.aminoType, Contract.typeUrl);
 function createBaseSequence(): Sequence {
   return {
     idKey: new Uint8Array(),
@@ -713,7 +721,7 @@ export const Sequence = {
   toAmino(message: Sequence): SequenceAmino {
     const obj: any = {};
     obj.id_key = message.idKey ? base64FromBytes(message.idKey) : undefined;
-    obj.value = message.value !== BigInt(0) ? (message.value?.toString)() : undefined;
+    obj.value = message.value !== BigInt(0) ? message.value?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: SequenceAminoMsg): Sequence {
@@ -736,7 +744,6 @@ export const Sequence = {
       typeUrl: "/cosmwasm.wasm.v1.Sequence",
       value: Sequence.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Sequence.typeUrl, Sequence);
-GlobalDecoderRegistry.registerAminoProtoMapping(Sequence.aminoType, Sequence.typeUrl);

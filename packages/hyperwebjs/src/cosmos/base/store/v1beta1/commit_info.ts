@@ -20,8 +20,8 @@ export interface CommitInfoProtoMsg {
  * a version/height.
  */
 export interface CommitInfoAmino {
-  version?: string;
-  store_infos?: StoreInfoAmino[];
+  version: string;
+  store_infos: StoreInfoAmino[];
 }
 export interface CommitInfoAminoMsg {
   type: "cosmos-sdk/CommitInfo";
@@ -52,8 +52,8 @@ export interface StoreInfoProtoMsg {
  * between a store name and the commit ID.
  */
 export interface StoreInfoAmino {
-  name?: string;
-  commit_id?: CommitIDAmino;
+  name: string;
+  commit_id: CommitIDAmino;
 }
 export interface StoreInfoAminoMsg {
   type: "cosmos-sdk/StoreInfo";
@@ -84,8 +84,8 @@ export interface CommitIDProtoMsg {
  * committed.
  */
 export interface CommitIDAmino {
-  version?: string;
-  hash?: string;
+  version: string;
+  hash: string;
 }
 export interface CommitIDAminoMsg {
   type: "cosmos-sdk/CommitID";
@@ -196,7 +196,7 @@ export const CommitInfo = {
   },
   toAmino(message: CommitInfo): CommitInfoAmino {
     const obj: any = {};
-    obj.version = message.version !== BigInt(0) ? (message.version?.toString)() : undefined;
+    obj.version = message.version !== BigInt(0) ? message.version?.toString() : undefined;
     if (message.storeInfos) {
       obj.store_infos = message.storeInfos.map(e => e ? StoreInfo.toAmino(e) : undefined);
     } else {
@@ -224,10 +224,11 @@ export const CommitInfo = {
       typeUrl: "/cosmos.base.store.v1beta1.CommitInfo",
       value: CommitInfo.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    StoreInfo.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CommitInfo.typeUrl, CommitInfo);
-GlobalDecoderRegistry.registerAminoProtoMapping(CommitInfo.aminoType, CommitInfo.typeUrl);
 function createBaseStoreInfo(): StoreInfo {
   return {
     name: "",
@@ -343,10 +344,11 @@ export const StoreInfo = {
       typeUrl: "/cosmos.base.store.v1beta1.StoreInfo",
       value: StoreInfo.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CommitID.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(StoreInfo.typeUrl, StoreInfo);
-GlobalDecoderRegistry.registerAminoProtoMapping(StoreInfo.aminoType, StoreInfo.typeUrl);
 function createBaseCommitID(): CommitID {
   return {
     version: BigInt(0),
@@ -438,7 +440,7 @@ export const CommitID = {
   },
   toAmino(message: CommitID): CommitIDAmino {
     const obj: any = {};
-    obj.version = message.version !== BigInt(0) ? (message.version?.toString)() : undefined;
+    obj.version = message.version !== BigInt(0) ? message.version?.toString() : undefined;
     obj.hash = message.hash ? base64FromBytes(message.hash) : undefined;
     return obj;
   },
@@ -462,7 +464,6 @@ export const CommitID = {
       typeUrl: "/cosmos.base.store.v1beta1.CommitID",
       value: CommitID.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(CommitID.typeUrl, CommitID);
-GlobalDecoderRegistry.registerAminoProtoMapping(CommitID.aminoType, CommitID.typeUrl);

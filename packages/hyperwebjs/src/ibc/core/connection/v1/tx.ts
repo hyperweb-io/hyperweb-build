@@ -2,9 +2,9 @@ import { Counterparty, CounterpartyAmino, CounterpartySDKType, Version, VersionA
 import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../../google/protobuf/any";
 import { Height, HeightAmino, HeightSDKType } from "../../client/v1/client";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.core.connection.v1";
 /**
  * MsgConnectionOpenInit defines the msg sent by an account on Chain A to
@@ -26,11 +26,11 @@ export interface MsgConnectionOpenInitProtoMsg {
  * initialize a connection with Chain B.
  */
 export interface MsgConnectionOpenInitAmino {
-  client_id?: string;
-  counterparty?: CounterpartyAmino;
+  client_id: string;
+  counterparty: CounterpartyAmino;
   version?: VersionAmino;
-  delay_period?: string;
-  signer?: string;
+  delay_period: string;
+  signer: string;
 }
 export interface MsgConnectionOpenInitAminoMsg {
   type: "cosmos-sdk/MsgConnectionOpenInit";
@@ -107,28 +107,28 @@ export interface MsgConnectionOpenTryProtoMsg {
  * connection on Chain B.
  */
 export interface MsgConnectionOpenTryAmino {
-  client_id?: string;
+  client_id: string;
   /**
    * in the case of crossing hello's, when both chains call OpenInit, we need
    * the connection identifier of the previous connection in state INIT
    */
-  previous_connection_id?: string;
+  previous_connection_id: string;
   client_state?: AnyAmino;
-  counterparty?: CounterpartyAmino;
-  delay_period?: string;
-  counterparty_versions?: VersionAmino[];
-  proof_height?: HeightAmino;
+  counterparty: CounterpartyAmino;
+  delay_period: string;
+  counterparty_versions: VersionAmino[];
+  proof_height: HeightAmino;
   /**
    * proof of the initialization the connection on Chain A: `UNITIALIZED ->
    * INIT`
    */
-  proof_init?: string;
+  proof_init: string;
   /** proof of client state included in message */
-  proof_client?: string;
+  proof_client: string;
   /** proof of client consensus state */
-  proof_consensus?: string;
-  consensus_height?: HeightAmino;
-  signer?: string;
+  proof_consensus: string;
+  consensus_height: HeightAmino;
+  signer: string;
 }
 export interface MsgConnectionOpenTryAminoMsg {
   type: "cosmos-sdk/MsgConnectionOpenTry";
@@ -197,22 +197,22 @@ export interface MsgConnectionOpenAckProtoMsg {
  * acknowledge the change of connection state to TRYOPEN on Chain B.
  */
 export interface MsgConnectionOpenAckAmino {
-  connection_id?: string;
-  counterparty_connection_id?: string;
+  connection_id: string;
+  counterparty_connection_id: string;
   version?: VersionAmino;
   client_state?: AnyAmino;
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
   /**
    * proof of the initialization the connection on Chain B: `UNITIALIZED ->
    * TRYOPEN`
    */
-  proof_try?: string;
+  proof_try: string;
   /** proof of client state included in message */
-  proof_client?: string;
+  proof_client: string;
   /** proof of client consensus state */
-  proof_consensus?: string;
-  consensus_height?: HeightAmino;
-  signer?: string;
+  proof_consensus: string;
+  consensus_height: HeightAmino;
+  signer: string;
 }
 export interface MsgConnectionOpenAckAminoMsg {
   type: "cosmos-sdk/MsgConnectionOpenAck";
@@ -268,11 +268,11 @@ export interface MsgConnectionOpenConfirmProtoMsg {
  * acknowledge the change of connection state to OPEN on Chain A.
  */
 export interface MsgConnectionOpenConfirmAmino {
-  connection_id?: string;
+  connection_id: string;
   /** proof for the change of the connection state on Chain A: `INIT -> OPEN` */
-  proof_ack?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  proof_ack: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 export interface MsgConnectionOpenConfirmAminoMsg {
   type: "cosmos-sdk/MsgConnectionOpenConfirm";
@@ -454,7 +454,7 @@ export const MsgConnectionOpenInit = {
     obj.client_id = message.clientId === "" ? undefined : message.clientId;
     obj.counterparty = message.counterparty ? Counterparty.toAmino(message.counterparty) : undefined;
     obj.version = message.version ? Version.toAmino(message.version) : undefined;
-    obj.delay_period = message.delayPeriod !== BigInt(0) ? (message.delayPeriod?.toString)() : undefined;
+    obj.delay_period = message.delayPeriod !== BigInt(0) ? message.delayPeriod?.toString() : undefined;
     obj.signer = message.signer === "" ? undefined : message.signer;
     return obj;
   },
@@ -478,10 +478,12 @@ export const MsgConnectionOpenInit = {
       typeUrl: "/ibc.core.connection.v1.MsgConnectionOpenInit",
       value: MsgConnectionOpenInit.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Counterparty.registerTypeUrl();
+    Version.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgConnectionOpenInit.typeUrl, MsgConnectionOpenInit);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgConnectionOpenInit.aminoType, MsgConnectionOpenInit.typeUrl);
 function createBaseMsgConnectionOpenInitResponse(): MsgConnectionOpenInitResponse {
   return {};
 }
@@ -561,10 +563,9 @@ export const MsgConnectionOpenInitResponse = {
       typeUrl: "/ibc.core.connection.v1.MsgConnectionOpenInitResponse",
       value: MsgConnectionOpenInitResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgConnectionOpenInitResponse.typeUrl, MsgConnectionOpenInitResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgConnectionOpenInitResponse.aminoType, MsgConnectionOpenInitResponse.typeUrl);
 function createBaseMsgConnectionOpenTry(): MsgConnectionOpenTry {
   return {
     clientId: "",
@@ -824,7 +825,7 @@ export const MsgConnectionOpenTry = {
     obj.previous_connection_id = message.previousConnectionId === "" ? undefined : message.previousConnectionId;
     obj.client_state = message.clientState ? Any.toAmino(message.clientState) : undefined;
     obj.counterparty = message.counterparty ? Counterparty.toAmino(message.counterparty) : undefined;
-    obj.delay_period = message.delayPeriod !== BigInt(0) ? (message.delayPeriod?.toString)() : undefined;
+    obj.delay_period = message.delayPeriod !== BigInt(0) ? message.delayPeriod?.toString() : undefined;
     if (message.counterpartyVersions) {
       obj.counterparty_versions = message.counterpartyVersions.map(e => e ? Version.toAmino(e) : undefined);
     } else {
@@ -858,10 +859,13 @@ export const MsgConnectionOpenTry = {
       typeUrl: "/ibc.core.connection.v1.MsgConnectionOpenTry",
       value: MsgConnectionOpenTry.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Counterparty.registerTypeUrl();
+    Version.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgConnectionOpenTry.typeUrl, MsgConnectionOpenTry);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgConnectionOpenTry.aminoType, MsgConnectionOpenTry.typeUrl);
 function createBaseMsgConnectionOpenTryResponse(): MsgConnectionOpenTryResponse {
   return {};
 }
@@ -941,10 +945,9 @@ export const MsgConnectionOpenTryResponse = {
       typeUrl: "/ibc.core.connection.v1.MsgConnectionOpenTryResponse",
       value: MsgConnectionOpenTryResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgConnectionOpenTryResponse.typeUrl, MsgConnectionOpenTryResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgConnectionOpenTryResponse.aminoType, MsgConnectionOpenTryResponse.typeUrl);
 function createBaseMsgConnectionOpenAck(): MsgConnectionOpenAck {
   return {
     connectionId: "",
@@ -1194,10 +1197,11 @@ export const MsgConnectionOpenAck = {
       typeUrl: "/ibc.core.connection.v1.MsgConnectionOpenAck",
       value: MsgConnectionOpenAck.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgConnectionOpenAck.typeUrl, MsgConnectionOpenAck);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgConnectionOpenAck.aminoType, MsgConnectionOpenAck.typeUrl);
 function createBaseMsgConnectionOpenAckResponse(): MsgConnectionOpenAckResponse {
   return {};
 }
@@ -1277,10 +1281,9 @@ export const MsgConnectionOpenAckResponse = {
       typeUrl: "/ibc.core.connection.v1.MsgConnectionOpenAckResponse",
       value: MsgConnectionOpenAckResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgConnectionOpenAckResponse.typeUrl, MsgConnectionOpenAckResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgConnectionOpenAckResponse.aminoType, MsgConnectionOpenAckResponse.typeUrl);
 function createBaseMsgConnectionOpenConfirm(): MsgConnectionOpenConfirm {
   return {
     connectionId: "",
@@ -1428,10 +1431,11 @@ export const MsgConnectionOpenConfirm = {
       typeUrl: "/ibc.core.connection.v1.MsgConnectionOpenConfirm",
       value: MsgConnectionOpenConfirm.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgConnectionOpenConfirm.typeUrl, MsgConnectionOpenConfirm);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgConnectionOpenConfirm.aminoType, MsgConnectionOpenConfirm.typeUrl);
 function createBaseMsgConnectionOpenConfirmResponse(): MsgConnectionOpenConfirmResponse {
   return {};
 }
@@ -1511,7 +1515,6 @@ export const MsgConnectionOpenConfirmResponse = {
       typeUrl: "/ibc.core.connection.v1.MsgConnectionOpenConfirmResponse",
       value: MsgConnectionOpenConfirmResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgConnectionOpenConfirmResponse.typeUrl, MsgConnectionOpenConfirmResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgConnectionOpenConfirmResponse.aminoType, MsgConnectionOpenConfirmResponse.typeUrl);

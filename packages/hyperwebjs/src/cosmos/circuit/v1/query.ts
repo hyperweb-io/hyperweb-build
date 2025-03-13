@@ -15,7 +15,7 @@ export interface QueryAccountRequestProtoMsg {
 }
 /** QueryAccountRequest is the request type for the Query/Account RPC method. */
 export interface QueryAccountRequestAmino {
-  address?: string;
+  address: string;
 }
 export interface QueryAccountRequestAminoMsg {
   type: "cosmos-sdk/QueryAccountRequest";
@@ -79,7 +79,7 @@ export interface AccountsResponseProtoMsg {
 }
 /** AccountsResponse is the response type for the Query/Accounts RPC method. */
 export interface AccountsResponseAmino {
-  accounts?: GenesisAccountPermissionsAmino[];
+  accounts: GenesisAccountPermissionsAmino[];
   /** pagination defines the pagination in the response. */
   pagination?: PageResponseAmino;
 }
@@ -116,7 +116,7 @@ export interface DisabledListResponseProtoMsg {
 }
 /** DisabledListResponse is the response type for the Query/DisabledList RPC method. */
 export interface DisabledListResponseAmino {
-  disabled_list?: string[];
+  disabled_list: string[];
 }
 export interface DisabledListResponseAminoMsg {
   type: "cosmos-sdk/DisabledListResponse";
@@ -223,10 +223,9 @@ export const QueryAccountRequest = {
       typeUrl: "/cosmos.circuit.v1.QueryAccountRequest",
       value: QueryAccountRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryAccountRequest.typeUrl, QueryAccountRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAccountRequest.aminoType, QueryAccountRequest.typeUrl);
 function createBaseAccountResponse(): AccountResponse {
   return {
     permission: undefined
@@ -326,10 +325,11 @@ export const AccountResponse = {
       typeUrl: "/cosmos.circuit.v1.AccountResponse",
       value: AccountResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Permissions.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(AccountResponse.typeUrl, AccountResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(AccountResponse.aminoType, AccountResponse.typeUrl);
 function createBaseQueryAccountsRequest(): QueryAccountsRequest {
   return {
     pagination: undefined
@@ -429,10 +429,11 @@ export const QueryAccountsRequest = {
       typeUrl: "/cosmos.circuit.v1.QueryAccountsRequest",
       value: QueryAccountsRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryAccountsRequest.typeUrl, QueryAccountsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAccountsRequest.aminoType, QueryAccountsRequest.typeUrl);
 function createBaseAccountsResponse(): AccountsResponse {
   return {
     accounts: [],
@@ -558,10 +559,12 @@ export const AccountsResponse = {
       typeUrl: "/cosmos.circuit.v1.AccountsResponse",
       value: AccountsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GenesisAccountPermissions.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(AccountsResponse.typeUrl, AccountsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(AccountsResponse.aminoType, AccountsResponse.typeUrl);
 function createBaseQueryDisabledListRequest(): QueryDisabledListRequest {
   return {};
 }
@@ -641,10 +644,9 @@ export const QueryDisabledListRequest = {
       typeUrl: "/cosmos.circuit.v1.QueryDisabledListRequest",
       value: QueryDisabledListRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryDisabledListRequest.typeUrl, QueryDisabledListRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryDisabledListRequest.aminoType, QueryDisabledListRequest.typeUrl);
 function createBaseDisabledListResponse(): DisabledListResponse {
   return {
     disabledList: []
@@ -752,7 +754,6 @@ export const DisabledListResponse = {
       typeUrl: "/cosmos.circuit.v1.DisabledListResponse",
       value: DisabledListResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(DisabledListResponse.typeUrl, DisabledListResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(DisabledListResponse.aminoType, DisabledListResponse.typeUrl);
