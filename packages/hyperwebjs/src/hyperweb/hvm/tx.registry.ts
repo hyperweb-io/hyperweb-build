@@ -1,5 +1,4 @@
 import { Params, ParamsSDKType } from "./params";
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../google/protobuf/any";
 import { TelescopeGeneratedType } from "../../types";
 import { MsgUpdateParams, MsgUpdateParamsSDKType, MsgInstantiate, MsgInstantiateSDKType, MsgEval, MsgEvalSDKType } from "./tx";
 export const registry: ReadonlyArray<[string, TelescopeGeneratedType<any, any, any>]> = [["/hyperweb.hvm.MsgUpdateParams", MsgUpdateParams], ["/hyperweb.hvm.MsgInstantiate", MsgInstantiate], ["/hyperweb.hvm.MsgEval", MsgEval]];

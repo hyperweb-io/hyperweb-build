@@ -3,7 +3,7 @@ import { Contracts, ContractsSDKType } from "./contracts";
 import { PageRequest, PageRequestSDKType, PageResponse, PageResponseSDKType } from "../../cosmos/base/query/v1beta1/pagination";
 import { TxRpc } from "../../types";
 import { BinaryReader } from "../../binary";
-import { ParamsRequest, ParamsRequestSDKType, ParamsResponse, ParamsResponseSDKType, GetContractRequest, GetContractRequestSDKType, GetContractResponse, GetContractResponseSDKType, ListContractsRequest, ListContractsRequestSDKType, ListContractsResponse, ListContractsResponseSDKType, EvalRequest, EvalRequestSDKType, EvalResponse, EvalResponseSDKType, LocalStateRequest, LocalStateRequestSDKType, LocalStateResponse, LocalStateResponseSDKType, GetContractSourceRequest, GetContractSourceRequestSDKType, GetContractSourceResponse, GetContractSourceResponseSDKType } from "./query";
+import { ParamsRequest, ParamsRequestSDKType, ParamsResponse, ParamsResponseSDKType, GetContractRequest, GetContractRequestSDKType, GetContractResponse, GetContractResponseSDKType, ListContractsRequest, ListContractsRequestSDKType, ListContractsResponse, ListContractsResponseSDKType, EvalRequest, EvalRequestSDKType, EvalResponse, EvalResponseSDKType, LocalStateRequest, LocalStateRequestSDKType, LocalStateResponse, LocalStateResponseSDKType, GetContractSourceRequest, GetContractSourceRequestSDKType, GetContractSourceResponse, GetContractSourceResponseSDKType, GetContractByIndexRequest, GetContractByIndexRequestSDKType, GetContractByIndexResponse, GetContractByIndexResponseSDKType } from "./query";
 /** query defines the gRPC querier service */
 export interface Query {
   /** parameters queries the parameters of the module */
@@ -18,6 +18,7 @@ export interface Query {
   localState(request: LocalStateRequest): Promise<LocalStateResponse>;
   /** fetch TypeScript source */
   getContractSource(request: GetContractSourceRequest): Promise<GetContractSourceResponse>;
+  getContractByIndex(request: GetContractByIndexRequest): Promise<GetContractByIndexResponse>;
 }
 export class QueryClientImpl implements Query {
   private readonly rpc: TxRpc;
@@ -61,6 +62,12 @@ export class QueryClientImpl implements Query {
     const data = GetContractSourceRequest.encode(request).finish();
     const promise = this.rpc.request("hyperweb.hvm.Query", "GetContractSource", data);
     return promise.then(data => GetContractSourceResponse.decode(new BinaryReader(data)));
+  };
+  /* GetContractByIndex */
+  getContractByIndex = async (request: GetContractByIndexRequest): Promise<GetContractByIndexResponse> => {
+    const data = GetContractByIndexRequest.encode(request).finish();
+    const promise = this.rpc.request("hyperweb.hvm.Query", "GetContractByIndex", data);
+    return promise.then(data => GetContractByIndexResponse.decode(new BinaryReader(data)));
   };
 }
 export const createClientImpl = (rpc: TxRpc) => {
