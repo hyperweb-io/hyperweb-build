@@ -2,7 +2,7 @@ import { Params, ParamsSDKType } from "./params";
 import { Contracts, ContractsSDKType } from "./contracts";
 import { PageRequest, PageRequestSDKType, PageResponse, PageResponseSDKType } from "../../cosmos/base/query/v1beta1/pagination";
 import { RpcResolver, buildQuery } from "../../helper-func-types";
-import { ParamsRequest, ParamsRequestSDKType, ParamsResponse, ParamsResponseSDKType, GetContractRequest, GetContractRequestSDKType, GetContractResponse, GetContractResponseSDKType, ListContractsRequest, ListContractsRequestSDKType, ListContractsResponse, ListContractsResponseSDKType, EvalRequest, EvalRequestSDKType, EvalResponse, EvalResponseSDKType, LocalStateRequest, LocalStateRequestSDKType, LocalStateResponse, LocalStateResponseSDKType, GetContractSourceRequest, GetContractSourceRequestSDKType, GetContractSourceResponse, GetContractSourceResponseSDKType } from "./query";
+import { ParamsRequest, ParamsRequestSDKType, ParamsResponse, ParamsResponseSDKType, GetContractRequest, GetContractRequestSDKType, GetContractResponse, GetContractResponseSDKType, ListContractsRequest, ListContractsRequestSDKType, ListContractsResponse, ListContractsResponseSDKType, EvalRequest, EvalRequestSDKType, EvalResponse, EvalResponseSDKType, LocalStateRequest, LocalStateRequestSDKType, LocalStateResponse, LocalStateResponseSDKType, GetContractSourceRequest, GetContractSourceRequestSDKType, GetContractSourceResponse, GetContractSourceResponseSDKType, GetContractByIndexRequest, GetContractByIndexRequestSDKType, GetContractByIndexResponse, GetContractByIndexResponseSDKType } from "./query";
 export const createGetParams = (clientResolver?: RpcResolver) => buildQuery<ParamsRequest, ParamsResponse>({
   encode: ParamsRequest.encode,
   decode: ParamsResponse.decode,
@@ -50,4 +50,12 @@ export const createGetGetContractSource = (clientResolver?: RpcResolver) => buil
   method: "GetContractSource",
   clientResolver,
   deps: [GetContractSourceRequest, GetContractSourceResponse]
+});
+export const createGetGetContractByIndex = (clientResolver?: RpcResolver) => buildQuery<GetContractByIndexRequest, GetContractByIndexResponse>({
+  encode: GetContractByIndexRequest.encode,
+  decode: GetContractByIndexResponse.decode,
+  service: "hyperweb.hvm.Query",
+  method: "GetContractByIndex",
+  clientResolver,
+  deps: [GetContractByIndexRequest, GetContractByIndexResponse]
 });
