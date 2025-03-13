@@ -1,8 +1,8 @@
 import { IdentifiedClientState, IdentifiedClientStateAmino, IdentifiedClientStateSDKType, ClientConsensusStates, ClientConsensusStatesAmino, ClientConsensusStatesSDKType, Params, ParamsAmino, ParamsSDKType } from "./client";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.core.client.v1";
 /** GenesisState defines the ibc client submodule's genesis state. */
 export interface GenesisState {
@@ -25,16 +25,16 @@ export interface GenesisStateProtoMsg {
 /** GenesisState defines the ibc client submodule's genesis state. */
 export interface GenesisStateAmino {
   /** client states with their corresponding identifiers */
-  clients?: IdentifiedClientStateAmino[];
+  clients: IdentifiedClientStateAmino[];
   /** consensus states from each client */
-  clients_consensus?: ClientConsensusStatesAmino[];
+  clients_consensus: ClientConsensusStatesAmino[];
   /** metadata from each client */
-  clients_metadata?: IdentifiedGenesisMetadataAmino[];
-  params?: ParamsAmino;
+  clients_metadata: IdentifiedGenesisMetadataAmino[];
+  params: ParamsAmino;
   /** create localhost on initialization */
-  create_localhost?: boolean;
+  create_localhost: boolean;
   /** the sequence for the next generated client identifier */
-  next_client_sequence?: string;
+  next_client_sequence: string;
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -69,9 +69,9 @@ export interface GenesisMetadataProtoMsg {
  */
 export interface GenesisMetadataAmino {
   /** store key of metadata without clientID-prefix */
-  key?: string;
+  key: string;
   /** metadata value */
-  value?: string;
+  value: string;
 }
 export interface GenesisMetadataAminoMsg {
   type: "cosmos-sdk/GenesisMetadata";
@@ -102,8 +102,8 @@ export interface IdentifiedGenesisMetadataProtoMsg {
  * client id.
  */
 export interface IdentifiedGenesisMetadataAmino {
-  client_id?: string;
-  client_metadata?: GenesisMetadataAmino[];
+  client_id: string;
+  client_metadata: GenesisMetadataAmino[];
 }
 export interface IdentifiedGenesisMetadataAminoMsg {
   type: "cosmos-sdk/IdentifiedGenesisMetadata";
@@ -305,7 +305,7 @@ export const GenesisState = {
     }
     obj.params = message.params ? Params.toAmino(message.params) : undefined;
     obj.create_localhost = message.createLocalhost === false ? undefined : message.createLocalhost;
-    obj.next_client_sequence = message.nextClientSequence !== BigInt(0) ? (message.nextClientSequence?.toString)() : undefined;
+    obj.next_client_sequence = message.nextClientSequence !== BigInt(0) ? message.nextClientSequence?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: GenesisStateAminoMsg): GenesisState {
@@ -328,10 +328,14 @@ export const GenesisState = {
       typeUrl: "/ibc.core.client.v1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IdentifiedClientState.registerTypeUrl();
+    ClientConsensusStates.registerTypeUrl();
+    IdentifiedGenesisMetadata.registerTypeUrl();
+    Params.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);
 function createBaseGenesisMetadata(): GenesisMetadata {
   return {
     key: new Uint8Array(),
@@ -445,10 +449,9 @@ export const GenesisMetadata = {
       typeUrl: "/ibc.core.client.v1.GenesisMetadata",
       value: GenesisMetadata.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GenesisMetadata.typeUrl, GenesisMetadata);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisMetadata.aminoType, GenesisMetadata.typeUrl);
 function createBaseIdentifiedGenesisMetadata(): IdentifiedGenesisMetadata {
   return {
     clientId: "",
@@ -572,7 +575,8 @@ export const IdentifiedGenesisMetadata = {
       typeUrl: "/ibc.core.client.v1.IdentifiedGenesisMetadata",
       value: IdentifiedGenesisMetadata.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GenesisMetadata.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(IdentifiedGenesisMetadata.typeUrl, IdentifiedGenesisMetadata);
-GlobalDecoderRegistry.registerAminoProtoMapping(IdentifiedGenesisMetadata.aminoType, IdentifiedGenesisMetadata.typeUrl);

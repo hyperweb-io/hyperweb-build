@@ -8,9 +8,9 @@ import { GenesisState as GenesisState3 } from "../../channel/v1/genesis";
 import { GenesisStateAmino as GenesisState3Amino } from "../../channel/v1/genesis";
 import { GenesisStateSDKType as GenesisState3SDKType } from "../../channel/v1/genesis";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.core.types.v1";
 /** GenesisState defines the ibc module's genesis state. */
 export interface GenesisState {
@@ -28,11 +28,11 @@ export interface GenesisStateProtoMsg {
 /** GenesisState defines the ibc module's genesis state. */
 export interface GenesisStateAmino {
   /** ICS002 - Clients genesis state */
-  client_genesis?: GenesisState1Amino;
+  client_genesis: GenesisState1Amino;
   /** ICS003 - Connections genesis state */
-  connection_genesis?: GenesisState2Amino;
+  connection_genesis: GenesisState2Amino;
   /** ICS004 - Channel genesis state */
-  channel_genesis?: GenesisState3Amino;
+  channel_genesis: GenesisState3Amino;
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -179,7 +179,10 @@ export const GenesisState = {
       typeUrl: "/ibc.core.types.v1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GenesisState1.registerTypeUrl();
+    GenesisState2.registerTypeUrl();
+    GenesisState3.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);

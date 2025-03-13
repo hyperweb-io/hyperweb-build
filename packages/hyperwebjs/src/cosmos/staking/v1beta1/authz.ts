@@ -1,8 +1,8 @@
 import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
 import { isSet, DeepPartial } from "../../../helpers";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { JsonSafe } from "../../../json-safe";
 import { GlobalDecoderRegistry } from "../../../registry";
+import { JsonSafe } from "../../../json-safe";
 export const protobufPackage = "cosmos.staking.v1beta1";
 /**
  * AuthorizationType defines the type of staking module authorization type
@@ -109,7 +109,7 @@ export interface StakeAuthorizationAmino {
   /** deny_list specifies list of validator addresses to whom grantee can not delegate tokens. */
   deny_list?: StakeAuthorization_ValidatorsAmino;
   /** authorization_type defines one of AuthorizationType. */
-  authorization_type?: AuthorizationType;
+  authorization_type: AuthorizationType;
 }
 export interface StakeAuthorizationAminoMsg {
   type: "cosmos-sdk/StakeAuthorization";
@@ -137,7 +137,7 @@ export interface StakeAuthorization_ValidatorsProtoMsg {
 }
 /** Validators defines list of validator addresses. */
 export interface StakeAuthorization_ValidatorsAmino {
-  address?: string[];
+  address: string[];
 }
 export interface StakeAuthorization_ValidatorsAminoMsg {
   type: "cosmos-sdk/Validators";
@@ -299,10 +299,14 @@ export const StakeAuthorization = {
       typeUrl: "/cosmos.staking.v1beta1.StakeAuthorization",
       value: StakeAuthorization.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(StakeAuthorization.typeUrl, StakeAuthorization);
+    GlobalDecoderRegistry.registerAminoProtoMapping(StakeAuthorization.aminoType, StakeAuthorization.typeUrl);
+    Coin.registerTypeUrl();
+    StakeAuthorization_Validators.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(StakeAuthorization.typeUrl, StakeAuthorization);
-GlobalDecoderRegistry.registerAminoProtoMapping(StakeAuthorization.aminoType, StakeAuthorization.typeUrl);
 function createBaseStakeAuthorization_Validators(): StakeAuthorization_Validators {
   return {
     address: []
@@ -410,7 +414,6 @@ export const StakeAuthorization_Validators = {
       typeUrl: "/cosmos.staking.v1beta1.Validators",
       value: StakeAuthorization_Validators.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(StakeAuthorization_Validators.typeUrl, StakeAuthorization_Validators);
-GlobalDecoderRegistry.registerAminoProtoMapping(StakeAuthorization_Validators.aminoType, StakeAuthorization_Validators.typeUrl);

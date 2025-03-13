@@ -1,7 +1,6 @@
 import { Plan, PlanSDKType, ModuleVersion, ModuleVersionSDKType } from "./upgrade";
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryCurrentPlanRequest, QueryCurrentPlanRequestSDKType, QueryCurrentPlanResponse, QueryCurrentPlanResponseSDKType, QueryAppliedPlanRequest, QueryAppliedPlanRequestSDKType, QueryAppliedPlanResponse, QueryAppliedPlanResponseSDKType, QueryUpgradedConsensusStateRequest, QueryUpgradedConsensusStateRequestSDKType, QueryUpgradedConsensusStateResponse, QueryUpgradedConsensusStateResponseSDKType, QueryModuleVersionsRequest, QueryModuleVersionsRequestSDKType, QueryModuleVersionsResponse, QueryModuleVersionsResponseSDKType, QueryAuthorityRequest, QueryAuthorityRequestSDKType, QueryAuthorityResponse, QueryAuthorityResponseSDKType } from "./query";
 /** Query defines the gRPC upgrade querier service. */
 export interface Query {
@@ -76,24 +75,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => QueryAuthorityResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    currentPlan(request?: QueryCurrentPlanRequest): Promise<QueryCurrentPlanResponse> {
-      return queryService.currentPlan(request);
-    },
-    appliedPlan(request: QueryAppliedPlanRequest): Promise<QueryAppliedPlanResponse> {
-      return queryService.appliedPlan(request);
-    },
-    upgradedConsensusState(request: QueryUpgradedConsensusStateRequest): Promise<QueryUpgradedConsensusStateResponse> {
-      return queryService.upgradedConsensusState(request);
-    },
-    moduleVersions(request: QueryModuleVersionsRequest): Promise<QueryModuleVersionsResponse> {
-      return queryService.moduleVersions(request);
-    },
-    authority(request?: QueryAuthorityRequest): Promise<QueryAuthorityResponse> {
-      return queryService.authority(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };

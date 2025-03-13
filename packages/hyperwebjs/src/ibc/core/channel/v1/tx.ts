@@ -1,9 +1,9 @@
 import { Channel, ChannelAmino, ChannelSDKType, Packet, PacketAmino, PacketSDKType } from "./channel";
 import { Height, HeightAmino, HeightSDKType } from "../../client/v1/client";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.core.channel.v1";
 /**
  * MsgChannelOpenInit defines an sdk.Msg to initialize a channel handshake. It
@@ -23,9 +23,9 @@ export interface MsgChannelOpenInitProtoMsg {
  * is called by a relayer on Chain A.
  */
 export interface MsgChannelOpenInitAmino {
-  port_id?: string;
-  channel?: ChannelAmino;
-  signer?: string;
+  port_id: string;
+  channel: ChannelAmino;
+  signer: string;
 }
 export interface MsgChannelOpenInitAminoMsg {
   type: "cosmos-sdk/MsgChannelOpenInit";
@@ -80,17 +80,17 @@ export interface MsgChannelOpenTryProtoMsg {
  * on Chain B.
  */
 export interface MsgChannelOpenTryAmino {
-  port_id?: string;
+  port_id: string;
   /**
    * in the case of crossing hello's, when both chains call OpenInit, we need
    * the channel identifier of the previous channel in state INIT
    */
-  previous_channel_id?: string;
-  channel?: ChannelAmino;
-  counterparty_version?: string;
-  proof_init?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  previous_channel_id: string;
+  channel: ChannelAmino;
+  counterparty_version: string;
+  proof_init: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 export interface MsgChannelOpenTryAminoMsg {
   type: "cosmos-sdk/MsgChannelOpenTry";
@@ -145,13 +145,13 @@ export interface MsgChannelOpenAckProtoMsg {
  * the change of channel state to TRYOPEN on Chain B.
  */
 export interface MsgChannelOpenAckAmino {
-  port_id?: string;
-  channel_id?: string;
-  counterparty_channel_id?: string;
-  counterparty_version?: string;
-  proof_try?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  port_id: string;
+  channel_id: string;
+  counterparty_channel_id: string;
+  counterparty_version: string;
+  proof_try: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 export interface MsgChannelOpenAckAminoMsg {
   type: "cosmos-sdk/MsgChannelOpenAck";
@@ -204,11 +204,11 @@ export interface MsgChannelOpenConfirmProtoMsg {
  * acknowledge the change of channel state to OPEN on Chain A.
  */
 export interface MsgChannelOpenConfirmAmino {
-  port_id?: string;
-  channel_id?: string;
-  proof_ack?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  port_id: string;
+  channel_id: string;
+  proof_ack: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 export interface MsgChannelOpenConfirmAminoMsg {
   type: "cosmos-sdk/MsgChannelOpenConfirm";
@@ -266,9 +266,9 @@ export interface MsgChannelCloseInitProtoMsg {
  * to close a channel with Chain B.
  */
 export interface MsgChannelCloseInitAmino {
-  port_id?: string;
-  channel_id?: string;
-  signer?: string;
+  port_id: string;
+  channel_id: string;
+  signer: string;
 }
 export interface MsgChannelCloseInitAminoMsg {
   type: "cosmos-sdk/MsgChannelCloseInit";
@@ -317,11 +317,11 @@ export interface MsgChannelCloseConfirmProtoMsg {
  * to acknowledge the change of channel state to CLOSED on Chain A.
  */
 export interface MsgChannelCloseConfirmAmino {
-  port_id?: string;
-  channel_id?: string;
-  proof_init?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  port_id: string;
+  channel_id: string;
+  proof_init: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 export interface MsgChannelCloseConfirmAminoMsg {
   type: "cosmos-sdk/MsgChannelCloseConfirm";
@@ -374,10 +374,10 @@ export interface MsgRecvPacketProtoMsg {
 }
 /** MsgRecvPacket receives incoming IBC packet */
 export interface MsgRecvPacketAmino {
-  packet?: PacketAmino;
-  proof_commitment?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  packet: PacketAmino;
+  proof_commitment: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 export interface MsgRecvPacketAminoMsg {
   type: "cosmos-sdk/MsgRecvPacket";
@@ -418,11 +418,11 @@ export interface MsgTimeoutProtoMsg {
 }
 /** MsgTimeout receives timed-out packet */
 export interface MsgTimeoutAmino {
-  packet?: PacketAmino;
-  proof_unreceived?: string;
-  proof_height?: HeightAmino;
-  next_sequence_recv?: string;
-  signer?: string;
+  packet: PacketAmino;
+  proof_unreceived: string;
+  proof_height: HeightAmino;
+  next_sequence_recv: string;
+  signer: string;
 }
 export interface MsgTimeoutAminoMsg {
   type: "cosmos-sdk/MsgTimeout";
@@ -465,12 +465,12 @@ export interface MsgTimeoutOnCloseProtoMsg {
 }
 /** MsgTimeoutOnClose timed-out packet upon counterparty channel closure. */
 export interface MsgTimeoutOnCloseAmino {
-  packet?: PacketAmino;
-  proof_unreceived?: string;
-  proof_close?: string;
-  proof_height?: HeightAmino;
-  next_sequence_recv?: string;
-  signer?: string;
+  packet: PacketAmino;
+  proof_unreceived: string;
+  proof_close: string;
+  proof_height: HeightAmino;
+  next_sequence_recv: string;
+  signer: string;
 }
 export interface MsgTimeoutOnCloseAminoMsg {
   type: "cosmos-sdk/MsgTimeoutOnClose";
@@ -513,11 +513,11 @@ export interface MsgAcknowledgementProtoMsg {
 }
 /** MsgAcknowledgement receives incoming IBC acknowledgement */
 export interface MsgAcknowledgementAmino {
-  packet?: PacketAmino;
-  acknowledgement?: string;
-  proof_acked?: string;
-  proof_height?: HeightAmino;
-  signer?: string;
+  packet: PacketAmino;
+  acknowledgement: string;
+  proof_acked: string;
+  proof_height: HeightAmino;
+  signer: string;
 }
 export interface MsgAcknowledgementAminoMsg {
   type: "cosmos-sdk/MsgAcknowledgement";
@@ -676,10 +676,11 @@ export const MsgChannelOpenInit = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelOpenInit",
       value: MsgChannelOpenInit.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Channel.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgChannelOpenInit.typeUrl, MsgChannelOpenInit);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelOpenInit.aminoType, MsgChannelOpenInit.typeUrl);
 function createBaseMsgChannelOpenInitResponse(): MsgChannelOpenInitResponse {
   return {};
 }
@@ -759,10 +760,9 @@ export const MsgChannelOpenInitResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelOpenInitResponse",
       value: MsgChannelOpenInitResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgChannelOpenInitResponse.typeUrl, MsgChannelOpenInitResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelOpenInitResponse.aminoType, MsgChannelOpenInitResponse.typeUrl);
 function createBaseMsgChannelOpenTry(): MsgChannelOpenTry {
   return {
     portId: "",
@@ -960,10 +960,12 @@ export const MsgChannelOpenTry = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelOpenTry",
       value: MsgChannelOpenTry.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Channel.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgChannelOpenTry.typeUrl, MsgChannelOpenTry);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelOpenTry.aminoType, MsgChannelOpenTry.typeUrl);
 function createBaseMsgChannelOpenTryResponse(): MsgChannelOpenTryResponse {
   return {};
 }
@@ -1043,10 +1045,9 @@ export const MsgChannelOpenTryResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelOpenTryResponse",
       value: MsgChannelOpenTryResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgChannelOpenTryResponse.typeUrl, MsgChannelOpenTryResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelOpenTryResponse.aminoType, MsgChannelOpenTryResponse.typeUrl);
 function createBaseMsgChannelOpenAck(): MsgChannelOpenAck {
   return {
     portId: "",
@@ -1242,10 +1243,11 @@ export const MsgChannelOpenAck = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelOpenAck",
       value: MsgChannelOpenAck.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgChannelOpenAck.typeUrl, MsgChannelOpenAck);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelOpenAck.aminoType, MsgChannelOpenAck.typeUrl);
 function createBaseMsgChannelOpenAckResponse(): MsgChannelOpenAckResponse {
   return {};
 }
@@ -1325,10 +1327,9 @@ export const MsgChannelOpenAckResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelOpenAckResponse",
       value: MsgChannelOpenAckResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgChannelOpenAckResponse.typeUrl, MsgChannelOpenAckResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelOpenAckResponse.aminoType, MsgChannelOpenAckResponse.typeUrl);
 function createBaseMsgChannelOpenConfirm(): MsgChannelOpenConfirm {
   return {
     portId: "",
@@ -1492,10 +1493,11 @@ export const MsgChannelOpenConfirm = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelOpenConfirm",
       value: MsgChannelOpenConfirm.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgChannelOpenConfirm.typeUrl, MsgChannelOpenConfirm);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelOpenConfirm.aminoType, MsgChannelOpenConfirm.typeUrl);
 function createBaseMsgChannelOpenConfirmResponse(): MsgChannelOpenConfirmResponse {
   return {};
 }
@@ -1575,10 +1577,9 @@ export const MsgChannelOpenConfirmResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelOpenConfirmResponse",
       value: MsgChannelOpenConfirmResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgChannelOpenConfirmResponse.typeUrl, MsgChannelOpenConfirmResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelOpenConfirmResponse.aminoType, MsgChannelOpenConfirmResponse.typeUrl);
 function createBaseMsgChannelCloseInit(): MsgChannelCloseInit {
   return {
     portId: "",
@@ -1708,10 +1709,9 @@ export const MsgChannelCloseInit = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelCloseInit",
       value: MsgChannelCloseInit.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgChannelCloseInit.typeUrl, MsgChannelCloseInit);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelCloseInit.aminoType, MsgChannelCloseInit.typeUrl);
 function createBaseMsgChannelCloseInitResponse(): MsgChannelCloseInitResponse {
   return {};
 }
@@ -1791,10 +1791,9 @@ export const MsgChannelCloseInitResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelCloseInitResponse",
       value: MsgChannelCloseInitResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgChannelCloseInitResponse.typeUrl, MsgChannelCloseInitResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelCloseInitResponse.aminoType, MsgChannelCloseInitResponse.typeUrl);
 function createBaseMsgChannelCloseConfirm(): MsgChannelCloseConfirm {
   return {
     portId: "",
@@ -1958,10 +1957,11 @@ export const MsgChannelCloseConfirm = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelCloseConfirm",
       value: MsgChannelCloseConfirm.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgChannelCloseConfirm.typeUrl, MsgChannelCloseConfirm);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelCloseConfirm.aminoType, MsgChannelCloseConfirm.typeUrl);
 function createBaseMsgChannelCloseConfirmResponse(): MsgChannelCloseConfirmResponse {
   return {};
 }
@@ -2041,10 +2041,9 @@ export const MsgChannelCloseConfirmResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgChannelCloseConfirmResponse",
       value: MsgChannelCloseConfirmResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgChannelCloseConfirmResponse.typeUrl, MsgChannelCloseConfirmResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgChannelCloseConfirmResponse.aminoType, MsgChannelCloseConfirmResponse.typeUrl);
 function createBaseMsgRecvPacket(): MsgRecvPacket {
   return {
     packet: Packet.fromPartial({}),
@@ -2194,10 +2193,12 @@ export const MsgRecvPacket = {
       typeUrl: "/ibc.core.channel.v1.MsgRecvPacket",
       value: MsgRecvPacket.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Packet.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgRecvPacket.typeUrl, MsgRecvPacket);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgRecvPacket.aminoType, MsgRecvPacket.typeUrl);
 function createBaseMsgRecvPacketResponse(): MsgRecvPacketResponse {
   return {};
 }
@@ -2277,10 +2278,9 @@ export const MsgRecvPacketResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgRecvPacketResponse",
       value: MsgRecvPacketResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgRecvPacketResponse.typeUrl, MsgRecvPacketResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgRecvPacketResponse.aminoType, MsgRecvPacketResponse.typeUrl);
 function createBaseMsgTimeout(): MsgTimeout {
   return {
     packet: Packet.fromPartial({}),
@@ -2424,7 +2424,7 @@ export const MsgTimeout = {
     obj.packet = message.packet ? Packet.toAmino(message.packet) : undefined;
     obj.proof_unreceived = message.proofUnreceived ? base64FromBytes(message.proofUnreceived) : undefined;
     obj.proof_height = message.proofHeight ? Height.toAmino(message.proofHeight) : {};
-    obj.next_sequence_recv = message.nextSequenceRecv !== BigInt(0) ? (message.nextSequenceRecv?.toString)() : undefined;
+    obj.next_sequence_recv = message.nextSequenceRecv !== BigInt(0) ? message.nextSequenceRecv?.toString() : undefined;
     obj.signer = message.signer === "" ? undefined : message.signer;
     return obj;
   },
@@ -2448,10 +2448,12 @@ export const MsgTimeout = {
       typeUrl: "/ibc.core.channel.v1.MsgTimeout",
       value: MsgTimeout.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Packet.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgTimeout.typeUrl, MsgTimeout);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgTimeout.aminoType, MsgTimeout.typeUrl);
 function createBaseMsgTimeoutResponse(): MsgTimeoutResponse {
   return {};
 }
@@ -2531,10 +2533,9 @@ export const MsgTimeoutResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgTimeoutResponse",
       value: MsgTimeoutResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgTimeoutResponse.typeUrl, MsgTimeoutResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgTimeoutResponse.aminoType, MsgTimeoutResponse.typeUrl);
 function createBaseMsgTimeoutOnClose(): MsgTimeoutOnClose {
   return {
     packet: Packet.fromPartial({}),
@@ -2694,7 +2695,7 @@ export const MsgTimeoutOnClose = {
     obj.proof_unreceived = message.proofUnreceived ? base64FromBytes(message.proofUnreceived) : undefined;
     obj.proof_close = message.proofClose ? base64FromBytes(message.proofClose) : undefined;
     obj.proof_height = message.proofHeight ? Height.toAmino(message.proofHeight) : {};
-    obj.next_sequence_recv = message.nextSequenceRecv !== BigInt(0) ? (message.nextSequenceRecv?.toString)() : undefined;
+    obj.next_sequence_recv = message.nextSequenceRecv !== BigInt(0) ? message.nextSequenceRecv?.toString() : undefined;
     obj.signer = message.signer === "" ? undefined : message.signer;
     return obj;
   },
@@ -2718,10 +2719,12 @@ export const MsgTimeoutOnClose = {
       typeUrl: "/ibc.core.channel.v1.MsgTimeoutOnClose",
       value: MsgTimeoutOnClose.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Packet.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgTimeoutOnClose.typeUrl, MsgTimeoutOnClose);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgTimeoutOnClose.aminoType, MsgTimeoutOnClose.typeUrl);
 function createBaseMsgTimeoutOnCloseResponse(): MsgTimeoutOnCloseResponse {
   return {};
 }
@@ -2801,10 +2804,9 @@ export const MsgTimeoutOnCloseResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgTimeoutOnCloseResponse",
       value: MsgTimeoutOnCloseResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgTimeoutOnCloseResponse.typeUrl, MsgTimeoutOnCloseResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgTimeoutOnCloseResponse.aminoType, MsgTimeoutOnCloseResponse.typeUrl);
 function createBaseMsgAcknowledgement(): MsgAcknowledgement {
   return {
     packet: Packet.fromPartial({}),
@@ -2970,10 +2972,12 @@ export const MsgAcknowledgement = {
       typeUrl: "/ibc.core.channel.v1.MsgAcknowledgement",
       value: MsgAcknowledgement.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Packet.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgAcknowledgement.typeUrl, MsgAcknowledgement);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgAcknowledgement.aminoType, MsgAcknowledgement.typeUrl);
 function createBaseMsgAcknowledgementResponse(): MsgAcknowledgementResponse {
   return {};
 }
@@ -3053,7 +3057,6 @@ export const MsgAcknowledgementResponse = {
       typeUrl: "/ibc.core.channel.v1.MsgAcknowledgementResponse",
       value: MsgAcknowledgementResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgAcknowledgementResponse.typeUrl, MsgAcknowledgementResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgAcknowledgementResponse.aminoType, MsgAcknowledgementResponse.typeUrl);

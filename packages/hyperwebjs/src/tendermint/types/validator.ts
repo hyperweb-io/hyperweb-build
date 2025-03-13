@@ -1,8 +1,8 @@
 import { PublicKey, PublicKeyAmino, PublicKeySDKType } from "../crypto/keys";
 import { BinaryReader, BinaryWriter } from "../../binary";
+import { GlobalDecoderRegistry } from "../../registry";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 import { JsonSafe } from "../../json-safe";
-import { GlobalDecoderRegistry } from "../../registry";
 export const protobufPackage = "tendermint.types";
 /** BlockIdFlag indicates which BlockID the signature is for */
 export enum BlockIDFlag {
@@ -62,9 +62,9 @@ export interface ValidatorSetProtoMsg {
   value: Uint8Array;
 }
 export interface ValidatorSetAmino {
-  validators?: ValidatorAmino[];
+  validators: ValidatorAmino[];
   proposer?: ValidatorAmino;
-  total_voting_power?: string;
+  total_voting_power: string;
 }
 export interface ValidatorSetAminoMsg {
   type: "/tendermint.types.ValidatorSet";
@@ -86,10 +86,10 @@ export interface ValidatorProtoMsg {
   value: Uint8Array;
 }
 export interface ValidatorAmino {
-  address?: string;
-  pub_key?: PublicKeyAmino;
-  voting_power?: string;
-  proposer_priority?: string;
+  address: string;
+  pub_key: PublicKeyAmino;
+  voting_power: string;
+  proposer_priority: string;
 }
 export interface ValidatorAminoMsg {
   type: "/tendermint.types.Validator";
@@ -111,7 +111,7 @@ export interface SimpleValidatorProtoMsg {
 }
 export interface SimpleValidatorAmino {
   pub_key?: PublicKeyAmino;
-  voting_power?: string;
+  voting_power: string;
 }
 export interface SimpleValidatorAminoMsg {
   type: "/tendermint.types.SimpleValidator";
@@ -240,7 +240,7 @@ export const ValidatorSet = {
       obj.validators = message.validators;
     }
     obj.proposer = message.proposer ? Validator.toAmino(message.proposer) : undefined;
-    obj.total_voting_power = message.totalVotingPower !== BigInt(0) ? (message.totalVotingPower?.toString)() : undefined;
+    obj.total_voting_power = message.totalVotingPower !== BigInt(0) ? message.totalVotingPower?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ValidatorSetAminoMsg): ValidatorSet {
@@ -257,9 +257,11 @@ export const ValidatorSet = {
       typeUrl: "/tendermint.types.ValidatorSet",
       value: ValidatorSet.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Validator.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ValidatorSet.typeUrl, ValidatorSet);
 function createBaseValidator(): Validator {
   return {
     address: new Uint8Array(),
@@ -386,8 +388,8 @@ export const Validator = {
     const obj: any = {};
     obj.address = message.address ? base64FromBytes(message.address) : undefined;
     obj.pub_key = message.pubKey ? PublicKey.toAmino(message.pubKey) : undefined;
-    obj.voting_power = message.votingPower !== BigInt(0) ? (message.votingPower?.toString)() : undefined;
-    obj.proposer_priority = message.proposerPriority !== BigInt(0) ? (message.proposerPriority?.toString)() : undefined;
+    obj.voting_power = message.votingPower !== BigInt(0) ? message.votingPower?.toString() : undefined;
+    obj.proposer_priority = message.proposerPriority !== BigInt(0) ? message.proposerPriority?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ValidatorAminoMsg): Validator {
@@ -404,9 +406,11 @@ export const Validator = {
       typeUrl: "/tendermint.types.Validator",
       value: Validator.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PublicKey.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Validator.typeUrl, Validator);
 function createBaseSimpleValidator(): SimpleValidator {
   return {
     pubKey: undefined,
@@ -500,7 +504,7 @@ export const SimpleValidator = {
   toAmino(message: SimpleValidator): SimpleValidatorAmino {
     const obj: any = {};
     obj.pub_key = message.pubKey ? PublicKey.toAmino(message.pubKey) : undefined;
-    obj.voting_power = message.votingPower !== BigInt(0) ? (message.votingPower?.toString)() : undefined;
+    obj.voting_power = message.votingPower !== BigInt(0) ? message.votingPower?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: SimpleValidatorAminoMsg): SimpleValidator {
@@ -517,6 +521,8 @@ export const SimpleValidator = {
       typeUrl: "/tendermint.types.SimpleValidator",
       value: SimpleValidator.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PublicKey.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(SimpleValidator.typeUrl, SimpleValidator);

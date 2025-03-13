@@ -2,7 +2,6 @@ import { GroupInfo, GroupInfoAmino, GroupInfoSDKType, GroupMember, GroupMemberAm
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.group.v1";
 /** GenesisState defines the group module's genesis state. */
 export interface GenesisState {
@@ -42,27 +41,27 @@ export interface GenesisStateAmino {
    * group_seq is the group table orm.Sequence,
    * it is used to get the next group ID.
    */
-  group_seq?: string;
+  group_seq: string;
   /** groups is the list of groups info. */
-  groups?: GroupInfoAmino[];
+  groups: GroupInfoAmino[];
   /** group_members is the list of groups members. */
-  group_members?: GroupMemberAmino[];
+  group_members: GroupMemberAmino[];
   /**
    * group_policy_seq is the group policy table orm.Sequence,
    * it is used to generate the next group policy account address.
    */
-  group_policy_seq?: string;
+  group_policy_seq: string;
   /** group_policies is the list of group policies info. */
-  group_policies?: GroupPolicyInfoAmino[];
+  group_policies: GroupPolicyInfoAmino[];
   /**
    * proposal_seq is the proposal table orm.Sequence,
    * it is used to get the next proposal ID.
    */
-  proposal_seq?: string;
+  proposal_seq: string;
   /** proposals is the list of proposals. */
-  proposals?: ProposalAmino[];
+  proposals: ProposalAmino[];
   /** votes is the list of votes. */
-  votes?: VoteAmino[];
+  votes: VoteAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -294,7 +293,7 @@ export const GenesisState = {
   },
   toAmino(message: GenesisState): GenesisStateAmino {
     const obj: any = {};
-    obj.group_seq = message.groupSeq !== BigInt(0) ? (message.groupSeq?.toString)() : undefined;
+    obj.group_seq = message.groupSeq !== BigInt(0) ? message.groupSeq?.toString() : undefined;
     if (message.groups) {
       obj.groups = message.groups.map(e => e ? GroupInfo.toAmino(e) : undefined);
     } else {
@@ -305,13 +304,13 @@ export const GenesisState = {
     } else {
       obj.group_members = message.groupMembers;
     }
-    obj.group_policy_seq = message.groupPolicySeq !== BigInt(0) ? (message.groupPolicySeq?.toString)() : undefined;
+    obj.group_policy_seq = message.groupPolicySeq !== BigInt(0) ? message.groupPolicySeq?.toString() : undefined;
     if (message.groupPolicies) {
       obj.group_policies = message.groupPolicies.map(e => e ? GroupPolicyInfo.toAmino(e) : undefined);
     } else {
       obj.group_policies = message.groupPolicies;
     }
-    obj.proposal_seq = message.proposalSeq !== BigInt(0) ? (message.proposalSeq?.toString)() : undefined;
+    obj.proposal_seq = message.proposalSeq !== BigInt(0) ? message.proposalSeq?.toString() : undefined;
     if (message.proposals) {
       obj.proposals = message.proposals.map(e => e ? Proposal.toAmino(e) : undefined);
     } else {
@@ -344,7 +343,12 @@ export const GenesisState = {
       typeUrl: "/cosmos.group.v1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GroupInfo.registerTypeUrl();
+    GroupMember.registerTypeUrl();
+    GroupPolicyInfo.registerTypeUrl();
+    Proposal.registerTypeUrl();
+    Vote.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);

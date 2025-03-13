@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmwasm.wasm.v1";
 /** MsgIBCSend */
 export interface MsgIBCSend {
@@ -30,22 +29,22 @@ export interface MsgIBCSendProtoMsg {
 /** MsgIBCSend */
 export interface MsgIBCSendAmino {
   /** the channel by which the packet will be sent */
-  channel?: string;
+  channel: string;
   /**
    * Timeout height relative to the current block height.
    * The timeout is disabled when set to 0.
    */
-  timeout_height?: string;
+  timeout_height: string;
   /**
    * Timeout timestamp (in nanoseconds) relative to the current block timestamp.
    * The timeout is disabled when set to 0.
    */
-  timeout_timestamp?: string;
+  timeout_timestamp: string;
   /**
    * Data is the payload to transfer. We must not make assumption what format or
    * content is in here.
    */
-  data?: string;
+  data: string;
 }
 export interface MsgIBCSendAminoMsg {
   type: "wasm/MsgIBCSend";
@@ -68,7 +67,7 @@ export interface MsgIBCCloseChannelProtoMsg {
 }
 /** MsgIBCCloseChannel port and channel need to be owned by the contract */
 export interface MsgIBCCloseChannelAmino {
-  channel?: string;
+  channel: string;
 }
 export interface MsgIBCCloseChannelAminoMsg {
   type: "wasm/MsgIBCCloseChannel";
@@ -202,8 +201,8 @@ export const MsgIBCSend = {
   toAmino(message: MsgIBCSend): MsgIBCSendAmino {
     const obj: any = {};
     obj.channel = message.channel === "" ? undefined : message.channel;
-    obj.timeout_height = message.timeoutHeight !== BigInt(0) ? (message.timeoutHeight?.toString)() : undefined;
-    obj.timeout_timestamp = message.timeoutTimestamp !== BigInt(0) ? (message.timeoutTimestamp?.toString)() : undefined;
+    obj.timeout_height = message.timeoutHeight !== BigInt(0) ? message.timeoutHeight?.toString() : undefined;
+    obj.timeout_timestamp = message.timeoutTimestamp !== BigInt(0) ? message.timeoutTimestamp?.toString() : undefined;
     obj.data = message.data ? base64FromBytes(message.data) : undefined;
     return obj;
   },
@@ -227,10 +226,9 @@ export const MsgIBCSend = {
       typeUrl: "/cosmwasm.wasm.v1.MsgIBCSend",
       value: MsgIBCSend.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgIBCSend.typeUrl, MsgIBCSend);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgIBCSend.aminoType, MsgIBCSend.typeUrl);
 function createBaseMsgIBCCloseChannel(): MsgIBCCloseChannel {
   return {
     channel: ""
@@ -328,7 +326,6 @@ export const MsgIBCCloseChannel = {
       typeUrl: "/cosmwasm.wasm.v1.MsgIBCCloseChannel",
       value: MsgIBCCloseChannel.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgIBCCloseChannel.typeUrl, MsgIBCCloseChannel);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgIBCCloseChannel.aminoType, MsgIBCCloseChannel.typeUrl);

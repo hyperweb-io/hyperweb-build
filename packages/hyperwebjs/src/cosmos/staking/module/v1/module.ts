@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.staking.module.v1";
 /** Module is the config object of the staking module. */
 export interface Module {
@@ -29,13 +28,13 @@ export interface ModuleAmino {
    * of module names which provide a staking hooks instance. If no order is
    * provided, then hooks will be applied in alphabetical order of module names.
    */
-  hooks_order?: string[];
+  hooks_order: string[];
   /** authority defines the custom module authority. If not set, defaults to the governance module. */
-  authority?: string;
+  authority: string;
   /** bech32_prefix_validator is the bech32 validator prefix for the app. */
-  bech32_prefix_validator?: string;
+  bech32_prefix_validator: string;
   /** bech32_prefix_consensus is the bech32 consensus node prefix for the app. */
-  bech32_prefix_consensus?: string;
+  bech32_prefix_consensus: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
@@ -203,7 +202,6 @@ export const Module = {
       typeUrl: "/cosmos.staking.module.v1.Module",
       value: Module.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Module.typeUrl, Module);
-GlobalDecoderRegistry.registerAminoProtoMapping(Module.aminoType, Module.typeUrl);

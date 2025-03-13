@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.base.store.v1beta1";
 /**
  * StoreKVPair is a KVStore KVPair used for listening to state changes (Sets and Deletes)
@@ -31,11 +30,11 @@ export interface StoreKVPairProtoMsg {
  */
 export interface StoreKVPairAmino {
   /** the store key for the KVStore this pair originates from */
-  store_key?: string;
+  store_key: string;
   /** true indicates a delete operation, false indicates a set operation */
-  delete?: boolean;
-  key?: string;
-  value?: string;
+  delete: boolean;
+  key: string;
+  value: string;
 }
 export interface StoreKVPairAminoMsg {
   type: "cosmos-sdk/StoreKVPair";
@@ -199,7 +198,6 @@ export const StoreKVPair = {
       typeUrl: "/cosmos.base.store.v1beta1.StoreKVPair",
       value: StoreKVPair.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(StoreKVPair.typeUrl, StoreKVPair);
-GlobalDecoderRegistry.registerAminoProtoMapping(StoreKVPair.aminoType, StoreKVPair.typeUrl);

@@ -1,8 +1,8 @@
 import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.core.client.v1";
 /** MsgCreateClient defines a message to create an IBC client */
 export interface MsgCreateClient {
@@ -30,7 +30,7 @@ export interface MsgCreateClientAmino {
    */
   consensus_state?: AnyAmino;
   /** signer address */
-  signer?: string;
+  signer: string;
 }
 export interface MsgCreateClientAminoMsg {
   type: "cosmos-sdk/MsgCreateClient";
@@ -78,11 +78,11 @@ export interface MsgUpdateClientProtoMsg {
  */
 export interface MsgUpdateClientAmino {
   /** client unique identifier */
-  client_id?: string;
+  client_id: string;
   /** header to update the light client */
   header?: AnyAmino;
   /** signer address */
-  signer?: string;
+  signer: string;
 }
 export interface MsgUpdateClientAminoMsg {
   type: "cosmos-sdk/MsgUpdateClient";
@@ -142,7 +142,7 @@ export interface MsgUpgradeClientProtoMsg {
  */
 export interface MsgUpgradeClientAmino {
   /** client unique identifier */
-  client_id?: string;
+  client_id: string;
   /** upgraded client state */
   client_state?: AnyAmino;
   /**
@@ -151,11 +151,11 @@ export interface MsgUpgradeClientAmino {
    */
   consensus_state?: AnyAmino;
   /** proof that old chain committed to new client */
-  proof_upgrade_client?: string;
+  proof_upgrade_client: string;
   /** proof that old chain committed to new consensus state */
-  proof_upgrade_consensus_state?: string;
+  proof_upgrade_consensus_state: string;
   /** signer address */
-  signer?: string;
+  signer: string;
 }
 export interface MsgUpgradeClientAminoMsg {
   type: "cosmos-sdk/MsgUpgradeClient";
@@ -209,11 +209,11 @@ export interface MsgSubmitMisbehaviourProtoMsg {
  */
 export interface MsgSubmitMisbehaviourAmino {
   /** client unique identifier */
-  client_id?: string;
+  client_id: string;
   /** misbehaviour used for freezing the light client */
   misbehaviour?: AnyAmino;
   /** signer address */
-  signer?: string;
+  signer: string;
 }
 export interface MsgSubmitMisbehaviourAminoMsg {
   type: "cosmos-sdk/MsgSubmitMisbehaviour";
@@ -384,10 +384,9 @@ export const MsgCreateClient = {
       typeUrl: "/ibc.core.client.v1.MsgCreateClient",
       value: MsgCreateClient.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgCreateClient.typeUrl, MsgCreateClient);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgCreateClient.aminoType, MsgCreateClient.typeUrl);
 function createBaseMsgCreateClientResponse(): MsgCreateClientResponse {
   return {};
 }
@@ -467,10 +466,9 @@ export const MsgCreateClientResponse = {
       typeUrl: "/ibc.core.client.v1.MsgCreateClientResponse",
       value: MsgCreateClientResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgCreateClientResponse.typeUrl, MsgCreateClientResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgCreateClientResponse.aminoType, MsgCreateClientResponse.typeUrl);
 function createBaseMsgUpdateClient(): MsgUpdateClient {
   return {
     clientId: "",
@@ -602,10 +600,9 @@ export const MsgUpdateClient = {
       typeUrl: "/ibc.core.client.v1.MsgUpdateClient",
       value: MsgUpdateClient.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgUpdateClient.typeUrl, MsgUpdateClient);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpdateClient.aminoType, MsgUpdateClient.typeUrl);
 function createBaseMsgUpdateClientResponse(): MsgUpdateClientResponse {
   return {};
 }
@@ -685,10 +682,9 @@ export const MsgUpdateClientResponse = {
       typeUrl: "/ibc.core.client.v1.MsgUpdateClientResponse",
       value: MsgUpdateClientResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgUpdateClientResponse.typeUrl, MsgUpdateClientResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpdateClientResponse.aminoType, MsgUpdateClientResponse.typeUrl);
 function createBaseMsgUpgradeClient(): MsgUpgradeClient {
   return {
     clientId: "",
@@ -870,10 +866,9 @@ export const MsgUpgradeClient = {
       typeUrl: "/ibc.core.client.v1.MsgUpgradeClient",
       value: MsgUpgradeClient.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgUpgradeClient.typeUrl, MsgUpgradeClient);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpgradeClient.aminoType, MsgUpgradeClient.typeUrl);
 function createBaseMsgUpgradeClientResponse(): MsgUpgradeClientResponse {
   return {};
 }
@@ -953,10 +948,9 @@ export const MsgUpgradeClientResponse = {
       typeUrl: "/ibc.core.client.v1.MsgUpgradeClientResponse",
       value: MsgUpgradeClientResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgUpgradeClientResponse.typeUrl, MsgUpgradeClientResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpgradeClientResponse.aminoType, MsgUpgradeClientResponse.typeUrl);
 function createBaseMsgSubmitMisbehaviour(): MsgSubmitMisbehaviour {
   return {
     clientId: "",
@@ -1088,10 +1082,9 @@ export const MsgSubmitMisbehaviour = {
       typeUrl: "/ibc.core.client.v1.MsgSubmitMisbehaviour",
       value: MsgSubmitMisbehaviour.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgSubmitMisbehaviour.typeUrl, MsgSubmitMisbehaviour);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgSubmitMisbehaviour.aminoType, MsgSubmitMisbehaviour.typeUrl);
 function createBaseMsgSubmitMisbehaviourResponse(): MsgSubmitMisbehaviourResponse {
   return {};
 }
@@ -1171,7 +1164,6 @@ export const MsgSubmitMisbehaviourResponse = {
       typeUrl: "/ibc.core.client.v1.MsgSubmitMisbehaviourResponse",
       value: MsgSubmitMisbehaviourResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgSubmitMisbehaviourResponse.typeUrl, MsgSubmitMisbehaviourResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgSubmitMisbehaviourResponse.aminoType, MsgSubmitMisbehaviourResponse.typeUrl);

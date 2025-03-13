@@ -1,8 +1,8 @@
 import { Permissions, PermissionsAmino, PermissionsSDKType } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.circuit.v1";
 /** MsgAuthorizeCircuitBreaker defines the Msg/AuthorizeCircuitBreaker request type. */
 export interface MsgAuthorizeCircuitBreaker {
@@ -30,9 +30,9 @@ export interface MsgAuthorizeCircuitBreakerAmino {
    * granter is the granter of the circuit breaker permissions and must have
    * LEVEL_SUPER_ADMIN.
    */
-  granter?: string;
+  granter: string;
   /** grantee is the account authorized with the provided permissions. */
-  grantee?: string;
+  grantee: string;
   /**
    * permissions are the circuit breaker permissions that the grantee receives.
    * These will overwrite any existing permissions. LEVEL_NONE_UNSPECIFIED can
@@ -60,7 +60,7 @@ export interface MsgAuthorizeCircuitBreakerResponseProtoMsg {
 }
 /** MsgAuthorizeCircuitBreakerResponse defines the Msg/AuthorizeCircuitBreaker response type. */
 export interface MsgAuthorizeCircuitBreakerResponseAmino {
-  success?: boolean;
+  success: boolean;
 }
 export interface MsgAuthorizeCircuitBreakerResponseAminoMsg {
   type: "cosmos-sdk/MsgAuthorizeCircuitBreakerResponse";
@@ -90,7 +90,7 @@ export interface MsgTripCircuitBreakerProtoMsg {
 /** MsgTripCircuitBreaker defines the Msg/TripCircuitBreaker request type. */
 export interface MsgTripCircuitBreakerAmino {
   /** authority is the account authorized to trip the circuit breaker. */
-  authority?: string;
+  authority: string;
   /**
    * msg_type_urls specifies a list of type URLs to immediately stop processing.
    * IF IT IS LEFT EMPTY, ALL MSG PROCESSING WILL STOP IMMEDIATELY.
@@ -98,7 +98,7 @@ export interface MsgTripCircuitBreakerAmino {
    * authority does not have permissions to trip the specified msg type URLs
    * (or all URLs), the operation will fail.
    */
-  msg_type_urls?: string[];
+  msg_type_urls: string[];
 }
 export interface MsgTripCircuitBreakerAminoMsg {
   type: "cosmos-sdk/MsgTripCircuitBreaker";
@@ -119,7 +119,7 @@ export interface MsgTripCircuitBreakerResponseProtoMsg {
 }
 /** MsgTripCircuitBreakerResponse defines the Msg/TripCircuitBreaker response type. */
 export interface MsgTripCircuitBreakerResponseAmino {
-  success?: boolean;
+  success: boolean;
 }
 export interface MsgTripCircuitBreakerResponseAminoMsg {
   type: "cosmos-sdk/MsgTripCircuitBreakerResponse";
@@ -147,13 +147,13 @@ export interface MsgResetCircuitBreakerProtoMsg {
 /** MsgResetCircuitBreaker defines the Msg/ResetCircuitBreaker request type. */
 export interface MsgResetCircuitBreakerAmino {
   /** authority is the account authorized to trip or reset the circuit breaker. */
-  authority?: string;
+  authority: string;
   /**
    * msg_type_urls specifies a list of Msg type URLs to resume processing. If
    * it is left empty all Msg processing for type URLs that the account is
    * authorized to trip will resume.
    */
-  msg_type_urls?: string[];
+  msg_type_urls: string[];
 }
 export interface MsgResetCircuitBreakerAminoMsg {
   type: "cosmos-sdk/MsgResetCircuitBreaker";
@@ -174,7 +174,7 @@ export interface MsgResetCircuitBreakerResponseProtoMsg {
 }
 /** MsgResetCircuitBreakerResponse defines the Msg/ResetCircuitBreaker response type. */
 export interface MsgResetCircuitBreakerResponseAmino {
-  success?: boolean;
+  success: boolean;
 }
 export interface MsgResetCircuitBreakerResponseAminoMsg {
   type: "cosmos-sdk/MsgResetCircuitBreakerResponse";
@@ -315,10 +315,11 @@ export const MsgAuthorizeCircuitBreaker = {
       typeUrl: "/cosmos.circuit.v1.MsgAuthorizeCircuitBreaker",
       value: MsgAuthorizeCircuitBreaker.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Permissions.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgAuthorizeCircuitBreaker.typeUrl, MsgAuthorizeCircuitBreaker);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgAuthorizeCircuitBreaker.aminoType, MsgAuthorizeCircuitBreaker.typeUrl);
 function createBaseMsgAuthorizeCircuitBreakerResponse(): MsgAuthorizeCircuitBreakerResponse {
   return {
     success: false
@@ -416,10 +417,9 @@ export const MsgAuthorizeCircuitBreakerResponse = {
       typeUrl: "/cosmos.circuit.v1.MsgAuthorizeCircuitBreakerResponse",
       value: MsgAuthorizeCircuitBreakerResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgAuthorizeCircuitBreakerResponse.typeUrl, MsgAuthorizeCircuitBreakerResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgAuthorizeCircuitBreakerResponse.aminoType, MsgAuthorizeCircuitBreakerResponse.typeUrl);
 function createBaseMsgTripCircuitBreaker(): MsgTripCircuitBreaker {
   return {
     authority: "",
@@ -543,10 +543,9 @@ export const MsgTripCircuitBreaker = {
       typeUrl: "/cosmos.circuit.v1.MsgTripCircuitBreaker",
       value: MsgTripCircuitBreaker.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgTripCircuitBreaker.typeUrl, MsgTripCircuitBreaker);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgTripCircuitBreaker.aminoType, MsgTripCircuitBreaker.typeUrl);
 function createBaseMsgTripCircuitBreakerResponse(): MsgTripCircuitBreakerResponse {
   return {
     success: false
@@ -644,10 +643,9 @@ export const MsgTripCircuitBreakerResponse = {
       typeUrl: "/cosmos.circuit.v1.MsgTripCircuitBreakerResponse",
       value: MsgTripCircuitBreakerResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgTripCircuitBreakerResponse.typeUrl, MsgTripCircuitBreakerResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgTripCircuitBreakerResponse.aminoType, MsgTripCircuitBreakerResponse.typeUrl);
 function createBaseMsgResetCircuitBreaker(): MsgResetCircuitBreaker {
   return {
     authority: "",
@@ -771,10 +769,9 @@ export const MsgResetCircuitBreaker = {
       typeUrl: "/cosmos.circuit.v1.MsgResetCircuitBreaker",
       value: MsgResetCircuitBreaker.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgResetCircuitBreaker.typeUrl, MsgResetCircuitBreaker);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgResetCircuitBreaker.aminoType, MsgResetCircuitBreaker.typeUrl);
 function createBaseMsgResetCircuitBreakerResponse(): MsgResetCircuitBreakerResponse {
   return {
     success: false
@@ -872,7 +869,6 @@ export const MsgResetCircuitBreakerResponse = {
       typeUrl: "/cosmos.circuit.v1.MsgResetCircuitBreakerResponse",
       value: MsgResetCircuitBreakerResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgResetCircuitBreakerResponse.typeUrl, MsgResetCircuitBreakerResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgResetCircuitBreakerResponse.aminoType, MsgResetCircuitBreakerResponse.typeUrl);

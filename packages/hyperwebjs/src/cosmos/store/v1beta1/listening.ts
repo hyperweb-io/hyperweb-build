@@ -32,11 +32,11 @@ export interface StoreKVPairProtoMsg {
  */
 export interface StoreKVPairAmino {
   /** the store key for the KVStore this pair originates from */
-  store_key?: string;
+  store_key: string;
   /** true indicates a delete operation, false indicates a set operation */
-  delete?: boolean;
-  key?: string;
-  value?: string;
+  delete: boolean;
+  key: string;
+  value: string;
 }
 export interface StoreKVPairAminoMsg {
   type: "cosmos-sdk/StoreKVPair";
@@ -237,10 +237,9 @@ export const StoreKVPair = {
       typeUrl: "/cosmos.store.v1beta1.StoreKVPair",
       value: StoreKVPair.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(StoreKVPair.typeUrl, StoreKVPair);
-GlobalDecoderRegistry.registerAminoProtoMapping(StoreKVPair.aminoType, StoreKVPair.typeUrl);
 function createBaseBlockMetadata(): BlockMetadata {
   return {
     responseCommit: undefined,
@@ -376,7 +375,10 @@ export const BlockMetadata = {
       typeUrl: "/cosmos.store.v1beta1.BlockMetadata",
       value: BlockMetadata.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ResponseCommit.registerTypeUrl();
+    RequestFinalizeBlock.registerTypeUrl();
+    ResponseFinalizeBlock.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(BlockMetadata.typeUrl, BlockMetadata);
-GlobalDecoderRegistry.registerAminoProtoMapping(BlockMetadata.aminoType, BlockMetadata.typeUrl);

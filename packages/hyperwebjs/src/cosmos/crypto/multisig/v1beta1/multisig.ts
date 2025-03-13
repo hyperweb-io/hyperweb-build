@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { bytesFromBase64, base64FromBytes, DeepPartial, isSet } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.crypto.multisig.v1beta1";
 /**
  * MultiSignature wraps the signatures from a multisig.LegacyAminoPubKey.
@@ -21,7 +20,7 @@ export interface MultiSignatureProtoMsg {
  * signed and with which modes.
  */
 export interface MultiSignatureAmino {
-  signatures?: string[];
+  signatures: string[];
 }
 export interface MultiSignatureAminoMsg {
   type: "cosmos-sdk/MultiSignature";
@@ -56,8 +55,8 @@ export interface CompactBitArrayProtoMsg {
  * This is not thread safe, and is not intended for concurrent usage.
  */
 export interface CompactBitArrayAmino {
-  extra_bits_stored?: number;
-  elems?: string;
+  extra_bits_stored: number;
+  elems: string;
 }
 export interface CompactBitArrayAminoMsg {
   type: "cosmos-sdk/CompactBitArray";
@@ -180,10 +179,9 @@ export const MultiSignature = {
       typeUrl: "/cosmos.crypto.multisig.v1beta1.MultiSignature",
       value: MultiSignature.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MultiSignature.typeUrl, MultiSignature);
-GlobalDecoderRegistry.registerAminoProtoMapping(MultiSignature.aminoType, MultiSignature.typeUrl);
 function createBaseCompactBitArray(): CompactBitArray {
   return {
     extraBitsStored: 0,
@@ -297,7 +295,6 @@ export const CompactBitArray = {
       typeUrl: "/cosmos.crypto.multisig.v1beta1.CompactBitArray",
       value: CompactBitArray.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(CompactBitArray.typeUrl, CompactBitArray);
-GlobalDecoderRegistry.registerAminoProtoMapping(CompactBitArray.aminoType, CompactBitArray.typeUrl);

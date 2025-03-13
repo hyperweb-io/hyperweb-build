@@ -2,7 +2,6 @@ import { Class, ClassAmino, ClassSDKType, NFT, NFTAmino, NFTSDKType } from "./nf
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { JsonSafe } from "../../../json-safe";
 import { DeepPartial, isSet } from "../../../helpers";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.nft.v1beta1";
 /** GenesisState defines the nft module's genesis state. */
 export interface GenesisState {
@@ -18,9 +17,9 @@ export interface GenesisStateProtoMsg {
 /** GenesisState defines the nft module's genesis state. */
 export interface GenesisStateAmino {
   /** class defines the class of the nft type. */
-  classes?: ClassAmino[];
+  classes: ClassAmino[];
   /** entry defines all nft owned by a person. */
-  entries?: EntryAmino[];
+  entries: EntryAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -45,9 +44,9 @@ export interface EntryProtoMsg {
 /** Entry Defines all nft owned by a person */
 export interface EntryAmino {
   /** owner is the owner address of the following nft */
-  owner?: string;
+  owner: string;
   /** nfts is a group of nfts of the same owner */
-  nfts?: NFTAmino[];
+  nfts: NFTAmino[];
 }
 export interface EntryAminoMsg {
   type: "cosmos-sdk/Entry";
@@ -191,10 +190,12 @@ export const GenesisState = {
       typeUrl: "/cosmos.nft.v1beta1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Class.registerTypeUrl();
+    Entry.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);
 function createBaseEntry(): Entry {
   return {
     owner: "",
@@ -318,7 +319,8 @@ export const Entry = {
       typeUrl: "/cosmos.nft.v1beta1.Entry",
       value: Entry.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    NFT.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Entry.typeUrl, Entry);
-GlobalDecoderRegistry.registerAminoProtoMapping(Entry.aminoType, Entry.typeUrl);

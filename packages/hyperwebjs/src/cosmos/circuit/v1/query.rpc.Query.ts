@@ -2,7 +2,6 @@ import { PageRequest, PageRequestSDKType, PageResponse, PageResponseSDKType } fr
 import { Permissions, PermissionsSDKType, GenesisAccountPermissions, GenesisAccountPermissionsSDKType } from "./types";
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryAccountRequest, QueryAccountRequestSDKType, AccountResponse, AccountResponseSDKType, QueryAccountsRequest, QueryAccountsRequestSDKType, AccountsResponse, AccountsResponseSDKType, QueryDisabledListRequest, QueryDisabledListRequestSDKType, DisabledListResponse, DisabledListResponseSDKType } from "./query";
 /** Query defines the circuit gRPC querier service. */
 export interface Query {
@@ -39,18 +38,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => DisabledListResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    account(request: QueryAccountRequest): Promise<AccountResponse> {
-      return queryService.account(request);
-    },
-    accounts(request?: QueryAccountsRequest): Promise<AccountsResponse> {
-      return queryService.accounts(request);
-    },
-    disabledList(request?: QueryDisabledListRequest): Promise<DisabledListResponse> {
-      return queryService.disabledList(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };

@@ -2,7 +2,6 @@ import { CommitmentProof, CommitmentProofAmino, CommitmentProofSDKType } from ".
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.core.commitment.v1";
 /**
  * MerkleRoot defines a merkle root hash.
@@ -20,7 +19,7 @@ export interface MerkleRootProtoMsg {
  * In the Cosmos SDK, the AppHash of a block header becomes the root.
  */
 export interface MerkleRootAmino {
-  hash?: string;
+  hash: string;
 }
 export interface MerkleRootAminoMsg {
   type: "cosmos-sdk/MerkleRoot";
@@ -51,7 +50,7 @@ export interface MerklePrefixProtoMsg {
  * append(Path.KeyPrefix, key...))
  */
 export interface MerklePrefixAmino {
-  key_prefix?: string;
+  key_prefix: string;
 }
 export interface MerklePrefixAminoMsg {
   type: "cosmos-sdk/MerklePrefix";
@@ -83,7 +82,7 @@ export interface MerklePathProtoMsg {
  * MerklePath is represented from root-to-leaf
  */
 export interface MerklePathAmino {
-  key_path?: string[];
+  key_path: string[];
 }
 export interface MerklePathAminoMsg {
   type: "cosmos-sdk/MerklePath";
@@ -119,7 +118,7 @@ export interface MerkleProofProtoMsg {
  * MerkleProofs are ordered from leaf-to-root
  */
 export interface MerkleProofAmino {
-  proofs?: CommitmentProofAmino[];
+  proofs: CommitmentProofAmino[];
 }
 export interface MerkleProofAminoMsg {
   type: "cosmos-sdk/MerkleProof";
@@ -232,10 +231,9 @@ export const MerkleRoot = {
       typeUrl: "/ibc.core.commitment.v1.MerkleRoot",
       value: MerkleRoot.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MerkleRoot.typeUrl, MerkleRoot);
-GlobalDecoderRegistry.registerAminoProtoMapping(MerkleRoot.aminoType, MerkleRoot.typeUrl);
 function createBaseMerklePrefix(): MerklePrefix {
   return {
     keyPrefix: new Uint8Array()
@@ -333,10 +331,9 @@ export const MerklePrefix = {
       typeUrl: "/ibc.core.commitment.v1.MerklePrefix",
       value: MerklePrefix.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MerklePrefix.typeUrl, MerklePrefix);
-GlobalDecoderRegistry.registerAminoProtoMapping(MerklePrefix.aminoType, MerklePrefix.typeUrl);
 function createBaseMerklePath(): MerklePath {
   return {
     keyPath: []
@@ -444,10 +441,9 @@ export const MerklePath = {
       typeUrl: "/ibc.core.commitment.v1.MerklePath",
       value: MerklePath.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MerklePath.typeUrl, MerklePath);
-GlobalDecoderRegistry.registerAminoProtoMapping(MerklePath.aminoType, MerklePath.typeUrl);
 function createBaseMerkleProof(): MerkleProof {
   return {
     proofs: []
@@ -555,7 +551,8 @@ export const MerkleProof = {
       typeUrl: "/ibc.core.commitment.v1.MerkleProof",
       value: MerkleProof.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CommitmentProof.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MerkleProof.typeUrl, MerkleProof);
-GlobalDecoderRegistry.registerAminoProtoMapping(MerkleProof.aminoType, MerkleProof.typeUrl);

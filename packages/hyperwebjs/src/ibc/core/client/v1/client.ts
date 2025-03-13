@@ -1,9 +1,9 @@
 import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../../google/protobuf/any";
 import { Plan, PlanAmino, PlanSDKType } from "../../../../cosmos/upgrade/v1beta1/upgrade";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.core.client.v1";
 /**
  * IdentifiedClientState defines a client state with an additional client
@@ -25,7 +25,7 @@ export interface IdentifiedClientStateProtoMsg {
  */
 export interface IdentifiedClientStateAmino {
   /** client identifier */
-  client_id?: string;
+  client_id: string;
   /** client state */
   client_state?: AnyAmino;
 }
@@ -61,7 +61,7 @@ export interface ConsensusStateWithHeightProtoMsg {
  */
 export interface ConsensusStateWithHeightAmino {
   /** consensus state height */
-  height?: HeightAmino;
+  height: HeightAmino;
   /** consensus state */
   consensus_state?: AnyAmino;
 }
@@ -97,9 +97,9 @@ export interface ClientConsensusStatesProtoMsg {
  */
 export interface ClientConsensusStatesAmino {
   /** client identifier */
-  client_id?: string;
+  client_id: string;
   /** consensus states and their heights associated with the client */
-  consensus_states?: ConsensusStateWithHeightAmino[];
+  consensus_states: ConsensusStateWithHeightAmino[];
 }
 export interface ClientConsensusStatesAminoMsg {
   type: "cosmos-sdk/ClientConsensusStates";
@@ -145,16 +145,16 @@ export interface ClientUpdateProposalProtoMsg {
  */
 export interface ClientUpdateProposalAmino {
   /** the title of the update proposal */
-  title?: string;
+  title: string;
   /** the description of the proposal */
-  description?: string;
+  description: string;
   /** the client identifier for the client to be updated if the proposal passes */
-  subject_client_id?: string;
+  subject_client_id: string;
   /**
    * the substitute client identifier for the client standing in for the subject
    * client
    */
-  substitute_client_id?: string;
+  substitute_client_id: string;
 }
 export interface ClientUpdateProposalAminoMsg {
   type: "cosmos-sdk/ClientUpdateProposal";
@@ -201,9 +201,9 @@ export interface UpgradeProposalProtoMsg {
  * upgrade.
  */
 export interface UpgradeProposalAmino {
-  title?: string;
-  description?: string;
-  plan?: PlanAmino;
+  title: string;
+  description: string;
+  plan: PlanAmino;
   /**
    * An UpgradedClientState must be provided to perform an IBC breaking upgrade.
    * This will make the chain commit to the correct upgraded (self) client state
@@ -265,9 +265,9 @@ export interface HeightProtoMsg {
  */
 export interface HeightAmino {
   /** the revision that the client is currently on */
-  revision_number?: string;
+  revision_number: string;
   /** the height within the given revision */
-  revision_height?: string;
+  revision_height: string;
 }
 export interface HeightAminoMsg {
   type: "cosmos-sdk/Height";
@@ -301,7 +301,7 @@ export interface ParamsProtoMsg {
 /** Params defines the set of IBC light client parameters. */
 export interface ParamsAmino {
   /** allowed_clients defines the list of allowed client state types. */
-  allowed_clients?: string[];
+  allowed_clients: string[];
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/Params";
@@ -426,10 +426,9 @@ export const IdentifiedClientState = {
       typeUrl: "/ibc.core.client.v1.IdentifiedClientState",
       value: IdentifiedClientState.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(IdentifiedClientState.typeUrl, IdentifiedClientState);
-GlobalDecoderRegistry.registerAminoProtoMapping(IdentifiedClientState.aminoType, IdentifiedClientState.typeUrl);
 function createBaseConsensusStateWithHeight(): ConsensusStateWithHeight {
   return {
     height: Height.fromPartial({}),
@@ -547,10 +546,9 @@ export const ConsensusStateWithHeight = {
       typeUrl: "/ibc.core.client.v1.ConsensusStateWithHeight",
       value: ConsensusStateWithHeight.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ConsensusStateWithHeight.typeUrl, ConsensusStateWithHeight);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConsensusStateWithHeight.aminoType, ConsensusStateWithHeight.typeUrl);
 function createBaseClientConsensusStates(): ClientConsensusStates {
   return {
     clientId: "",
@@ -674,10 +672,11 @@ export const ClientConsensusStates = {
       typeUrl: "/ibc.core.client.v1.ClientConsensusStates",
       value: ClientConsensusStates.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ConsensusStateWithHeight.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ClientConsensusStates.typeUrl, ClientConsensusStates);
-GlobalDecoderRegistry.registerAminoProtoMapping(ClientConsensusStates.aminoType, ClientConsensusStates.typeUrl);
 function createBaseClientUpdateProposal(): ClientUpdateProposal {
   return {
     $typeUrl: "/ibc.core.client.v1.ClientUpdateProposal",
@@ -824,10 +823,12 @@ export const ClientUpdateProposal = {
       typeUrl: "/ibc.core.client.v1.ClientUpdateProposal",
       value: ClientUpdateProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(ClientUpdateProposal.typeUrl, ClientUpdateProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(ClientUpdateProposal.aminoType, ClientUpdateProposal.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(ClientUpdateProposal.typeUrl, ClientUpdateProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(ClientUpdateProposal.aminoType, ClientUpdateProposal.typeUrl);
 function createBaseUpgradeProposal(): UpgradeProposal {
   return {
     $typeUrl: "/ibc.core.client.v1.UpgradeProposal",
@@ -978,10 +979,12 @@ export const UpgradeProposal = {
       typeUrl: "/ibc.core.client.v1.UpgradeProposal",
       value: UpgradeProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(UpgradeProposal.typeUrl, UpgradeProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(UpgradeProposal.aminoType, UpgradeProposal.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(UpgradeProposal.typeUrl, UpgradeProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(UpgradeProposal.aminoType, UpgradeProposal.typeUrl);
 function createBaseHeight(): Height {
   return {
     revisionNumber: BigInt(0),
@@ -1071,8 +1074,8 @@ export const Height = {
   },
   toAmino(message: Height): HeightAmino {
     const obj: any = {};
-    obj.revision_number = message.revisionNumber !== BigInt(0) ? (message.revisionNumber?.toString)() : undefined;
-    obj.revision_height = message.revisionHeight !== BigInt(0) ? (message.revisionHeight?.toString)() : undefined;
+    obj.revision_number = message.revisionNumber !== BigInt(0) ? message.revisionNumber?.toString() : undefined;
+    obj.revision_height = message.revisionHeight !== BigInt(0) ? message.revisionHeight?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: HeightAminoMsg): Height {
@@ -1095,10 +1098,9 @@ export const Height = {
       typeUrl: "/ibc.core.client.v1.Height",
       value: Height.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Height.typeUrl, Height);
-GlobalDecoderRegistry.registerAminoProtoMapping(Height.aminoType, Height.typeUrl);
 function createBaseParams(): Params {
   return {
     allowedClients: []
@@ -1206,7 +1208,6 @@ export const Params = {
       typeUrl: "/ibc.core.client.v1.Params",
       value: Params.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Params.typeUrl, Params);
-GlobalDecoderRegistry.registerAminoProtoMapping(Params.aminoType, Params.typeUrl);

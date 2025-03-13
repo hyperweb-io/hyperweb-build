@@ -30,16 +30,16 @@
     "test:watch": "jest --watch"
   },
   "devDependencies": {
-    "@cosmology/telescope": "^1.10.0",
+    "@cosmology/telescope": "^1.11.25",
     "prettier": "2.8.8",
     "rimraf": "^6.0.1"
   },
   "dependencies": {
-    "@cosmjs/amino": "0.32.3",
-    "@cosmjs/encoding": "0.32.3",
-    "@cosmjs/math": "0.32.3",
-    "@cosmjs/proto-signing": "0.32.3",
-    "@cosmjs/stargate": "0.32.3",
+    "@interchainjs/cosmos": "1.9.14",
+    "@interchainjs/encoding": "1.9.14",
+    "@interchainjs/pubkey": "1.9.14",
+    "@interchainjs/types": "1.9.14",
+    "@interchainjs/utils": "1.9.14",
     "@cosmology/lcd": "^0.14.0"
   },
   "keywords": [],

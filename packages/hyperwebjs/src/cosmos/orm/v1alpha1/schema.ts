@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.orm.v1alpha1";
 /** StorageType */
 export enum StorageType {
@@ -73,12 +72,12 @@ export interface ModuleSchemaDescriptorProtoMsg {
 }
 /** ModuleSchemaDescriptor describe's a module's ORM schema. */
 export interface ModuleSchemaDescriptorAmino {
-  schema_file?: ModuleSchemaDescriptor_FileEntryAmino[];
+  schema_file: ModuleSchemaDescriptor_FileEntryAmino[];
   /**
    * prefix is an optional prefix that precedes all keys in this module's
    * store.
    */
-  prefix?: string;
+  prefix: string;
 }
 export interface ModuleSchemaDescriptorAminoMsg {
   type: "cosmos-sdk/ModuleSchemaDescriptor";
@@ -119,19 +118,19 @@ export interface ModuleSchemaDescriptor_FileEntryAmino {
    * id is a prefix that will be varint encoded and prepended to all the
    * table keys specified in the file's tables.
    */
-  id?: number;
+  id: number;
   /**
    * proto_file_name is the name of a file .proto in that contains
    * table definitions. The .proto file must be in a package that the
    * module has referenced using cosmos.app.v1.ModuleDescriptor.use_package.
    */
-  proto_file_name?: string;
+  proto_file_name: string;
   /**
    * storage_type optionally indicates the type of storage this file's
    * tables should used. If it is left unspecified, the default KV-storage
    * of the app will be used.
    */
-  storage_type?: StorageType;
+  storage_type: StorageType;
 }
 export interface ModuleSchemaDescriptor_FileEntryAminoMsg {
   type: "cosmos-sdk/FileEntry";
@@ -266,10 +265,11 @@ export const ModuleSchemaDescriptor = {
       typeUrl: "/cosmos.orm.v1alpha1.ModuleSchemaDescriptor",
       value: ModuleSchemaDescriptor.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ModuleSchemaDescriptor_FileEntry.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ModuleSchemaDescriptor.typeUrl, ModuleSchemaDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(ModuleSchemaDescriptor.aminoType, ModuleSchemaDescriptor.typeUrl);
 function createBaseModuleSchemaDescriptor_FileEntry(): ModuleSchemaDescriptor_FileEntry {
   return {
     id: 0,
@@ -399,7 +399,6 @@ export const ModuleSchemaDescriptor_FileEntry = {
       typeUrl: "/cosmos.orm.v1alpha1.FileEntry",
       value: ModuleSchemaDescriptor_FileEntry.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ModuleSchemaDescriptor_FileEntry.typeUrl, ModuleSchemaDescriptor_FileEntry);
-GlobalDecoderRegistry.registerAminoProtoMapping(ModuleSchemaDescriptor_FileEntry.aminoType, ModuleSchemaDescriptor_FileEntry.typeUrl);

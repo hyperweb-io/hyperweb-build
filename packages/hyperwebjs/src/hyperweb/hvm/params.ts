@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { JsonSafe } from "../../json-safe";
 import { DeepPartial } from "../../helpers";
-import { GlobalDecoderRegistry } from "../../registry";
 export const protobufPackage = "hyperweb.hvm";
 /** Params defines the parameters for the module. */
 export interface Params {}
@@ -96,7 +95,6 @@ export const Params = {
       typeUrl: "/hyperweb.hvm.Params",
       value: Params.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Params.typeUrl, Params);
-GlobalDecoderRegistry.registerAminoProtoMapping(Params.aminoType, Params.typeUrl);

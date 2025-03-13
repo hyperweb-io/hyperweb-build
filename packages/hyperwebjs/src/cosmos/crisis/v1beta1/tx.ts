@@ -20,11 +20,11 @@ export interface MsgVerifyInvariantProtoMsg {
 /** MsgVerifyInvariant represents a message to verify a particular invariance. */
 export interface MsgVerifyInvariantAmino {
   /** sender is the account address of private key to send coins to fee collector account. */
-  sender?: string;
+  sender: string;
   /** name of the invariant module. */
-  invariant_module_name?: string;
+  invariant_module_name: string;
   /** invariant_route is the msg's invariant route. */
-  invariant_route?: string;
+  invariant_route: string;
 }
 export interface MsgVerifyInvariantAminoMsg {
   type: "cosmos-sdk/MsgVerifyInvariant";
@@ -72,7 +72,7 @@ export interface MsgUpdateParamsProtoMsg {
  */
 export interface MsgUpdateParamsAmino {
   /** authority is the address that controls the module (defaults to x/gov unless overwritten). */
-  authority?: string;
+  authority: string;
   /** constant_fee defines the x/crisis parameter. */
   constant_fee: CoinAmino;
 }
@@ -247,10 +247,9 @@ export const MsgVerifyInvariant = {
       typeUrl: "/cosmos.crisis.v1beta1.MsgVerifyInvariant",
       value: MsgVerifyInvariant.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgVerifyInvariant.typeUrl, MsgVerifyInvariant);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgVerifyInvariant.aminoType, MsgVerifyInvariant.typeUrl);
 function createBaseMsgVerifyInvariantResponse(): MsgVerifyInvariantResponse {
   return {};
 }
@@ -330,10 +329,9 @@ export const MsgVerifyInvariantResponse = {
       typeUrl: "/cosmos.crisis.v1beta1.MsgVerifyInvariantResponse",
       value: MsgVerifyInvariantResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgVerifyInvariantResponse.typeUrl, MsgVerifyInvariantResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgVerifyInvariantResponse.aminoType, MsgVerifyInvariantResponse.typeUrl);
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return {
     authority: "",
@@ -449,10 +447,11 @@ export const MsgUpdateParams = {
       typeUrl: "/cosmos.crisis.v1beta1.MsgUpdateParams",
       value: MsgUpdateParams.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgUpdateParams.typeUrl, MsgUpdateParams);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpdateParams.aminoType, MsgUpdateParams.typeUrl);
 function createBaseMsgUpdateParamsResponse(): MsgUpdateParamsResponse {
   return {};
 }
@@ -532,7 +531,6 @@ export const MsgUpdateParamsResponse = {
       typeUrl: "/cosmos.crisis.v1beta1.MsgUpdateParamsResponse",
       value: MsgUpdateParamsResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgUpdateParamsResponse.typeUrl, MsgUpdateParamsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpdateParamsResponse.aminoType, MsgUpdateParamsResponse.typeUrl);

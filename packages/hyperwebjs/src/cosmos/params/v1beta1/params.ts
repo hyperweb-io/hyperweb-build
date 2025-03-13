@@ -16,8 +16,8 @@ export interface ParameterChangeProposalProtoMsg {
 }
 /** ParameterChangeProposal defines a proposal to change one or more parameters. */
 export interface ParameterChangeProposalAmino {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
   changes: ParamChangeAmino[];
 }
 export interface ParameterChangeProposalAminoMsg {
@@ -49,9 +49,9 @@ export interface ParamChangeProtoMsg {
  * ParameterChangeProposal.
  */
 export interface ParamChangeAmino {
-  subspace?: string;
-  key?: string;
-  value?: string;
+  subspace: string;
+  key: string;
+  value: string;
 }
 export interface ParamChangeAminoMsg {
   type: "cosmos-sdk/ParamChange";
@@ -206,10 +206,13 @@ export const ParameterChangeProposal = {
       typeUrl: "/cosmos.params.v1beta1.ParameterChangeProposal",
       value: ParameterChangeProposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(ParameterChangeProposal.typeUrl, ParameterChangeProposal);
+    GlobalDecoderRegistry.registerAminoProtoMapping(ParameterChangeProposal.aminoType, ParameterChangeProposal.typeUrl);
+    ParamChange.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ParameterChangeProposal.typeUrl, ParameterChangeProposal);
-GlobalDecoderRegistry.registerAminoProtoMapping(ParameterChangeProposal.aminoType, ParameterChangeProposal.typeUrl);
 function createBaseParamChange(): ParamChange {
   return {
     subspace: "",
@@ -339,7 +342,6 @@ export const ParamChange = {
       typeUrl: "/cosmos.params.v1beta1.ParamChange",
       value: ParamChange.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ParamChange.typeUrl, ParamChange);
-GlobalDecoderRegistry.registerAminoProtoMapping(ParamChange.aminoType, ParamChange.typeUrl);

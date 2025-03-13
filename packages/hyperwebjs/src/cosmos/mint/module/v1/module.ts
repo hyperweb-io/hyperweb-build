@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.mint.module.v1";
 /** Module is the config object of the mint module. */
 export interface Module {
@@ -15,9 +14,9 @@ export interface ModuleProtoMsg {
 }
 /** Module is the config object of the mint module. */
 export interface ModuleAmino {
-  fee_collector_name?: string;
+  fee_collector_name: string;
   /** authority defines the custom module authority. If not set, defaults to the governance module. */
-  authority?: string;
+  authority: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
@@ -141,7 +140,6 @@ export const Module = {
       typeUrl: "/cosmos.mint.module.v1.Module",
       value: Module.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Module.typeUrl, Module);
-GlobalDecoderRegistry.registerAminoProtoMapping(Module.aminoType, Module.typeUrl);

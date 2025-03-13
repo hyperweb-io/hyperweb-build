@@ -6,9 +6,9 @@ import { MerkleRoot, MerkleRootAmino, MerkleRootSDKType } from "../../../core/co
 import { SignedHeader, SignedHeaderAmino, SignedHeaderSDKType } from "../../../../tendermint/types/types";
 import { ValidatorSet, ValidatorSetAmino, ValidatorSetSDKType } from "../../../../tendermint/types/validator";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "ibc.lightclients.tendermint.v1";
 /**
  * ClientState from Tendermint tracks the current validator set, latest height,
@@ -62,23 +62,23 @@ export interface ClientStateProtoMsg {
  * and a possible frozen height.
  */
 export interface ClientStateAmino {
-  chain_id?: string;
-  trust_level?: FractionAmino;
+  chain_id: string;
+  trust_level: FractionAmino;
   /**
    * duration of the period since the LastestTimestamp during which the
    * submitted headers are valid for upgrade
    */
-  trusting_period?: DurationAmino;
+  trusting_period: DurationAmino;
   /** duration of the staking unbonding period */
-  unbonding_period?: DurationAmino;
+  unbonding_period: DurationAmino;
   /** defines how much new (untrusted) header's Time can drift into the future. */
-  max_clock_drift?: DurationAmino;
+  max_clock_drift: DurationAmino;
   /** Block height when the client was frozen due to a misbehaviour */
-  frozen_height?: HeightAmino;
+  frozen_height: HeightAmino;
   /** Latest height the client was updated to */
-  latest_height?: HeightAmino;
+  latest_height: HeightAmino;
   /** Proof specifications used in verifying counterparty state */
-  proof_specs?: ProofSpecAmino[];
+  proof_specs: ProofSpecAmino[];
   /**
    * Path at which next upgraded client will be committed.
    * Each element corresponds to the key for a single CommitmentProof in the
@@ -88,17 +88,17 @@ export interface ClientStateAmino {
    * the default upgrade module, upgrade_path should be []string{"upgrade",
    * "upgradedIBCState"}`
    */
-  upgrade_path?: string[];
+  upgrade_path: string[];
   /**
    * This flag, when set to true, will allow governance to recover a client
    * which has expired
    */
-  allow_update_after_expiry?: boolean;
+  allow_update_after_expiry: boolean;
   /**
    * This flag, when set to true, will allow governance to unfreeze a client
    * whose chain has experienced a misbehaviour event
    */
-  allow_update_after_misbehaviour?: boolean;
+  allow_update_after_misbehaviour: boolean;
 }
 export interface ClientStateAminoMsg {
   type: "cosmos-sdk/ClientState";
@@ -142,10 +142,10 @@ export interface ConsensusStateAmino {
    * timestamp that corresponds to the block height in which the ConsensusState
    * was stored.
    */
-  timestamp?: string;
+  timestamp: string;
   /** commitment root (i.e app hash) */
-  root?: MerkleRootAmino;
-  next_validators_hash?: string;
+  root: MerkleRootAmino;
+  next_validators_hash: string;
 }
 export interface ConsensusStateAminoMsg {
   type: "cosmos-sdk/ConsensusState";
@@ -175,7 +175,7 @@ export interface MisbehaviourProtoMsg {
  * that implements Misbehaviour interface expected by ICS-02
  */
 export interface MisbehaviourAmino {
-  client_id?: string;
+  client_id: string;
   header_1?: HeaderAmino;
   header_2?: HeaderAmino;
 }
@@ -233,7 +233,7 @@ export interface HeaderProtoMsg {
 export interface HeaderAmino {
   signed_header?: SignedHeaderAmino;
   validator_set?: ValidatorSetAmino;
-  trusted_height?: HeightAmino;
+  trusted_height: HeightAmino;
   trusted_validators?: ValidatorSetAmino;
 }
 export interface HeaderAminoMsg {
@@ -277,8 +277,8 @@ export interface FractionProtoMsg {
  * supports positive values.
  */
 export interface FractionAmino {
-  numerator?: string;
-  denominator?: string;
+  numerator: string;
+  denominator: string;
 }
 export interface FractionAminoMsg {
   type: "cosmos-sdk/Fraction";
@@ -581,10 +581,13 @@ export const ClientState = {
       typeUrl: "/ibc.lightclients.tendermint.v1.ClientState",
       value: ClientState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Fraction.registerTypeUrl();
+    Height.registerTypeUrl();
+    ProofSpec.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ClientState.typeUrl, ClientState);
-GlobalDecoderRegistry.registerAminoProtoMapping(ClientState.aminoType, ClientState.typeUrl);
 function createBaseConsensusState(): ConsensusState {
   return {
     timestamp: new Date(),
@@ -716,10 +719,11 @@ export const ConsensusState = {
       typeUrl: "/ibc.lightclients.tendermint.v1.ConsensusState",
       value: ConsensusState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    MerkleRoot.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ConsensusState.typeUrl, ConsensusState);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConsensusState.aminoType, ConsensusState.typeUrl);
 function createBaseMisbehaviour(): Misbehaviour {
   return {
     clientId: "",
@@ -853,10 +857,11 @@ export const Misbehaviour = {
       typeUrl: "/ibc.lightclients.tendermint.v1.Misbehaviour",
       value: Misbehaviour.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Header.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Misbehaviour.typeUrl, Misbehaviour);
-GlobalDecoderRegistry.registerAminoProtoMapping(Misbehaviour.aminoType, Misbehaviour.typeUrl);
 function createBaseHeader(): Header {
   return {
     signedHeader: undefined,
@@ -1010,10 +1015,13 @@ export const Header = {
       typeUrl: "/ibc.lightclients.tendermint.v1.Header",
       value: Header.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    SignedHeader.registerTypeUrl();
+    ValidatorSet.registerTypeUrl();
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Header.typeUrl, Header);
-GlobalDecoderRegistry.registerAminoProtoMapping(Header.aminoType, Header.typeUrl);
 function createBaseFraction(): Fraction {
   return {
     numerator: BigInt(0),
@@ -1107,8 +1115,8 @@ export const Fraction = {
   },
   toAmino(message: Fraction): FractionAmino {
     const obj: any = {};
-    obj.numerator = message.numerator !== BigInt(0) ? (message.numerator?.toString)() : undefined;
-    obj.denominator = message.denominator !== BigInt(0) ? (message.denominator?.toString)() : undefined;
+    obj.numerator = message.numerator !== BigInt(0) ? message.numerator?.toString() : undefined;
+    obj.denominator = message.denominator !== BigInt(0) ? message.denominator?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: FractionAminoMsg): Fraction {
@@ -1131,7 +1139,6 @@ export const Fraction = {
       typeUrl: "/ibc.lightclients.tendermint.v1.Fraction",
       value: Fraction.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Fraction.typeUrl, Fraction);
-GlobalDecoderRegistry.registerAminoProtoMapping(Fraction.aminoType, Fraction.typeUrl);

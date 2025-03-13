@@ -1,10 +1,10 @@
 import { AccessConfig, AccessConfigAmino, AccessConfigSDKType } from "./types";
 import { Coin, CoinAmino, CoinSDKType } from "../../../cosmos/base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { fromBase64, toBase64, toUtf8, fromUtf8 } from "@cosmjs/encoding";
-import { GlobalDecoderRegistry } from "../../../registry";
+import { fromBase64, toBase64, toUtf8, fromUtf8 } from "@interchainjs/encoding";
 export const protobufPackage = "cosmwasm.wasm.v1";
 /** MsgStoreCode submit Wasm code to the system */
 export interface MsgStoreCode {
@@ -25,9 +25,9 @@ export interface MsgStoreCodeProtoMsg {
 /** MsgStoreCode submit Wasm code to the system */
 export interface MsgStoreCodeAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** WASMByteCode can be raw or gzip compressed */
-  wasm_byte_code?: string;
+  wasm_byte_code: string;
   /**
    * InstantiatePermission access control to apply on contract creation,
    * optional
@@ -58,9 +58,9 @@ export interface MsgStoreCodeResponseProtoMsg {
 /** MsgStoreCodeResponse returns store result data. */
 export interface MsgStoreCodeResponseAmino {
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Checksum is the sha256 hash of the stored code */
-  checksum?: string;
+  checksum: string;
 }
 export interface MsgStoreCodeResponseAminoMsg {
   type: "wasm/MsgStoreCodeResponse";
@@ -99,17 +99,17 @@ export interface MsgInstantiateContractProtoMsg {
  */
 export interface MsgInstantiateContractAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Admin is an optional address that can execute migrations */
-  admin?: string;
+  admin: string;
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Label is optional metadata to be stored with a contract instance. */
-  label?: string;
+  label: string;
   /** Msg json encoded message to be passed to the contract on instantiation */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on instantiation */
-  funds?: CoinAmino[];
+  funds: CoinAmino[];
 }
 export interface MsgInstantiateContractAminoMsg {
   type: "wasm/MsgInstantiateContract";
@@ -162,24 +162,24 @@ export interface MsgInstantiateContract2ProtoMsg {
  */
 export interface MsgInstantiateContract2Amino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Admin is an optional address that can execute migrations */
-  admin?: string;
+  admin: string;
   /** CodeID is the reference to the stored WASM code */
-  code_id?: string;
+  code_id: string;
   /** Label is optional metadata to be stored with a contract instance. */
-  label?: string;
+  label: string;
   /** Msg json encoded message to be passed to the contract on instantiation */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on instantiation */
-  funds?: CoinAmino[];
+  funds: CoinAmino[];
   /** Salt is an arbitrary value provided by the sender. Size can be 1 to 64. */
-  salt?: string;
+  salt: string;
   /**
    * FixMsg include the msg value into the hash for the predictable address.
    * Default is false
    */
-  fix_msg?: boolean;
+  fix_msg: boolean;
 }
 export interface MsgInstantiateContract2AminoMsg {
   type: "wasm/MsgInstantiateContract2";
@@ -213,9 +213,9 @@ export interface MsgInstantiateContractResponseProtoMsg {
 /** MsgInstantiateContractResponse return instantiation result data */
 export interface MsgInstantiateContractResponseAmino {
   /** Address is the bech32 address of the new contract instance. */
-  address?: string;
+  address: string;
   /** Data contains bytes to returned from the contract */
-  data?: string;
+  data: string;
 }
 export interface MsgInstantiateContractResponseAminoMsg {
   type: "wasm/MsgInstantiateContractResponse";
@@ -240,9 +240,9 @@ export interface MsgInstantiateContract2ResponseProtoMsg {
 /** MsgInstantiateContract2Response return instantiation result data */
 export interface MsgInstantiateContract2ResponseAmino {
   /** Address is the bech32 address of the new contract instance. */
-  address?: string;
+  address: string;
   /** Data contains bytes to returned from the contract */
-  data?: string;
+  data: string;
 }
 export interface MsgInstantiateContract2ResponseAminoMsg {
   type: "wasm/MsgInstantiateContract2Response";
@@ -271,13 +271,13 @@ export interface MsgExecuteContractProtoMsg {
 /** MsgExecuteContract submits the given message data to a smart contract */
 export interface MsgExecuteContractAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
   /** Msg json encoded message to be passed to the contract */
-  msg?: any;
+  msg: any;
   /** Funds coins that are transferred to the contract on execution */
-  funds?: CoinAmino[];
+  funds: CoinAmino[];
 }
 export interface MsgExecuteContractAminoMsg {
   type: "wasm/MsgExecuteContract";
@@ -302,7 +302,7 @@ export interface MsgExecuteContractResponseProtoMsg {
 /** MsgExecuteContractResponse returns execution result data. */
 export interface MsgExecuteContractResponseAmino {
   /** Data contains bytes to returned from the contract */
-  data?: string;
+  data: string;
 }
 export interface MsgExecuteContractResponseAminoMsg {
   type: "wasm/MsgExecuteContractResponse";
@@ -330,13 +330,13 @@ export interface MsgMigrateContractProtoMsg {
 /** MsgMigrateContract runs a code upgrade/ downgrade for a smart contract */
 export interface MsgMigrateContractAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
   /** CodeID references the new WASM code */
-  code_id?: string;
+  code_id: string;
   /** Msg json encoded message to be passed to the contract on migration */
-  msg?: any;
+  msg: any;
 }
 export interface MsgMigrateContractAminoMsg {
   type: "wasm/MsgMigrateContract";
@@ -367,7 +367,7 @@ export interface MsgMigrateContractResponseAmino {
    * Data contains same raw bytes returned as data from the wasm contract.
    * (May be empty)
    */
-  data?: string;
+  data: string;
 }
 export interface MsgMigrateContractResponseAminoMsg {
   type: "wasm/MsgMigrateContractResponse";
@@ -393,11 +393,11 @@ export interface MsgUpdateAdminProtoMsg {
 /** MsgUpdateAdmin sets a new admin for a smart contract */
 export interface MsgUpdateAdminAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** NewAdmin address to be set */
-  new_admin?: string;
+  new_admin: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
 }
 export interface MsgUpdateAdminAminoMsg {
   type: "wasm/MsgUpdateAdmin";
@@ -437,9 +437,9 @@ export interface MsgClearAdminProtoMsg {
 /** MsgClearAdmin removes any admin stored for a smart contract */
 export interface MsgClearAdminAmino {
   /** Sender is the that actor that signed the messages */
-  sender?: string;
+  sender: string;
   /** Contract is the address of the smart contract */
-  contract?: string;
+  contract: string;
 }
 export interface MsgClearAdminAminoMsg {
   type: "wasm/MsgClearAdmin";
@@ -595,10 +595,11 @@ export const MsgStoreCode = {
       typeUrl: "/cosmwasm.wasm.v1.MsgStoreCode",
       value: MsgStoreCode.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    AccessConfig.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgStoreCode.typeUrl, MsgStoreCode);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgStoreCode.aminoType, MsgStoreCode.typeUrl);
 function createBaseMsgStoreCodeResponse(): MsgStoreCodeResponse {
   return {
     codeId: BigInt(0),
@@ -690,7 +691,7 @@ export const MsgStoreCodeResponse = {
   },
   toAmino(message: MsgStoreCodeResponse): MsgStoreCodeResponseAmino {
     const obj: any = {};
-    obj.code_id = message.codeId !== BigInt(0) ? (message.codeId?.toString)() : undefined;
+    obj.code_id = message.codeId !== BigInt(0) ? message.codeId?.toString() : undefined;
     obj.checksum = message.checksum ? base64FromBytes(message.checksum) : undefined;
     return obj;
   },
@@ -714,10 +715,9 @@ export const MsgStoreCodeResponse = {
       typeUrl: "/cosmwasm.wasm.v1.MsgStoreCodeResponse",
       value: MsgStoreCodeResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgStoreCodeResponse.typeUrl, MsgStoreCodeResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgStoreCodeResponse.aminoType, MsgStoreCodeResponse.typeUrl);
 function createBaseMsgInstantiateContract(): MsgInstantiateContract {
   return {
     sender: "",
@@ -877,7 +877,7 @@ export const MsgInstantiateContract = {
     const obj: any = {};
     obj.sender = message.sender === "" ? undefined : message.sender;
     obj.admin = message.admin === "" ? undefined : message.admin;
-    obj.code_id = message.codeId !== BigInt(0) ? (message.codeId?.toString)() : undefined;
+    obj.code_id = message.codeId !== BigInt(0) ? message.codeId?.toString() : undefined;
     obj.label = message.label === "" ? undefined : message.label;
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     if (message.funds) {
@@ -907,10 +907,11 @@ export const MsgInstantiateContract = {
       typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract",
       value: MsgInstantiateContract.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgInstantiateContract.typeUrl, MsgInstantiateContract);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgInstantiateContract.aminoType, MsgInstantiateContract.typeUrl);
 function createBaseMsgInstantiateContract2(): MsgInstantiateContract2 {
   return {
     sender: "",
@@ -1100,7 +1101,7 @@ export const MsgInstantiateContract2 = {
     const obj: any = {};
     obj.sender = message.sender === "" ? undefined : message.sender;
     obj.admin = message.admin === "" ? undefined : message.admin;
-    obj.code_id = message.codeId !== BigInt(0) ? (message.codeId?.toString)() : undefined;
+    obj.code_id = message.codeId !== BigInt(0) ? message.codeId?.toString() : undefined;
     obj.label = message.label === "" ? undefined : message.label;
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     if (message.funds) {
@@ -1132,10 +1133,11 @@ export const MsgInstantiateContract2 = {
       typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract2",
       value: MsgInstantiateContract2.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgInstantiateContract2.typeUrl, MsgInstantiateContract2);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgInstantiateContract2.aminoType, MsgInstantiateContract2.typeUrl);
 function createBaseMsgInstantiateContractResponse(): MsgInstantiateContractResponse {
   return {
     address: "",
@@ -1249,10 +1251,9 @@ export const MsgInstantiateContractResponse = {
       typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContractResponse",
       value: MsgInstantiateContractResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgInstantiateContractResponse.typeUrl, MsgInstantiateContractResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgInstantiateContractResponse.aminoType, MsgInstantiateContractResponse.typeUrl);
 function createBaseMsgInstantiateContract2Response(): MsgInstantiateContract2Response {
   return {
     address: "",
@@ -1366,10 +1367,9 @@ export const MsgInstantiateContract2Response = {
       typeUrl: "/cosmwasm.wasm.v1.MsgInstantiateContract2Response",
       value: MsgInstantiateContract2Response.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgInstantiateContract2Response.typeUrl, MsgInstantiateContract2Response);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgInstantiateContract2Response.aminoType, MsgInstantiateContract2Response.typeUrl);
 function createBaseMsgExecuteContract(): MsgExecuteContract {
   return {
     sender: "",
@@ -1525,10 +1525,11 @@ export const MsgExecuteContract = {
       typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
       value: MsgExecuteContract.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgExecuteContract.typeUrl, MsgExecuteContract);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgExecuteContract.aminoType, MsgExecuteContract.typeUrl);
 function createBaseMsgExecuteContractResponse(): MsgExecuteContractResponse {
   return {
     data: new Uint8Array()
@@ -1626,10 +1627,9 @@ export const MsgExecuteContractResponse = {
       typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContractResponse",
       value: MsgExecuteContractResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgExecuteContractResponse.typeUrl, MsgExecuteContractResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgExecuteContractResponse.aminoType, MsgExecuteContractResponse.typeUrl);
 function createBaseMsgMigrateContract(): MsgMigrateContract {
   return {
     sender: "",
@@ -1753,7 +1753,7 @@ export const MsgMigrateContract = {
     const obj: any = {};
     obj.sender = message.sender === "" ? undefined : message.sender;
     obj.contract = message.contract === "" ? undefined : message.contract;
-    obj.code_id = message.codeId !== BigInt(0) ? (message.codeId?.toString)() : undefined;
+    obj.code_id = message.codeId !== BigInt(0) ? message.codeId?.toString() : undefined;
     obj.msg = message.msg ? JSON.parse(fromUtf8(message.msg)) : undefined;
     return obj;
   },
@@ -1777,10 +1777,9 @@ export const MsgMigrateContract = {
       typeUrl: "/cosmwasm.wasm.v1.MsgMigrateContract",
       value: MsgMigrateContract.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgMigrateContract.typeUrl, MsgMigrateContract);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgMigrateContract.aminoType, MsgMigrateContract.typeUrl);
 function createBaseMsgMigrateContractResponse(): MsgMigrateContractResponse {
   return {
     data: new Uint8Array()
@@ -1878,10 +1877,9 @@ export const MsgMigrateContractResponse = {
       typeUrl: "/cosmwasm.wasm.v1.MsgMigrateContractResponse",
       value: MsgMigrateContractResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgMigrateContractResponse.typeUrl, MsgMigrateContractResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgMigrateContractResponse.aminoType, MsgMigrateContractResponse.typeUrl);
 function createBaseMsgUpdateAdmin(): MsgUpdateAdmin {
   return {
     sender: "",
@@ -2011,10 +2009,9 @@ export const MsgUpdateAdmin = {
       typeUrl: "/cosmwasm.wasm.v1.MsgUpdateAdmin",
       value: MsgUpdateAdmin.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgUpdateAdmin.typeUrl, MsgUpdateAdmin);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpdateAdmin.aminoType, MsgUpdateAdmin.typeUrl);
 function createBaseMsgUpdateAdminResponse(): MsgUpdateAdminResponse {
   return {};
 }
@@ -2094,10 +2091,9 @@ export const MsgUpdateAdminResponse = {
       typeUrl: "/cosmwasm.wasm.v1.MsgUpdateAdminResponse",
       value: MsgUpdateAdminResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgUpdateAdminResponse.typeUrl, MsgUpdateAdminResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpdateAdminResponse.aminoType, MsgUpdateAdminResponse.typeUrl);
 function createBaseMsgClearAdmin(): MsgClearAdmin {
   return {
     sender: "",
@@ -2211,10 +2207,9 @@ export const MsgClearAdmin = {
       typeUrl: "/cosmwasm.wasm.v1.MsgClearAdmin",
       value: MsgClearAdmin.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgClearAdmin.typeUrl, MsgClearAdmin);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgClearAdmin.aminoType, MsgClearAdmin.typeUrl);
 function createBaseMsgClearAdminResponse(): MsgClearAdminResponse {
   return {};
 }
@@ -2294,7 +2289,6 @@ export const MsgClearAdminResponse = {
       typeUrl: "/cosmwasm.wasm.v1.MsgClearAdminResponse",
       value: MsgClearAdminResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgClearAdminResponse.typeUrl, MsgClearAdminResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgClearAdminResponse.aminoType, MsgClearAdminResponse.typeUrl);

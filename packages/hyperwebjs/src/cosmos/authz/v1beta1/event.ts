@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.authz.v1beta1";
 /** EventGrant is emitted on Msg/Grant */
 export interface EventGrant {
@@ -19,11 +18,11 @@ export interface EventGrantProtoMsg {
 /** EventGrant is emitted on Msg/Grant */
 export interface EventGrantAmino {
   /** Msg type URL for which an autorization is granted */
-  msg_type_url?: string;
+  msg_type_url: string;
   /** Granter account address */
-  granter?: string;
+  granter: string;
   /** Grantee account address */
-  grantee?: string;
+  grantee: string;
 }
 export interface EventGrantAminoMsg {
   type: "cosmos-sdk/EventGrant";
@@ -51,11 +50,11 @@ export interface EventRevokeProtoMsg {
 /** EventRevoke is emitted on Msg/Revoke */
 export interface EventRevokeAmino {
   /** Msg type URL for which an autorization is revoked */
-  msg_type_url?: string;
+  msg_type_url: string;
   /** Granter account address */
-  granter?: string;
+  granter: string;
   /** Grantee account address */
-  grantee?: string;
+  grantee: string;
 }
 export interface EventRevokeAminoMsg {
   type: "cosmos-sdk/EventRevoke";
@@ -196,10 +195,9 @@ export const EventGrant = {
       typeUrl: "/cosmos.authz.v1beta1.EventGrant",
       value: EventGrant.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(EventGrant.typeUrl, EventGrant);
-GlobalDecoderRegistry.registerAminoProtoMapping(EventGrant.aminoType, EventGrant.typeUrl);
 function createBaseEventRevoke(): EventRevoke {
   return {
     msgTypeUrl: "",
@@ -329,7 +327,6 @@ export const EventRevoke = {
       typeUrl: "/cosmos.authz.v1beta1.EventRevoke",
       value: EventRevoke.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(EventRevoke.typeUrl, EventRevoke);
-GlobalDecoderRegistry.registerAminoProtoMapping(EventRevoke.aminoType, EventRevoke.typeUrl);

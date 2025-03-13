@@ -22,8 +22,8 @@ export interface MsgSetWithdrawAddressProtoMsg {
  * a delegator (or validator self-delegation).
  */
 export interface MsgSetWithdrawAddressAmino {
-  delegator_address?: string;
-  withdraw_address?: string;
+  delegator_address: string;
+  withdraw_address: string;
 }
 export interface MsgSetWithdrawAddressAminoMsg {
   type: "cosmos-sdk/MsgModifyWithdrawAddress";
@@ -77,8 +77,8 @@ export interface MsgWithdrawDelegatorRewardProtoMsg {
  * from a single validator.
  */
 export interface MsgWithdrawDelegatorRewardAmino {
-  delegator_address?: string;
-  validator_address?: string;
+  delegator_address: string;
+  validator_address: string;
 }
 export interface MsgWithdrawDelegatorRewardAminoMsg {
   type: "cosmos-sdk/MsgWithdrawDelegationReward";
@@ -139,7 +139,7 @@ export interface MsgWithdrawValidatorCommissionProtoMsg {
  * address.
  */
 export interface MsgWithdrawValidatorCommissionAmino {
-  validator_address?: string;
+  validator_address: string;
 }
 export interface MsgWithdrawValidatorCommissionAminoMsg {
   type: "cosmos-sdk/MsgWithdrawValidatorCommission";
@@ -201,7 +201,7 @@ export interface MsgFundCommunityPoolProtoMsg {
  */
 export interface MsgFundCommunityPoolAmino {
   amount: CoinAmino[];
-  depositor?: string;
+  depositor: string;
 }
 export interface MsgFundCommunityPoolAminoMsg {
   type: "cosmos-sdk/MsgFundCommunityPool";
@@ -255,7 +255,7 @@ export interface MsgUpdateParamsProtoMsg {
  */
 export interface MsgUpdateParamsAmino {
   /** authority is the address that controls the module (defaults to x/gov unless overwritten). */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/distribution parameters to update.
    * 
@@ -331,8 +331,8 @@ export interface MsgCommunityPoolSpendProtoMsg {
  */
 export interface MsgCommunityPoolSpendAmino {
   /** authority is the address that controls the module (defaults to x/gov unless overwritten). */
-  authority?: string;
-  recipient?: string;
+  authority: string;
+  recipient: string;
   amount: CoinAmino[];
 }
 export interface MsgCommunityPoolSpendAminoMsg {
@@ -402,8 +402,8 @@ export interface MsgDepositValidatorRewardsPoolProtoMsg {
  * Since: cosmos-sdk 0.50
  */
 export interface MsgDepositValidatorRewardsPoolAmino {
-  depositor?: string;
-  validator_address?: string;
+  depositor: string;
+  validator_address: string;
   amount: CoinAmino[];
 }
 export interface MsgDepositValidatorRewardsPoolAminoMsg {
@@ -563,10 +563,9 @@ export const MsgSetWithdrawAddress = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgSetWithdrawAddress",
       value: MsgSetWithdrawAddress.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgSetWithdrawAddress.typeUrl, MsgSetWithdrawAddress);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgSetWithdrawAddress.aminoType, MsgSetWithdrawAddress.typeUrl);
 function createBaseMsgSetWithdrawAddressResponse(): MsgSetWithdrawAddressResponse {
   return {};
 }
@@ -646,10 +645,9 @@ export const MsgSetWithdrawAddressResponse = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgSetWithdrawAddressResponse",
       value: MsgSetWithdrawAddressResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgSetWithdrawAddressResponse.typeUrl, MsgSetWithdrawAddressResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgSetWithdrawAddressResponse.aminoType, MsgSetWithdrawAddressResponse.typeUrl);
 function createBaseMsgWithdrawDelegatorReward(): MsgWithdrawDelegatorReward {
   return {
     delegatorAddress: "",
@@ -763,10 +761,9 @@ export const MsgWithdrawDelegatorReward = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward",
       value: MsgWithdrawDelegatorReward.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgWithdrawDelegatorReward.typeUrl, MsgWithdrawDelegatorReward);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgWithdrawDelegatorReward.aminoType, MsgWithdrawDelegatorReward.typeUrl);
 function createBaseMsgWithdrawDelegatorRewardResponse(): MsgWithdrawDelegatorRewardResponse {
   return {
     amount: []
@@ -874,10 +871,11 @@ export const MsgWithdrawDelegatorRewardResponse = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse",
       value: MsgWithdrawDelegatorRewardResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgWithdrawDelegatorRewardResponse.typeUrl, MsgWithdrawDelegatorRewardResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgWithdrawDelegatorRewardResponse.aminoType, MsgWithdrawDelegatorRewardResponse.typeUrl);
 function createBaseMsgWithdrawValidatorCommission(): MsgWithdrawValidatorCommission {
   return {
     validatorAddress: ""
@@ -975,10 +973,9 @@ export const MsgWithdrawValidatorCommission = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission",
       value: MsgWithdrawValidatorCommission.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgWithdrawValidatorCommission.typeUrl, MsgWithdrawValidatorCommission);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgWithdrawValidatorCommission.aminoType, MsgWithdrawValidatorCommission.typeUrl);
 function createBaseMsgWithdrawValidatorCommissionResponse(): MsgWithdrawValidatorCommissionResponse {
   return {
     amount: []
@@ -1086,10 +1083,11 @@ export const MsgWithdrawValidatorCommissionResponse = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommissionResponse",
       value: MsgWithdrawValidatorCommissionResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgWithdrawValidatorCommissionResponse.typeUrl, MsgWithdrawValidatorCommissionResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgWithdrawValidatorCommissionResponse.aminoType, MsgWithdrawValidatorCommissionResponse.typeUrl);
 function createBaseMsgFundCommunityPool(): MsgFundCommunityPool {
   return {
     amount: [],
@@ -1213,10 +1211,11 @@ export const MsgFundCommunityPool = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgFundCommunityPool",
       value: MsgFundCommunityPool.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgFundCommunityPool.typeUrl, MsgFundCommunityPool);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgFundCommunityPool.aminoType, MsgFundCommunityPool.typeUrl);
 function createBaseMsgFundCommunityPoolResponse(): MsgFundCommunityPoolResponse {
   return {};
 }
@@ -1296,10 +1295,9 @@ export const MsgFundCommunityPoolResponse = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgFundCommunityPoolResponse",
       value: MsgFundCommunityPoolResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgFundCommunityPoolResponse.typeUrl, MsgFundCommunityPoolResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgFundCommunityPoolResponse.aminoType, MsgFundCommunityPoolResponse.typeUrl);
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return {
     authority: "",
@@ -1415,10 +1413,11 @@ export const MsgUpdateParams = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgUpdateParams",
       value: MsgUpdateParams.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgUpdateParams.typeUrl, MsgUpdateParams);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpdateParams.aminoType, MsgUpdateParams.typeUrl);
 function createBaseMsgUpdateParamsResponse(): MsgUpdateParamsResponse {
   return {};
 }
@@ -1498,10 +1497,9 @@ export const MsgUpdateParamsResponse = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgUpdateParamsResponse",
       value: MsgUpdateParamsResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgUpdateParamsResponse.typeUrl, MsgUpdateParamsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgUpdateParamsResponse.aminoType, MsgUpdateParamsResponse.typeUrl);
 function createBaseMsgCommunityPoolSpend(): MsgCommunityPoolSpend {
   return {
     authority: "",
@@ -1641,10 +1639,11 @@ export const MsgCommunityPoolSpend = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgCommunityPoolSpend",
       value: MsgCommunityPoolSpend.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgCommunityPoolSpend.typeUrl, MsgCommunityPoolSpend);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgCommunityPoolSpend.aminoType, MsgCommunityPoolSpend.typeUrl);
 function createBaseMsgCommunityPoolSpendResponse(): MsgCommunityPoolSpendResponse {
   return {};
 }
@@ -1724,10 +1723,9 @@ export const MsgCommunityPoolSpendResponse = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgCommunityPoolSpendResponse",
       value: MsgCommunityPoolSpendResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgCommunityPoolSpendResponse.typeUrl, MsgCommunityPoolSpendResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgCommunityPoolSpendResponse.aminoType, MsgCommunityPoolSpendResponse.typeUrl);
 function createBaseMsgDepositValidatorRewardsPool(): MsgDepositValidatorRewardsPool {
   return {
     depositor: "",
@@ -1867,10 +1865,11 @@ export const MsgDepositValidatorRewardsPool = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgDepositValidatorRewardsPool",
       value: MsgDepositValidatorRewardsPool.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MsgDepositValidatorRewardsPool.typeUrl, MsgDepositValidatorRewardsPool);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgDepositValidatorRewardsPool.aminoType, MsgDepositValidatorRewardsPool.typeUrl);
 function createBaseMsgDepositValidatorRewardsPoolResponse(): MsgDepositValidatorRewardsPoolResponse {
   return {};
 }
@@ -1950,7 +1949,6 @@ export const MsgDepositValidatorRewardsPoolResponse = {
       typeUrl: "/cosmos.distribution.v1beta1.MsgDepositValidatorRewardsPoolResponse",
       value: MsgDepositValidatorRewardsPoolResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgDepositValidatorRewardsPoolResponse.typeUrl, MsgDepositValidatorRewardsPoolResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgDepositValidatorRewardsPoolResponse.aminoType, MsgDepositValidatorRewardsPoolResponse.typeUrl);

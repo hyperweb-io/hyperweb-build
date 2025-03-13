@@ -2,7 +2,6 @@ import { ProposalStatus, ProposalStatusSDKType, Proposal, ProposalSDKType, Vote,
 import { PageRequest, PageRequestSDKType, PageResponse, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryProposalRequest, QueryProposalRequestSDKType, QueryProposalResponse, QueryProposalResponseSDKType, QueryProposalsRequest, QueryProposalsRequestSDKType, QueryProposalsResponse, QueryProposalsResponseSDKType, QueryVoteRequest, QueryVoteRequestSDKType, QueryVoteResponse, QueryVoteResponseSDKType, QueryVotesRequest, QueryVotesRequestSDKType, QueryVotesResponse, QueryVotesResponseSDKType, QueryParamsRequest, QueryParamsRequestSDKType, QueryParamsResponse, QueryParamsResponseSDKType, QueryDepositRequest, QueryDepositRequestSDKType, QueryDepositResponse, QueryDepositResponseSDKType, QueryDepositsRequest, QueryDepositsRequestSDKType, QueryDepositsResponse, QueryDepositsResponseSDKType, QueryTallyResultRequest, QueryTallyResultRequestSDKType, QueryTallyResultResponse, QueryTallyResultResponseSDKType } from "./query";
 /** Query defines the gRPC querier service for gov module */
 export interface Query {
@@ -77,33 +76,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => QueryTallyResultResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    proposal(request: QueryProposalRequest): Promise<QueryProposalResponse> {
-      return queryService.proposal(request);
-    },
-    proposals(request: QueryProposalsRequest): Promise<QueryProposalsResponse> {
-      return queryService.proposals(request);
-    },
-    vote(request: QueryVoteRequest): Promise<QueryVoteResponse> {
-      return queryService.vote(request);
-    },
-    votes(request: QueryVotesRequest): Promise<QueryVotesResponse> {
-      return queryService.votes(request);
-    },
-    params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
-      return queryService.params(request);
-    },
-    deposit(request: QueryDepositRequest): Promise<QueryDepositResponse> {
-      return queryService.deposit(request);
-    },
-    deposits(request: QueryDepositsRequest): Promise<QueryDepositsResponse> {
-      return queryService.deposits(request);
-    },
-    tallyResult(request: QueryTallyResultRequest): Promise<QueryTallyResultResponse> {
-      return queryService.tallyResult(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };

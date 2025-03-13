@@ -4,7 +4,7 @@ import { BinaryReader, BinaryWriter } from "../../../binary";
 import { JsonSafe } from "../../../json-safe";
 import { DeepPartial, isSet, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { toUtf8, fromUtf8 } from "@cosmjs/encoding";
+import { toUtf8, fromUtf8 } from "@interchainjs/encoding";
 export const protobufPackage = "cosmwasm.wasm.v1";
 /**
  * ContractExecutionAuthorization defines authorization for wasm execute.
@@ -25,7 +25,7 @@ export interface ContractExecutionAuthorizationProtoMsg {
  */
 export interface ContractExecutionAuthorizationAmino {
   /** Grants for contract executions */
-  grants?: ContractGrantAmino[];
+  grants: ContractGrantAmino[];
 }
 export interface ContractExecutionAuthorizationAminoMsg {
   type: "wasm/ContractExecutionAuthorization";
@@ -58,7 +58,7 @@ export interface ContractMigrationAuthorizationProtoMsg {
  */
 export interface ContractMigrationAuthorizationAmino {
   /** Grants for contract migrations */
-  grants?: ContractGrantAmino[];
+  grants: ContractGrantAmino[];
 }
 export interface ContractMigrationAuthorizationAminoMsg {
   type: "wasm/ContractMigrationAuthorization";
@@ -114,7 +114,7 @@ export type ContractGrantEncoded = Omit<ContractGrant, "limit" | "filter"> & {
  */
 export interface ContractGrantAmino {
   /** Contract is the bech32 address of the smart contract */
-  contract?: string;
+  contract: string;
   /**
    * Limit defines execution limits that are enforced and updated when the grant
    * is applied. When the limit lapsed the grant is removed.
@@ -159,7 +159,7 @@ export interface MaxCallsLimitProtoMsg {
  */
 export interface MaxCallsLimitAmino {
   /** Remaining number that is decremented on each execution */
-  remaining?: string;
+  remaining: string;
 }
 export interface MaxCallsLimitAminoMsg {
   type: "wasm/MaxCallsLimit";
@@ -192,7 +192,7 @@ export interface MaxFundsLimitProtoMsg {
  */
 export interface MaxFundsLimitAmino {
   /** Amounts is the maximal amount of tokens transferable to the contract. */
-  amounts?: CoinAmino[];
+  amounts: CoinAmino[];
 }
 export interface MaxFundsLimitAminoMsg {
   type: "wasm/MaxFundsLimit";
@@ -229,9 +229,9 @@ export interface CombinedLimitProtoMsg {
  */
 export interface CombinedLimitAmino {
   /** Remaining number that is decremented on each execution */
-  calls_remaining?: string;
+  calls_remaining: string;
   /** Amounts is the maximal amount of tokens transferable to the contract. */
-  amounts?: CoinAmino[];
+  amounts: CoinAmino[];
 }
 export interface CombinedLimitAminoMsg {
   type: "wasm/CombinedLimit";
@@ -298,7 +298,7 @@ export interface AcceptedMessageKeysFilterProtoMsg {
  */
 export interface AcceptedMessageKeysFilterAmino {
   /** Messages is the list of unique keys */
-  keys?: string[];
+  keys: string[];
 }
 export interface AcceptedMessageKeysFilterAminoMsg {
   type: "wasm/AcceptedMessageKeysFilter";
@@ -334,7 +334,7 @@ export interface AcceptedMessagesFilterProtoMsg {
  */
 export interface AcceptedMessagesFilterAmino {
   /** Messages is the list of raw contract messages */
-  messages?: any[];
+  messages: any[];
 }
 export interface AcceptedMessagesFilterAminoMsg {
   type: "wasm/AcceptedMessagesFilter";
@@ -457,10 +457,13 @@ export const ContractExecutionAuthorization = {
       typeUrl: "/cosmwasm.wasm.v1.ContractExecutionAuthorization",
       value: ContractExecutionAuthorization.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(ContractExecutionAuthorization.typeUrl, ContractExecutionAuthorization);
+    GlobalDecoderRegistry.registerAminoProtoMapping(ContractExecutionAuthorization.aminoType, ContractExecutionAuthorization.typeUrl);
+    ContractGrant.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ContractExecutionAuthorization.typeUrl, ContractExecutionAuthorization);
-GlobalDecoderRegistry.registerAminoProtoMapping(ContractExecutionAuthorization.aminoType, ContractExecutionAuthorization.typeUrl);
 function createBaseContractMigrationAuthorization(): ContractMigrationAuthorization {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.ContractMigrationAuthorization",
@@ -569,10 +572,13 @@ export const ContractMigrationAuthorization = {
       typeUrl: "/cosmwasm.wasm.v1.ContractMigrationAuthorization",
       value: ContractMigrationAuthorization.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(ContractMigrationAuthorization.typeUrl, ContractMigrationAuthorization);
+    GlobalDecoderRegistry.registerAminoProtoMapping(ContractMigrationAuthorization.aminoType, ContractMigrationAuthorization.typeUrl);
+    ContractGrant.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ContractMigrationAuthorization.typeUrl, ContractMigrationAuthorization);
-GlobalDecoderRegistry.registerAminoProtoMapping(ContractMigrationAuthorization.aminoType, ContractMigrationAuthorization.typeUrl);
 function createBaseContractGrant(): ContractGrant {
   return {
     contract: "",
@@ -706,10 +712,13 @@ export const ContractGrant = {
       typeUrl: "/cosmwasm.wasm.v1.ContractGrant",
       value: ContractGrant.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    AllowAllMessagesFilter.registerTypeUrl();
+    AcceptedMessageKeysFilter.registerTypeUrl();
+    AcceptedMessagesFilter.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ContractGrant.typeUrl, ContractGrant);
-GlobalDecoderRegistry.registerAminoProtoMapping(ContractGrant.aminoType, ContractGrant.typeUrl);
 function createBaseMaxCallsLimit(): MaxCallsLimit {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.MaxCallsLimit",
@@ -787,7 +796,7 @@ export const MaxCallsLimit = {
   },
   toAmino(message: MaxCallsLimit): MaxCallsLimitAmino {
     const obj: any = {};
-    obj.remaining = message.remaining !== BigInt(0) ? (message.remaining?.toString)() : undefined;
+    obj.remaining = message.remaining !== BigInt(0) ? message.remaining?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: MaxCallsLimitAminoMsg): MaxCallsLimit {
@@ -810,10 +819,12 @@ export const MaxCallsLimit = {
       typeUrl: "/cosmwasm.wasm.v1.MaxCallsLimit",
       value: MaxCallsLimit.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(MaxCallsLimit.typeUrl, MaxCallsLimit);
+    GlobalDecoderRegistry.registerAminoProtoMapping(MaxCallsLimit.aminoType, MaxCallsLimit.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(MaxCallsLimit.typeUrl, MaxCallsLimit);
-GlobalDecoderRegistry.registerAminoProtoMapping(MaxCallsLimit.aminoType, MaxCallsLimit.typeUrl);
 function createBaseMaxFundsLimit(): MaxFundsLimit {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.MaxFundsLimit",
@@ -922,10 +933,13 @@ export const MaxFundsLimit = {
       typeUrl: "/cosmwasm.wasm.v1.MaxFundsLimit",
       value: MaxFundsLimit.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(MaxFundsLimit.typeUrl, MaxFundsLimit);
+    GlobalDecoderRegistry.registerAminoProtoMapping(MaxFundsLimit.aminoType, MaxFundsLimit.typeUrl);
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(MaxFundsLimit.typeUrl, MaxFundsLimit);
-GlobalDecoderRegistry.registerAminoProtoMapping(MaxFundsLimit.aminoType, MaxFundsLimit.typeUrl);
 function createBaseCombinedLimit(): CombinedLimit {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.CombinedLimit",
@@ -1024,7 +1038,7 @@ export const CombinedLimit = {
   },
   toAmino(message: CombinedLimit): CombinedLimitAmino {
     const obj: any = {};
-    obj.calls_remaining = message.callsRemaining !== BigInt(0) ? (message.callsRemaining?.toString)() : undefined;
+    obj.calls_remaining = message.callsRemaining !== BigInt(0) ? message.callsRemaining?.toString() : undefined;
     if (message.amounts) {
       obj.amounts = message.amounts.map(e => e ? Coin.toAmino(e) : undefined);
     } else {
@@ -1052,10 +1066,13 @@ export const CombinedLimit = {
       typeUrl: "/cosmwasm.wasm.v1.CombinedLimit",
       value: CombinedLimit.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(CombinedLimit.typeUrl, CombinedLimit);
+    GlobalDecoderRegistry.registerAminoProtoMapping(CombinedLimit.aminoType, CombinedLimit.typeUrl);
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CombinedLimit.typeUrl, CombinedLimit);
-GlobalDecoderRegistry.registerAminoProtoMapping(CombinedLimit.aminoType, CombinedLimit.typeUrl);
 function createBaseAllowAllMessagesFilter(): AllowAllMessagesFilter {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.AllowAllMessagesFilter"
@@ -1137,10 +1154,12 @@ export const AllowAllMessagesFilter = {
       typeUrl: "/cosmwasm.wasm.v1.AllowAllMessagesFilter",
       value: AllowAllMessagesFilter.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(AllowAllMessagesFilter.typeUrl, AllowAllMessagesFilter);
+    GlobalDecoderRegistry.registerAminoProtoMapping(AllowAllMessagesFilter.aminoType, AllowAllMessagesFilter.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(AllowAllMessagesFilter.typeUrl, AllowAllMessagesFilter);
-GlobalDecoderRegistry.registerAminoProtoMapping(AllowAllMessagesFilter.aminoType, AllowAllMessagesFilter.typeUrl);
 function createBaseAcceptedMessageKeysFilter(): AcceptedMessageKeysFilter {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.AcceptedMessageKeysFilter",
@@ -1249,10 +1268,12 @@ export const AcceptedMessageKeysFilter = {
       typeUrl: "/cosmwasm.wasm.v1.AcceptedMessageKeysFilter",
       value: AcceptedMessageKeysFilter.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(AcceptedMessageKeysFilter.typeUrl, AcceptedMessageKeysFilter);
+    GlobalDecoderRegistry.registerAminoProtoMapping(AcceptedMessageKeysFilter.aminoType, AcceptedMessageKeysFilter.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(AcceptedMessageKeysFilter.typeUrl, AcceptedMessageKeysFilter);
-GlobalDecoderRegistry.registerAminoProtoMapping(AcceptedMessageKeysFilter.aminoType, AcceptedMessageKeysFilter.typeUrl);
 function createBaseAcceptedMessagesFilter(): AcceptedMessagesFilter {
   return {
     $typeUrl: "/cosmwasm.wasm.v1.AcceptedMessagesFilter",
@@ -1361,7 +1382,9 @@ export const AcceptedMessagesFilter = {
       typeUrl: "/cosmwasm.wasm.v1.AcceptedMessagesFilter",
       value: AcceptedMessagesFilter.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GlobalDecoderRegistry.register(AcceptedMessagesFilter.typeUrl, AcceptedMessagesFilter);
+    GlobalDecoderRegistry.registerAminoProtoMapping(AcceptedMessagesFilter.aminoType, AcceptedMessagesFilter.typeUrl);
   }
 };
-GlobalDecoderRegistry.register(AcceptedMessagesFilter.typeUrl, AcceptedMessagesFilter);
-GlobalDecoderRegistry.registerAminoProtoMapping(AcceptedMessagesFilter.aminoType, AcceptedMessagesFilter.typeUrl);

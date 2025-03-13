@@ -90,13 +90,13 @@ export interface PermissionsProtoMsg {
  */
 export interface PermissionsAmino {
   /** level is the level of permissions granted to this account. */
-  level?: Permissions_Level;
+  level: Permissions_Level;
   /**
    * limit_type_urls is used with LEVEL_SOME_MSGS to limit the lists of Msg type
    * URLs that the account can trip. It is an error to use limit_type_urls with
    * a level other than LEVEL_SOME_MSGS.
    */
-  limit_type_urls?: string[];
+  limit_type_urls: string[];
 }
 export interface PermissionsAminoMsg {
   type: "cosmos-sdk/Permissions";
@@ -121,7 +121,7 @@ export interface GenesisAccountPermissionsProtoMsg {
 }
 /** GenesisAccountPermissions is the account permissions for the circuit breaker in genesis */
 export interface GenesisAccountPermissionsAmino {
-  address?: string;
+  address: string;
   permissions?: PermissionsAmino;
 }
 export interface GenesisAccountPermissionsAminoMsg {
@@ -144,8 +144,8 @@ export interface GenesisStateProtoMsg {
 }
 /** GenesisState is the state that must be provided at genesis. */
 export interface GenesisStateAmino {
-  account_permissions?: GenesisAccountPermissionsAmino[];
-  disabled_type_urls?: string[];
+  account_permissions: GenesisAccountPermissionsAmino[];
+  disabled_type_urls: string[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
@@ -279,10 +279,9 @@ export const Permissions = {
       typeUrl: "/cosmos.circuit.v1.Permissions",
       value: Permissions.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Permissions.typeUrl, Permissions);
-GlobalDecoderRegistry.registerAminoProtoMapping(Permissions.aminoType, Permissions.typeUrl);
 function createBaseGenesisAccountPermissions(): GenesisAccountPermissions {
   return {
     address: "",
@@ -398,10 +397,11 @@ export const GenesisAccountPermissions = {
       typeUrl: "/cosmos.circuit.v1.GenesisAccountPermissions",
       value: GenesisAccountPermissions.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Permissions.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisAccountPermissions.typeUrl, GenesisAccountPermissions);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisAccountPermissions.aminoType, GenesisAccountPermissions.typeUrl);
 function createBaseGenesisState(): GenesisState {
   return {
     accountPermissions: [],
@@ -535,7 +535,8 @@ export const GenesisState = {
       typeUrl: "/cosmos.circuit.v1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    GenesisAccountPermissions.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);

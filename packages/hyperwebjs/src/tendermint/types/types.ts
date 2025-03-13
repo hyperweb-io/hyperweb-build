@@ -65,8 +65,8 @@ export interface PartSetHeaderProtoMsg {
 }
 /** PartsetHeader */
 export interface PartSetHeaderAmino {
-  total?: number;
-  hash?: string;
+  total: number;
+  hash: string;
 }
 export interface PartSetHeaderAminoMsg {
   type: "/tendermint.types.PartSetHeader";
@@ -87,9 +87,9 @@ export interface PartProtoMsg {
   value: Uint8Array;
 }
 export interface PartAmino {
-  index?: number;
-  bytes?: string;
-  proof?: ProofAmino;
+  index: number;
+  bytes: string;
+  proof: ProofAmino;
 }
 export interface PartAminoMsg {
   type: "/tendermint.types.Part";
@@ -111,8 +111,8 @@ export interface BlockIDProtoMsg {
 }
 /** BlockID */
 export interface BlockIDAmino {
-  hash?: string;
-  part_set_header?: PartSetHeaderAmino;
+  hash: string;
+  part_set_header: PartSetHeaderAmino;
 }
 export interface BlockIDAminoMsg {
   type: "/tendermint.types.BlockID";
@@ -158,30 +158,30 @@ export interface HeaderProtoMsg {
 /** Header defines the structure of a block header. */
 export interface HeaderAmino {
   /** basic block info */
-  version?: ConsensusAmino;
-  chain_id?: string;
-  height?: string;
-  time?: string;
+  version: ConsensusAmino;
+  chain_id: string;
+  height: string;
+  time: string;
   /** prev block info */
-  last_block_id?: BlockIDAmino;
+  last_block_id: BlockIDAmino;
   /** hashes of block data */
-  last_commit_hash?: string;
+  last_commit_hash: string;
   /** transactions */
-  data_hash?: string;
+  data_hash: string;
   /** hashes from the app output from the prev block */
-  validators_hash?: string;
+  validators_hash: string;
   /** validators for the next block */
-  next_validators_hash?: string;
+  next_validators_hash: string;
   /** consensus params for current block */
-  consensus_hash?: string;
+  consensus_hash: string;
   /** state after txs from the previous block */
-  app_hash?: string;
+  app_hash: string;
   /** root hash of all results from the txs from the previous block */
-  last_results_hash?: string;
+  last_results_hash: string;
   /** consensus info */
-  evidence_hash?: string;
+  evidence_hash: string;
   /** original proposer of the block */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface HeaderAminoMsg {
   type: "/tendermint.types.Header";
@@ -224,7 +224,7 @@ export interface DataAmino {
    * NOTE: not all txs here are valid.  We're just agreeing on the order first.
    * This means that block.AppHash does not include these txs.
    */
-  txs?: string[];
+  txs: string[];
 }
 export interface DataAminoMsg {
   type: "/tendermint.types.Data";
@@ -273,30 +273,30 @@ export interface VoteProtoMsg {
  * consensus.
  */
 export interface VoteAmino {
-  type?: SignedMsgType;
-  height?: string;
-  round?: number;
+  type: SignedMsgType;
+  height: string;
+  round: number;
   /** zero if vote is nil. */
-  block_id?: BlockIDAmino;
-  timestamp?: string;
-  validator_address?: string;
-  validator_index?: number;
+  block_id: BlockIDAmino;
+  timestamp: string;
+  validator_address: string;
+  validator_index: number;
   /**
    * Vote signature by the validator if they participated in consensus for the
    * associated block.
    */
-  signature?: string;
+  signature: string;
   /**
    * Vote extension provided by the application. Only valid for precommit
    * messages.
    */
-  extension?: string;
+  extension: string;
   /**
    * Vote extension signature by the validator if they participated in
    * consensus for the associated block.
    * Only valid for precommit messages.
    */
-  extension_signature?: string;
+  extension_signature: string;
 }
 export interface VoteAminoMsg {
   type: "/tendermint.types.Vote";
@@ -331,10 +331,10 @@ export interface CommitProtoMsg {
 }
 /** Commit contains the evidence that a block was committed by a set of validators. */
 export interface CommitAmino {
-  height?: string;
-  round?: number;
-  block_id?: BlockIDAmino;
-  signatures?: CommitSigAmino[];
+  height: string;
+  round: number;
+  block_id: BlockIDAmino;
+  signatures: CommitSigAmino[];
 }
 export interface CommitAminoMsg {
   type: "/tendermint.types.Commit";
@@ -360,10 +360,10 @@ export interface CommitSigProtoMsg {
 }
 /** CommitSig is a part of the Vote included in a Commit. */
 export interface CommitSigAmino {
-  block_id_flag?: BlockIDFlag;
-  validator_address?: string;
-  timestamp?: string;
-  signature?: string;
+  block_id_flag: BlockIDFlag;
+  validator_address: string;
+  timestamp: string;
+  signature: string;
 }
 export interface CommitSigAminoMsg {
   type: "/tendermint.types.CommitSig";
@@ -387,10 +387,10 @@ export interface ExtendedCommitProtoMsg {
   value: Uint8Array;
 }
 export interface ExtendedCommitAmino {
-  height?: string;
-  round?: number;
-  block_id?: BlockIDAmino;
-  extended_signatures?: ExtendedCommitSigAmino[];
+  height: string;
+  round: number;
+  block_id: BlockIDAmino;
+  extended_signatures: ExtendedCommitSigAmino[];
 }
 export interface ExtendedCommitAminoMsg {
   type: "/tendermint.types.ExtendedCommit";
@@ -427,14 +427,14 @@ export interface ExtendedCommitSigProtoMsg {
  * That is the digest of the original signature is still the same in prior versions
  */
 export interface ExtendedCommitSigAmino {
-  block_id_flag?: BlockIDFlag;
-  validator_address?: string;
-  timestamp?: string;
-  signature?: string;
+  block_id_flag: BlockIDFlag;
+  validator_address: string;
+  timestamp: string;
+  signature: string;
   /** Vote extension data */
-  extension?: string;
+  extension: string;
   /** Vote extension signature */
-  extension_signature?: string;
+  extension_signature: string;
 }
 export interface ExtendedCommitSigAminoMsg {
   type: "/tendermint.types.ExtendedCommitSig";
@@ -467,13 +467,13 @@ export interface ProposalProtoMsg {
   value: Uint8Array;
 }
 export interface ProposalAmino {
-  type?: SignedMsgType;
-  height?: string;
-  round?: number;
-  pol_round?: number;
-  block_id?: BlockIDAmino;
-  timestamp?: string;
-  signature?: string;
+  type: SignedMsgType;
+  height: string;
+  round: number;
+  pol_round: number;
+  block_id: BlockIDAmino;
+  timestamp: string;
+  signature: string;
 }
 export interface ProposalAminoMsg {
   type: "/tendermint.types.Proposal";
@@ -539,10 +539,10 @@ export interface BlockMetaProtoMsg {
   value: Uint8Array;
 }
 export interface BlockMetaAmino {
-  block_id?: BlockIDAmino;
-  block_size?: string;
-  header?: HeaderAmino;
-  num_txs?: string;
+  block_id: BlockIDAmino;
+  block_size: string;
+  header: HeaderAmino;
+  num_txs: string;
 }
 export interface BlockMetaAminoMsg {
   type: "/tendermint.types.BlockMeta";
@@ -566,8 +566,8 @@ export interface TxProofProtoMsg {
 }
 /** TxProof represents a Merkle proof of the presence of a transaction in the Merkle tree. */
 export interface TxProofAmino {
-  root_hash?: string;
-  data?: string;
+  root_hash: string;
+  data: string;
   proof?: ProofAmino;
 }
 export interface TxProofAminoMsg {
@@ -686,9 +686,9 @@ export const PartSetHeader = {
       typeUrl: "/tendermint.types.PartSetHeader",
       value: PartSetHeader.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PartSetHeader.typeUrl, PartSetHeader);
 function createBasePart(): Part {
   return {
     index: 0,
@@ -813,9 +813,11 @@ export const Part = {
       typeUrl: "/tendermint.types.Part",
       value: Part.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Proof.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Part.typeUrl, Part);
 function createBaseBlockID(): BlockID {
   return {
     hash: new Uint8Array(),
@@ -924,9 +926,11 @@ export const BlockID = {
       typeUrl: "/tendermint.types.BlockID",
       value: BlockID.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PartSetHeader.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(BlockID.typeUrl, BlockID);
 function createBaseHeader(): Header {
   return {
     version: Consensus.fromPartial({}),
@@ -1203,7 +1207,7 @@ export const Header = {
     const obj: any = {};
     obj.version = message.version ? Consensus.toAmino(message.version) : undefined;
     obj.chain_id = message.chainId === "" ? undefined : message.chainId;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : undefined;
     obj.last_block_id = message.lastBlockId ? BlockID.toAmino(message.lastBlockId) : undefined;
     obj.last_commit_hash = message.lastCommitHash ? base64FromBytes(message.lastCommitHash) : undefined;
@@ -1231,9 +1235,12 @@ export const Header = {
       typeUrl: "/tendermint.types.Header",
       value: Header.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Consensus.registerTypeUrl();
+    BlockID.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Header.typeUrl, Header);
 function createBaseData(): Data {
   return {
     txs: []
@@ -1334,9 +1341,9 @@ export const Data = {
       typeUrl: "/tendermint.types.Data",
       value: Data.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Data.typeUrl, Data);
 function createBaseVote(): Vote {
   return {
     type: 0,
@@ -1550,7 +1557,7 @@ export const Vote = {
   toAmino(message: Vote): VoteAmino {
     const obj: any = {};
     obj.type = message.type === 0 ? undefined : message.type;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.round = message.round === 0 ? undefined : message.round;
     obj.block_id = message.blockId ? BlockID.toAmino(message.blockId) : undefined;
     obj.timestamp = message.timestamp ? Timestamp.toAmino(toTimestamp(message.timestamp)) : undefined;
@@ -1575,9 +1582,11 @@ export const Vote = {
       typeUrl: "/tendermint.types.Vote",
       value: Vote.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    BlockID.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Vote.typeUrl, Vote);
 function createBaseCommit(): Commit {
   return {
     height: BigInt(0),
@@ -1706,7 +1715,7 @@ export const Commit = {
   },
   toAmino(message: Commit): CommitAmino {
     const obj: any = {};
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.round = message.round === 0 ? undefined : message.round;
     obj.block_id = message.blockId ? BlockID.toAmino(message.blockId) : undefined;
     if (message.signatures) {
@@ -1730,9 +1739,12 @@ export const Commit = {
       typeUrl: "/tendermint.types.Commit",
       value: Commit.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    BlockID.registerTypeUrl();
+    CommitSig.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Commit.typeUrl, Commit);
 function createBaseCommitSig(): CommitSig {
   return {
     blockIdFlag: 0,
@@ -1871,9 +1883,9 @@ export const CommitSig = {
       typeUrl: "/tendermint.types.CommitSig",
       value: CommitSig.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(CommitSig.typeUrl, CommitSig);
 function createBaseExtendedCommit(): ExtendedCommit {
   return {
     height: BigInt(0),
@@ -2002,7 +2014,7 @@ export const ExtendedCommit = {
   },
   toAmino(message: ExtendedCommit): ExtendedCommitAmino {
     const obj: any = {};
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.round = message.round === 0 ? undefined : message.round;
     obj.block_id = message.blockId ? BlockID.toAmino(message.blockId) : undefined;
     if (message.extendedSignatures) {
@@ -2026,9 +2038,12 @@ export const ExtendedCommit = {
       typeUrl: "/tendermint.types.ExtendedCommit",
       value: ExtendedCommit.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    BlockID.registerTypeUrl();
+    ExtendedCommitSig.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ExtendedCommit.typeUrl, ExtendedCommit);
 function createBaseExtendedCommitSig(): ExtendedCommitSig {
   return {
     blockIdFlag: 0,
@@ -2199,9 +2214,9 @@ export const ExtendedCommitSig = {
       typeUrl: "/tendermint.types.ExtendedCommitSig",
       value: ExtendedCommitSig.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ExtendedCommitSig.typeUrl, ExtendedCommitSig);
 function createBaseProposal(): Proposal {
   return {
     type: 0,
@@ -2370,7 +2385,7 @@ export const Proposal = {
   toAmino(message: Proposal): ProposalAmino {
     const obj: any = {};
     obj.type = message.type === 0 ? undefined : message.type;
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.round = message.round === 0 ? undefined : message.round;
     obj.pol_round = message.polRound === 0 ? undefined : message.polRound;
     obj.block_id = message.blockId ? BlockID.toAmino(message.blockId) : undefined;
@@ -2392,9 +2407,11 @@ export const Proposal = {
       typeUrl: "/tendermint.types.Proposal",
       value: Proposal.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    BlockID.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Proposal.typeUrl, Proposal);
 function createBaseSignedHeader(): SignedHeader {
   return {
     header: undefined,
@@ -2505,9 +2522,12 @@ export const SignedHeader = {
       typeUrl: "/tendermint.types.SignedHeader",
       value: SignedHeader.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Header.registerTypeUrl();
+    Commit.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(SignedHeader.typeUrl, SignedHeader);
 function createBaseLightBlock(): LightBlock {
   return {
     signedHeader: undefined,
@@ -2618,9 +2638,12 @@ export const LightBlock = {
       typeUrl: "/tendermint.types.LightBlock",
       value: LightBlock.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    SignedHeader.registerTypeUrl();
+    ValidatorSet.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(LightBlock.typeUrl, LightBlock);
 function createBaseBlockMeta(): BlockMeta {
   return {
     blockId: BlockID.fromPartial({}),
@@ -2748,9 +2771,9 @@ export const BlockMeta = {
   toAmino(message: BlockMeta): BlockMetaAmino {
     const obj: any = {};
     obj.block_id = message.blockId ? BlockID.toAmino(message.blockId) : undefined;
-    obj.block_size = message.blockSize !== BigInt(0) ? (message.blockSize?.toString)() : undefined;
+    obj.block_size = message.blockSize !== BigInt(0) ? message.blockSize?.toString() : undefined;
     obj.header = message.header ? Header.toAmino(message.header) : undefined;
-    obj.num_txs = message.numTxs !== BigInt(0) ? (message.numTxs?.toString)() : undefined;
+    obj.num_txs = message.numTxs !== BigInt(0) ? message.numTxs?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: BlockMetaAminoMsg): BlockMeta {
@@ -2767,9 +2790,12 @@ export const BlockMeta = {
       typeUrl: "/tendermint.types.BlockMeta",
       value: BlockMeta.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    BlockID.registerTypeUrl();
+    Header.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(BlockMeta.typeUrl, BlockMeta);
 function createBaseTxProof(): TxProof {
   return {
     rootHash: new Uint8Array(),
@@ -2894,6 +2920,8 @@ export const TxProof = {
       typeUrl: "/tendermint.types.TxProof",
       value: TxProof.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Proof.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(TxProof.typeUrl, TxProof);

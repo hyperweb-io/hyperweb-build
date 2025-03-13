@@ -218,10 +218,9 @@ export const QueryParamsRequest = {
       typeUrl: "/cosmos.mint.v1beta1.QueryParamsRequest",
       value: QueryParamsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryParamsRequest.typeUrl, QueryParamsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryParamsRequest.aminoType, QueryParamsRequest.typeUrl);
 function createBaseQueryParamsResponse(): QueryParamsResponse {
   return {
     params: Params.fromPartial({})
@@ -321,10 +320,11 @@ export const QueryParamsResponse = {
       typeUrl: "/cosmos.mint.v1beta1.QueryParamsResponse",
       value: QueryParamsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryParamsResponse.typeUrl, QueryParamsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryParamsResponse.aminoType, QueryParamsResponse.typeUrl);
 function createBaseQueryInflationRequest(): QueryInflationRequest {
   return {};
 }
@@ -404,10 +404,9 @@ export const QueryInflationRequest = {
       typeUrl: "/cosmos.mint.v1beta1.QueryInflationRequest",
       value: QueryInflationRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryInflationRequest.typeUrl, QueryInflationRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryInflationRequest.aminoType, QueryInflationRequest.typeUrl);
 function createBaseQueryInflationResponse(): QueryInflationResponse {
   return {
     inflation: new Uint8Array()
@@ -505,10 +504,9 @@ export const QueryInflationResponse = {
       typeUrl: "/cosmos.mint.v1beta1.QueryInflationResponse",
       value: QueryInflationResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryInflationResponse.typeUrl, QueryInflationResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryInflationResponse.aminoType, QueryInflationResponse.typeUrl);
 function createBaseQueryAnnualProvisionsRequest(): QueryAnnualProvisionsRequest {
   return {};
 }
@@ -588,10 +586,9 @@ export const QueryAnnualProvisionsRequest = {
       typeUrl: "/cosmos.mint.v1beta1.QueryAnnualProvisionsRequest",
       value: QueryAnnualProvisionsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryAnnualProvisionsRequest.typeUrl, QueryAnnualProvisionsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAnnualProvisionsRequest.aminoType, QueryAnnualProvisionsRequest.typeUrl);
 function createBaseQueryAnnualProvisionsResponse(): QueryAnnualProvisionsResponse {
   return {
     annualProvisions: new Uint8Array()
@@ -689,7 +686,6 @@ export const QueryAnnualProvisionsResponse = {
       typeUrl: "/cosmos.mint.v1beta1.QueryAnnualProvisionsResponse",
       value: QueryAnnualProvisionsResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryAnnualProvisionsResponse.typeUrl, QueryAnnualProvisionsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAnnualProvisionsResponse.aminoType, QueryAnnualProvisionsResponse.typeUrl);

@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.crypto.ed25519";
 /**
  * PubKey is an ed25519 public key for handling Tendermint keys in SDK.
@@ -25,7 +24,7 @@ export interface PubKeyProtoMsg {
  * then you must create a new proto message and follow ADR-28 for Address construction.
  */
 export interface PubKeyAmino {
-  key?: string;
+  key: string;
 }
 export interface PubKeyAminoMsg {
   type: "tendermint/PubKeyEd25519";
@@ -57,7 +56,7 @@ export interface PrivKeyProtoMsg {
  * NOTE: ed25519 keys must not be used in SDK apps except in a tendermint validator context.
  */
 export interface PrivKeyAmino {
-  key?: string;
+  key: string;
 }
 export interface PrivKeyAminoMsg {
   type: "tendermint/PrivKeyEd25519";
@@ -167,10 +166,9 @@ export const PubKey = {
       typeUrl: "/cosmos.crypto.ed25519.PubKey",
       value: PubKey.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PubKey.typeUrl, PubKey);
-GlobalDecoderRegistry.registerAminoProtoMapping(PubKey.aminoType, PubKey.typeUrl);
 function createBasePrivKey(): PrivKey {
   return {
     key: new Uint8Array()
@@ -268,7 +266,6 @@ export const PrivKey = {
       typeUrl: "/cosmos.crypto.ed25519.PrivKey",
       value: PrivKey.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(PrivKey.typeUrl, PrivKey);
-GlobalDecoderRegistry.registerAminoProtoMapping(PrivKey.aminoType, PrivKey.typeUrl);

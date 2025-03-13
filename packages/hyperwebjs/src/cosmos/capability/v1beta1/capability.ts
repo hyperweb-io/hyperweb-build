@@ -1,7 +1,6 @@
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.capability.v1beta1";
 /**
  * Capability defines an implementation of an object capability. The index
@@ -19,7 +18,7 @@ export interface CapabilityProtoMsg {
  * provided to a Capability must be globally unique.
  */
 export interface CapabilityAmino {
-  index?: string;
+  index: string;
 }
 export interface CapabilityAminoMsg {
   type: "cosmos-sdk/Capability";
@@ -49,8 +48,8 @@ export interface OwnerProtoMsg {
  * capability and the module name.
  */
 export interface OwnerAmino {
-  module?: string;
-  name?: string;
+  module: string;
+  name: string;
 }
 export interface OwnerAminoMsg {
   type: "cosmos-sdk/Owner";
@@ -80,7 +79,7 @@ export interface CapabilityOwnersProtoMsg {
  * owners must be unique.
  */
 export interface CapabilityOwnersAmino {
-  owners?: OwnerAmino[];
+  owners: OwnerAmino[];
 }
 export interface CapabilityOwnersAminoMsg {
   type: "cosmos-sdk/CapabilityOwners";
@@ -169,7 +168,7 @@ export const Capability = {
   },
   toAmino(message: Capability): CapabilityAmino {
     const obj: any = {};
-    obj.index = message.index !== BigInt(0) ? (message.index?.toString)() : undefined;
+    obj.index = message.index !== BigInt(0) ? message.index?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: CapabilityAminoMsg): Capability {
@@ -192,10 +191,9 @@ export const Capability = {
       typeUrl: "/cosmos.capability.v1beta1.Capability",
       value: Capability.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Capability.typeUrl, Capability);
-GlobalDecoderRegistry.registerAminoProtoMapping(Capability.aminoType, Capability.typeUrl);
 function createBaseOwner(): Owner {
   return {
     module: "",
@@ -309,10 +307,9 @@ export const Owner = {
       typeUrl: "/cosmos.capability.v1beta1.Owner",
       value: Owner.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Owner.typeUrl, Owner);
-GlobalDecoderRegistry.registerAminoProtoMapping(Owner.aminoType, Owner.typeUrl);
 function createBaseCapabilityOwners(): CapabilityOwners {
   return {
     owners: []
@@ -420,7 +417,8 @@ export const CapabilityOwners = {
       typeUrl: "/cosmos.capability.v1beta1.CapabilityOwners",
       value: CapabilityOwners.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Owner.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CapabilityOwners.typeUrl, CapabilityOwners);
-GlobalDecoderRegistry.registerAminoProtoMapping(CapabilityOwners.aminoType, CapabilityOwners.typeUrl);

@@ -1,8 +1,7 @@
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Decimal } from "@cosmjs/math";
+import { Decimal } from "@interchainjs/math";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.mint.v1beta1";
 /** Minter represents the minting state. */
 export interface Minter {
@@ -18,9 +17,9 @@ export interface MinterProtoMsg {
 /** Minter represents the minting state. */
 export interface MinterAmino {
   /** current annual inflation rate */
-  inflation?: string;
+  inflation: string;
   /** current annual expected provisions */
-  annual_provisions?: string;
+  annual_provisions: string;
 }
 export interface MinterAminoMsg {
   type: "cosmos-sdk/Minter";
@@ -53,7 +52,7 @@ export interface ParamsProtoMsg {
 /** Params defines the parameters for the x/mint module. */
 export interface ParamsAmino {
   /** type of coin to mint */
-  mint_denom?: string;
+  mint_denom: string;
   /** maximum annual change in inflation rate */
   inflation_rate_change: string;
   /** maximum inflation rate */
@@ -63,7 +62,7 @@ export interface ParamsAmino {
   /** goal of percent bonded atoms */
   goal_bonded: string;
   /** expected blocks per year */
-  blocks_per_year?: string;
+  blocks_per_year: string;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/x/mint/Params";
@@ -167,8 +166,8 @@ export const Minter = {
   },
   toAmino(message: Minter): MinterAmino {
     const obj: any = {};
-    obj.inflation = message.inflation === "" ? undefined : message.inflation;
-    obj.annual_provisions = message.annualProvisions === "" ? undefined : message.annualProvisions;
+    obj.inflation = message.inflation === "" ? undefined : Decimal.fromUserInput(message.inflation, 18).atomics;
+    obj.annual_provisions = message.annualProvisions === "" ? undefined : Decimal.fromUserInput(message.annualProvisions, 18).atomics;
     return obj;
   },
   fromAminoMsg(object: MinterAminoMsg): Minter {
@@ -191,10 +190,9 @@ export const Minter = {
       typeUrl: "/cosmos.mint.v1beta1.Minter",
       value: Minter.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Minter.typeUrl, Minter);
-GlobalDecoderRegistry.registerAminoProtoMapping(Minter.aminoType, Minter.typeUrl);
 function createBaseParams(): Params {
   return {
     mintDenom: "",
@@ -347,11 +345,11 @@ export const Params = {
   toAmino(message: Params): ParamsAmino {
     const obj: any = {};
     obj.mint_denom = message.mintDenom === "" ? undefined : message.mintDenom;
-    obj.inflation_rate_change = message.inflationRateChange ?? "";
-    obj.inflation_max = message.inflationMax ?? "";
-    obj.inflation_min = message.inflationMin ?? "";
-    obj.goal_bonded = message.goalBonded ?? "";
-    obj.blocks_per_year = message.blocksPerYear !== BigInt(0) ? (message.blocksPerYear?.toString)() : undefined;
+    obj.inflation_rate_change = Decimal.fromUserInput(message.inflationRateChange, 18).atomics ?? "";
+    obj.inflation_max = Decimal.fromUserInput(message.inflationMax, 18).atomics ?? "";
+    obj.inflation_min = Decimal.fromUserInput(message.inflationMin, 18).atomics ?? "";
+    obj.goal_bonded = Decimal.fromUserInput(message.goalBonded, 18).atomics ?? "";
+    obj.blocks_per_year = message.blocksPerYear !== BigInt(0) ? message.blocksPerYear?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ParamsAminoMsg): Params {
@@ -374,7 +372,6 @@ export const Params = {
       typeUrl: "/cosmos.mint.v1beta1.Params",
       value: Params.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Params.typeUrl, Params);
-GlobalDecoderRegistry.registerAminoProtoMapping(Params.aminoType, Params.typeUrl);

@@ -1,7 +1,7 @@
 import { BinaryReader, BinaryWriter } from "../../../../binary";
+import { GlobalDecoderRegistry } from "../../../../registry";
 import { isSet, DeepPartial } from "../../../../helpers";
 import { JsonSafe } from "../../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../../registry";
 export const protobufPackage = "cosmos.base.reflection.v2alpha1";
 /** AppDescriptor describes a cosmos-sdk based application */
 export interface AppDescriptor {
@@ -78,9 +78,9 @@ export interface TxDescriptorAmino {
    * it is not meant to support polymorphism of transaction types, it is supposed to be used by
    * reflection clients to understand if they can handle a specific transaction type in an application.
    */
-  fullname?: string;
+  fullname: string;
   /** msgs lists the accepted application messages (sdk.Msg) */
-  msgs?: MsgDescriptorAmino[];
+  msgs: MsgDescriptorAmino[];
 }
 export interface TxDescriptorAminoMsg {
   type: "cosmos-sdk/TxDescriptor";
@@ -109,7 +109,7 @@ export interface AuthnDescriptorProtoMsg {
  */
 export interface AuthnDescriptorAmino {
   /** sign_modes defines the supported signature algorithm */
-  sign_modes?: SigningModeDescriptorAmino[];
+  sign_modes: SigningModeDescriptorAmino[];
 }
 export interface AuthnDescriptorAminoMsg {
   type: "cosmos-sdk/AuthnDescriptor";
@@ -151,14 +151,14 @@ export interface SigningModeDescriptorProtoMsg {
  */
 export interface SigningModeDescriptorAmino {
   /** name defines the unique name of the signing mode */
-  name?: string;
+  name: string;
   /** number is the unique int32 identifier for the sign_mode enum */
-  number?: number;
+  number: number;
   /**
    * authn_info_provider_method_fullname defines the fullname of the method to call to get
    * the metadata required to authenticate using the provided sign_modes
    */
-  authn_info_provider_method_fullname?: string;
+  authn_info_provider_method_fullname: string;
 }
 export interface SigningModeDescriptorAminoMsg {
   type: "cosmos-sdk/SigningModeDescriptor";
@@ -187,7 +187,7 @@ export interface ChainDescriptorProtoMsg {
 /** ChainDescriptor describes chain information of the application */
 export interface ChainDescriptorAmino {
   /** id is the chain id */
-  id?: string;
+  id: string;
 }
 export interface ChainDescriptorAminoMsg {
   type: "cosmos-sdk/ChainDescriptor";
@@ -209,7 +209,7 @@ export interface CodecDescriptorProtoMsg {
 /** CodecDescriptor describes the registered interfaces and provides metadata information on the types */
 export interface CodecDescriptorAmino {
   /** interfaces is a list of the registerted interfaces descriptors */
-  interfaces?: InterfaceDescriptorAmino[];
+  interfaces: InterfaceDescriptorAmino[];
 }
 export interface CodecDescriptorAminoMsg {
   type: "cosmos-sdk/CodecDescriptor";
@@ -238,14 +238,14 @@ export interface InterfaceDescriptorProtoMsg {
 /** InterfaceDescriptor describes the implementation of an interface */
 export interface InterfaceDescriptorAmino {
   /** fullname is the name of the interface */
-  fullname?: string;
+  fullname: string;
   /**
    * interface_accepting_messages contains information regarding the proto messages which contain the interface as
    * google.protobuf.Any field
    */
-  interface_accepting_messages?: InterfaceAcceptingMessageDescriptorAmino[];
+  interface_accepting_messages: InterfaceAcceptingMessageDescriptorAmino[];
   /** interface_implementers is a list of the descriptors of the interface implementers */
-  interface_implementers?: InterfaceImplementerDescriptorAmino[];
+  interface_implementers: InterfaceImplementerDescriptorAmino[];
 }
 export interface InterfaceDescriptorAminoMsg {
   type: "cosmos-sdk/InterfaceDescriptor";
@@ -276,14 +276,14 @@ export interface InterfaceImplementerDescriptorProtoMsg {
 /** InterfaceImplementerDescriptor describes an interface implementer */
 export interface InterfaceImplementerDescriptorAmino {
   /** fullname is the protobuf queryable name of the interface implementer */
-  fullname?: string;
+  fullname: string;
   /**
    * type_url defines the type URL used when marshalling the type as any
    * this is required so we can provide type safe google.protobuf.Any marshalling and
    * unmarshalling, making sure that we don't accept just 'any' type
    * in our interface fields
    */
-  type_url?: string;
+  type_url: string;
 }
 export interface InterfaceImplementerDescriptorAminoMsg {
   type: "cosmos-sdk/InterfaceImplementerDescriptor";
@@ -318,13 +318,13 @@ export interface InterfaceAcceptingMessageDescriptorProtoMsg {
  */
 export interface InterfaceAcceptingMessageDescriptorAmino {
   /** fullname is the protobuf fullname of the type containing the interface */
-  fullname?: string;
+  fullname: string;
   /**
    * field_descriptor_names is a list of the protobuf name (not fullname) of the field
    * which contains the interface as google.protobuf.Any (the interface is the same, but
    * it can be in multiple fields of the same proto message)
    */
-  field_descriptor_names?: string[];
+  field_descriptor_names: string[];
 }
 export interface InterfaceAcceptingMessageDescriptorAminoMsg {
   type: "cosmos-sdk/InterfaceAcceptingMessageDescriptor";
@@ -350,7 +350,7 @@ export interface ConfigurationDescriptorProtoMsg {
 /** ConfigurationDescriptor contains metadata information on the sdk.Config */
 export interface ConfigurationDescriptorAmino {
   /** bech32_account_address_prefix is the account address prefix */
-  bech32_account_address_prefix?: string;
+  bech32_account_address_prefix: string;
 }
 export interface ConfigurationDescriptorAminoMsg {
   type: "cosmos-sdk/ConfigurationDescriptor";
@@ -372,7 +372,7 @@ export interface MsgDescriptorProtoMsg {
 /** MsgDescriptor describes a cosmos-sdk message that can be delivered with a transaction */
 export interface MsgDescriptorAmino {
   /** msg_type_url contains the TypeURL of a sdk.Msg. */
-  msg_type_url?: string;
+  msg_type_url: string;
 }
 export interface MsgDescriptorAminoMsg {
   type: "cosmos-sdk/MsgDescriptor";
@@ -616,7 +616,7 @@ export interface QueryServicesDescriptorProtoMsg {
 /** QueryServicesDescriptor contains the list of cosmos-sdk queriable services */
 export interface QueryServicesDescriptorAmino {
   /** query_services is a list of cosmos-sdk QueryServiceDescriptor */
-  query_services?: QueryServiceDescriptorAmino[];
+  query_services: QueryServiceDescriptorAmino[];
 }
 export interface QueryServicesDescriptorAminoMsg {
   type: "cosmos-sdk/QueryServicesDescriptor";
@@ -642,11 +642,11 @@ export interface QueryServiceDescriptorProtoMsg {
 /** QueryServiceDescriptor describes a cosmos-sdk queryable service */
 export interface QueryServiceDescriptorAmino {
   /** fullname is the protobuf fullname of the service descriptor */
-  fullname?: string;
+  fullname: string;
   /** is_module describes if this service is actually exposed by an application's module */
-  is_module?: boolean;
+  is_module: boolean;
   /** methods provides a list of query service methods */
-  methods?: QueryMethodDescriptorAmino[];
+  methods: QueryMethodDescriptorAmino[];
 }
 export interface QueryServiceDescriptorAminoMsg {
   type: "cosmos-sdk/QueryServiceDescriptor";
@@ -683,12 +683,12 @@ export interface QueryMethodDescriptorProtoMsg {
  */
 export interface QueryMethodDescriptorAmino {
   /** name is the protobuf name (not fullname) of the method */
-  name?: string;
+  name: string;
   /**
    * full_query_path is the path that can be used to query
    * this method via tendermint abci.Query
    */
-  full_query_path?: string;
+  full_query_path: string;
 }
 export interface QueryMethodDescriptorAminoMsg {
   type: "cosmos-sdk/QueryMethodDescriptor";
@@ -892,10 +892,16 @@ export const AppDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.AppDescriptor",
       value: AppDescriptor.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    AuthnDescriptor.registerTypeUrl();
+    ChainDescriptor.registerTypeUrl();
+    CodecDescriptor.registerTypeUrl();
+    ConfigurationDescriptor.registerTypeUrl();
+    QueryServicesDescriptor.registerTypeUrl();
+    TxDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(AppDescriptor.typeUrl, AppDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(AppDescriptor.aminoType, AppDescriptor.typeUrl);
 function createBaseTxDescriptor(): TxDescriptor {
   return {
     fullname: "",
@@ -1019,10 +1025,11 @@ export const TxDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.TxDescriptor",
       value: TxDescriptor.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    MsgDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(TxDescriptor.typeUrl, TxDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(TxDescriptor.aminoType, TxDescriptor.typeUrl);
 function createBaseAuthnDescriptor(): AuthnDescriptor {
   return {
     signModes: []
@@ -1130,10 +1137,11 @@ export const AuthnDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.AuthnDescriptor",
       value: AuthnDescriptor.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    SigningModeDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(AuthnDescriptor.typeUrl, AuthnDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(AuthnDescriptor.aminoType, AuthnDescriptor.typeUrl);
 function createBaseSigningModeDescriptor(): SigningModeDescriptor {
   return {
     name: "",
@@ -1263,10 +1271,9 @@ export const SigningModeDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.SigningModeDescriptor",
       value: SigningModeDescriptor.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(SigningModeDescriptor.typeUrl, SigningModeDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(SigningModeDescriptor.aminoType, SigningModeDescriptor.typeUrl);
 function createBaseChainDescriptor(): ChainDescriptor {
   return {
     id: ""
@@ -1364,10 +1371,9 @@ export const ChainDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.ChainDescriptor",
       value: ChainDescriptor.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ChainDescriptor.typeUrl, ChainDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(ChainDescriptor.aminoType, ChainDescriptor.typeUrl);
 function createBaseCodecDescriptor(): CodecDescriptor {
   return {
     interfaces: []
@@ -1475,10 +1481,11 @@ export const CodecDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.CodecDescriptor",
       value: CodecDescriptor.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    InterfaceDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CodecDescriptor.typeUrl, CodecDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(CodecDescriptor.aminoType, CodecDescriptor.typeUrl);
 function createBaseInterfaceDescriptor(): InterfaceDescriptor {
   return {
     fullname: "",
@@ -1628,10 +1635,12 @@ export const InterfaceDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.InterfaceDescriptor",
       value: InterfaceDescriptor.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    InterfaceAcceptingMessageDescriptor.registerTypeUrl();
+    InterfaceImplementerDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(InterfaceDescriptor.typeUrl, InterfaceDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(InterfaceDescriptor.aminoType, InterfaceDescriptor.typeUrl);
 function createBaseInterfaceImplementerDescriptor(): InterfaceImplementerDescriptor {
   return {
     fullname: "",
@@ -1745,10 +1754,9 @@ export const InterfaceImplementerDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.InterfaceImplementerDescriptor",
       value: InterfaceImplementerDescriptor.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(InterfaceImplementerDescriptor.typeUrl, InterfaceImplementerDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(InterfaceImplementerDescriptor.aminoType, InterfaceImplementerDescriptor.typeUrl);
 function createBaseInterfaceAcceptingMessageDescriptor(): InterfaceAcceptingMessageDescriptor {
   return {
     fullname: "",
@@ -1872,10 +1880,9 @@ export const InterfaceAcceptingMessageDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.InterfaceAcceptingMessageDescriptor",
       value: InterfaceAcceptingMessageDescriptor.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(InterfaceAcceptingMessageDescriptor.typeUrl, InterfaceAcceptingMessageDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(InterfaceAcceptingMessageDescriptor.aminoType, InterfaceAcceptingMessageDescriptor.typeUrl);
 function createBaseConfigurationDescriptor(): ConfigurationDescriptor {
   return {
     bech32AccountAddressPrefix: ""
@@ -1973,10 +1980,9 @@ export const ConfigurationDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.ConfigurationDescriptor",
       value: ConfigurationDescriptor.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ConfigurationDescriptor.typeUrl, ConfigurationDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(ConfigurationDescriptor.aminoType, ConfigurationDescriptor.typeUrl);
 function createBaseMsgDescriptor(): MsgDescriptor {
   return {
     msgTypeUrl: ""
@@ -2074,10 +2080,9 @@ export const MsgDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.MsgDescriptor",
       value: MsgDescriptor.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgDescriptor.typeUrl, MsgDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgDescriptor.aminoType, MsgDescriptor.typeUrl);
 function createBaseGetAuthnDescriptorRequest(): GetAuthnDescriptorRequest {
   return {};
 }
@@ -2157,10 +2162,9 @@ export const GetAuthnDescriptorRequest = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetAuthnDescriptorRequest",
       value: GetAuthnDescriptorRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetAuthnDescriptorRequest.typeUrl, GetAuthnDescriptorRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetAuthnDescriptorRequest.aminoType, GetAuthnDescriptorRequest.typeUrl);
 function createBaseGetAuthnDescriptorResponse(): GetAuthnDescriptorResponse {
   return {
     authn: undefined
@@ -2260,10 +2264,11 @@ export const GetAuthnDescriptorResponse = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetAuthnDescriptorResponse",
       value: GetAuthnDescriptorResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    AuthnDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetAuthnDescriptorResponse.typeUrl, GetAuthnDescriptorResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetAuthnDescriptorResponse.aminoType, GetAuthnDescriptorResponse.typeUrl);
 function createBaseGetChainDescriptorRequest(): GetChainDescriptorRequest {
   return {};
 }
@@ -2343,10 +2348,9 @@ export const GetChainDescriptorRequest = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetChainDescriptorRequest",
       value: GetChainDescriptorRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetChainDescriptorRequest.typeUrl, GetChainDescriptorRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetChainDescriptorRequest.aminoType, GetChainDescriptorRequest.typeUrl);
 function createBaseGetChainDescriptorResponse(): GetChainDescriptorResponse {
   return {
     chain: undefined
@@ -2446,10 +2450,11 @@ export const GetChainDescriptorResponse = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetChainDescriptorResponse",
       value: GetChainDescriptorResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ChainDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetChainDescriptorResponse.typeUrl, GetChainDescriptorResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetChainDescriptorResponse.aminoType, GetChainDescriptorResponse.typeUrl);
 function createBaseGetCodecDescriptorRequest(): GetCodecDescriptorRequest {
   return {};
 }
@@ -2529,10 +2534,9 @@ export const GetCodecDescriptorRequest = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetCodecDescriptorRequest",
       value: GetCodecDescriptorRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetCodecDescriptorRequest.typeUrl, GetCodecDescriptorRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetCodecDescriptorRequest.aminoType, GetCodecDescriptorRequest.typeUrl);
 function createBaseGetCodecDescriptorResponse(): GetCodecDescriptorResponse {
   return {
     codec: undefined
@@ -2632,10 +2636,11 @@ export const GetCodecDescriptorResponse = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetCodecDescriptorResponse",
       value: GetCodecDescriptorResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CodecDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetCodecDescriptorResponse.typeUrl, GetCodecDescriptorResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetCodecDescriptorResponse.aminoType, GetCodecDescriptorResponse.typeUrl);
 function createBaseGetConfigurationDescriptorRequest(): GetConfigurationDescriptorRequest {
   return {};
 }
@@ -2715,10 +2720,9 @@ export const GetConfigurationDescriptorRequest = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetConfigurationDescriptorRequest",
       value: GetConfigurationDescriptorRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetConfigurationDescriptorRequest.typeUrl, GetConfigurationDescriptorRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetConfigurationDescriptorRequest.aminoType, GetConfigurationDescriptorRequest.typeUrl);
 function createBaseGetConfigurationDescriptorResponse(): GetConfigurationDescriptorResponse {
   return {
     config: undefined
@@ -2818,10 +2822,11 @@ export const GetConfigurationDescriptorResponse = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetConfigurationDescriptorResponse",
       value: GetConfigurationDescriptorResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ConfigurationDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetConfigurationDescriptorResponse.typeUrl, GetConfigurationDescriptorResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetConfigurationDescriptorResponse.aminoType, GetConfigurationDescriptorResponse.typeUrl);
 function createBaseGetQueryServicesDescriptorRequest(): GetQueryServicesDescriptorRequest {
   return {};
 }
@@ -2901,10 +2906,9 @@ export const GetQueryServicesDescriptorRequest = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetQueryServicesDescriptorRequest",
       value: GetQueryServicesDescriptorRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetQueryServicesDescriptorRequest.typeUrl, GetQueryServicesDescriptorRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetQueryServicesDescriptorRequest.aminoType, GetQueryServicesDescriptorRequest.typeUrl);
 function createBaseGetQueryServicesDescriptorResponse(): GetQueryServicesDescriptorResponse {
   return {
     queries: undefined
@@ -3004,10 +3008,11 @@ export const GetQueryServicesDescriptorResponse = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetQueryServicesDescriptorResponse",
       value: GetQueryServicesDescriptorResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    QueryServicesDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetQueryServicesDescriptorResponse.typeUrl, GetQueryServicesDescriptorResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetQueryServicesDescriptorResponse.aminoType, GetQueryServicesDescriptorResponse.typeUrl);
 function createBaseGetTxDescriptorRequest(): GetTxDescriptorRequest {
   return {};
 }
@@ -3087,10 +3092,9 @@ export const GetTxDescriptorRequest = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetTxDescriptorRequest",
       value: GetTxDescriptorRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(GetTxDescriptorRequest.typeUrl, GetTxDescriptorRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetTxDescriptorRequest.aminoType, GetTxDescriptorRequest.typeUrl);
 function createBaseGetTxDescriptorResponse(): GetTxDescriptorResponse {
   return {
     tx: undefined
@@ -3190,10 +3194,11 @@ export const GetTxDescriptorResponse = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.GetTxDescriptorResponse",
       value: GetTxDescriptorResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    TxDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GetTxDescriptorResponse.typeUrl, GetTxDescriptorResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(GetTxDescriptorResponse.aminoType, GetTxDescriptorResponse.typeUrl);
 function createBaseQueryServicesDescriptor(): QueryServicesDescriptor {
   return {
     queryServices: []
@@ -3301,10 +3306,11 @@ export const QueryServicesDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.QueryServicesDescriptor",
       value: QueryServicesDescriptor.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    QueryServiceDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryServicesDescriptor.typeUrl, QueryServicesDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryServicesDescriptor.aminoType, QueryServicesDescriptor.typeUrl);
 function createBaseQueryServiceDescriptor(): QueryServiceDescriptor {
   return {
     fullname: "",
@@ -3444,10 +3450,11 @@ export const QueryServiceDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.QueryServiceDescriptor",
       value: QueryServiceDescriptor.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    QueryMethodDescriptor.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryServiceDescriptor.typeUrl, QueryServiceDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryServiceDescriptor.aminoType, QueryServiceDescriptor.typeUrl);
 function createBaseQueryMethodDescriptor(): QueryMethodDescriptor {
   return {
     name: "",
@@ -3561,7 +3568,6 @@ export const QueryMethodDescriptor = {
       typeUrl: "/cosmos.base.reflection.v2alpha1.QueryMethodDescriptor",
       value: QueryMethodDescriptor.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryMethodDescriptor.typeUrl, QueryMethodDescriptor);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryMethodDescriptor.aminoType, QueryMethodDescriptor.typeUrl);

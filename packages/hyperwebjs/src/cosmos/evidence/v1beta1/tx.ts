@@ -1,8 +1,8 @@
 import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.evidence.v1beta1";
 /**
  * MsgSubmitEvidence represents a message that supports submitting arbitrary
@@ -27,7 +27,7 @@ export type MsgSubmitEvidenceEncoded = Omit<MsgSubmitEvidence, "evidence"> & {
  */
 export interface MsgSubmitEvidenceAmino {
   /** submitter is the signer account address of evidence. */
-  submitter?: string;
+  submitter: string;
   /** evidence defines the evidence of misbehavior. */
   evidence?: AnyAmino;
 }
@@ -55,7 +55,7 @@ export interface MsgSubmitEvidenceResponseProtoMsg {
 /** MsgSubmitEvidenceResponse defines the Msg/SubmitEvidence response type. */
 export interface MsgSubmitEvidenceResponseAmino {
   /** hash defines the hash of the evidence. */
-  hash?: string;
+  hash: string;
 }
 export interface MsgSubmitEvidenceResponseAminoMsg {
   type: "cosmos-sdk/MsgSubmitEvidenceResponse";
@@ -180,10 +180,9 @@ export const MsgSubmitEvidence = {
       typeUrl: "/cosmos.evidence.v1beta1.MsgSubmitEvidence",
       value: MsgSubmitEvidence.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgSubmitEvidence.typeUrl, MsgSubmitEvidence);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgSubmitEvidence.aminoType, MsgSubmitEvidence.typeUrl);
 function createBaseMsgSubmitEvidenceResponse(): MsgSubmitEvidenceResponse {
   return {
     hash: new Uint8Array()
@@ -281,7 +280,6 @@ export const MsgSubmitEvidenceResponse = {
       typeUrl: "/cosmos.evidence.v1beta1.MsgSubmitEvidenceResponse",
       value: MsgSubmitEvidenceResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(MsgSubmitEvidenceResponse.typeUrl, MsgSubmitEvidenceResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(MsgSubmitEvidenceResponse.aminoType, MsgSubmitEvidenceResponse.typeUrl);

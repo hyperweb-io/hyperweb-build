@@ -1,9 +1,9 @@
 import { Header, HeaderAmino, HeaderSDKType, Data, DataAmino, DataSDKType, Commit, CommitAmino, CommitSDKType } from "./types";
 import { EvidenceList, EvidenceListAmino, EvidenceListSDKType } from "./evidence";
 import { BinaryReader, BinaryWriter } from "../../binary";
+import { GlobalDecoderRegistry } from "../../registry";
 import { isSet, DeepPartial } from "../../helpers";
 import { JsonSafe } from "../../json-safe";
-import { GlobalDecoderRegistry } from "../../registry";
 export const protobufPackage = "tendermint.types";
 export interface Block {
   header: Header;
@@ -16,9 +16,9 @@ export interface BlockProtoMsg {
   value: Uint8Array;
 }
 export interface BlockAmino {
-  header?: HeaderAmino;
-  data?: DataAmino;
-  evidence?: EvidenceListAmino;
+  header: HeaderAmino;
+  data: DataAmino;
+  evidence: EvidenceListAmino;
   last_commit?: CommitAmino;
 }
 export interface BlockAminoMsg {
@@ -177,6 +177,11 @@ export const Block = {
       typeUrl: "/tendermint.types.Block",
       value: Block.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Header.registerTypeUrl();
+    Data.registerTypeUrl();
+    EvidenceList.registerTypeUrl();
+    Commit.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Block.typeUrl, Block);

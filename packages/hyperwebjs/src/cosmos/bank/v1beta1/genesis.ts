@@ -1,9 +1,9 @@
 import { Params, ParamsAmino, ParamsSDKType, Metadata, MetadataAmino, MetadataSDKType, SendEnabled, SendEnabledAmino, SendEnabledSDKType } from "./bank";
 import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
+import { GlobalDecoderRegistry } from "../../../registry";
 import { isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.bank.v1beta1";
 /** GenesisState defines the bank module's genesis state. */
 export interface GenesisState {
@@ -81,7 +81,7 @@ export interface BalanceProtoMsg {
  */
 export interface BalanceAmino {
   /** address is the address of the balance holder. */
-  address?: string;
+  address: string;
   /** coins defines the different coins this balance holds. */
   coins: CoinAmino[];
 }
@@ -300,10 +300,15 @@ export const GenesisState = {
       typeUrl: "/cosmos.bank.v1beta1.GenesisState",
       value: GenesisState.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
+    Balance.registerTypeUrl();
+    Coin.registerTypeUrl();
+    Metadata.registerTypeUrl();
+    SendEnabled.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(GenesisState.typeUrl, GenesisState);
-GlobalDecoderRegistry.registerAminoProtoMapping(GenesisState.aminoType, GenesisState.typeUrl);
 function createBaseBalance(): Balance {
   return {
     address: "",
@@ -427,7 +432,8 @@ export const Balance = {
       typeUrl: "/cosmos.bank.v1beta1.Balance",
       value: Balance.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Coin.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(Balance.typeUrl, Balance);
-GlobalDecoderRegistry.registerAminoProtoMapping(Balance.aminoType, Balance.typeUrl);

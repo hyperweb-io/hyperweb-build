@@ -14,15 +14,19 @@ export const options: TelescopeInput = {
     env: 'v-next',
     removeUnusedImports: false,
     classesUseArrowFunctions: true,
+    useInterchainJs: true,
 
     interfaces: {
       enabled: true,
       useGlobalDecoderRegistry: true,
+      registerAllDecodersToGlobal: false,
       useUnionTypes: true
     },
 
     prototypes: {
       enabled: true,
+      enableRegistryLoader: false,
+      enableMessageComposer: true,
       addTypeUrlToObjects: true,
       addTypeUrlToDecoders: true,
       addAminoTypeToObjects: true,
@@ -43,7 +47,7 @@ export const options: TelescopeInput = {
         toAmino: true,
         fromAmino: true,
         toProto: true,
-        fromProto: true
+        fromProto: true,
       },
       strictNullCheckForPrototypeMethods: true,
       paginationDefaultFromPartial: true,
@@ -54,14 +58,16 @@ export const options: TelescopeInput = {
       allowEncodeDefaultScalars: true,
       typingsFormat: {
         customTypes: {
-          useCosmosSDKDec: true
+          useCosmosSDKDec: true,
+          useEnhancedDecimal: false
         },
         num64: 'bigint',
         useDeepPartial: true,
         useExact: false,
         timestamp: 'date',
         duration: 'duration',
-        useTelescopeGeneratedType: true
+        useTelescopeGeneratedType: true,
+        autoFixUndefinedEnumDefault: true
       }
     },
 
@@ -70,8 +76,7 @@ export const options: TelescopeInput = {
     },
 
     stargateClients: {
-      enabled: true,
-      includeCosmosDefaultTypes: true
+      enabled: false
     },
 
     lcdClients: {
@@ -80,13 +85,28 @@ export const options: TelescopeInput = {
 
     rpcClients: {
       enabled: true,
-      extensions: true,
+      extensions: false,
       camelCase: true,
       useConnectComet: true
     },
 
+    helperFunctions: {
+      enabled: true,
+      useGlobalDecoderRegistry: true,
+      hooks: {
+        react: false,
+        vue: false
+      }
+    },
+
     aminoEncoding: {
-      enabled: true
+      enabled: true,
+      useLegacyInlineEncoding: false,
+      disableMsgTypes: false,
+      useProtoOptionality: true,
+      customTypes: {
+        useCosmosSDKDec: true
+      }
     }
   }
 };

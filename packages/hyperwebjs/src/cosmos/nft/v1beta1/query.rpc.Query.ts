@@ -2,7 +2,6 @@ import { PageRequest, PageRequestSDKType, PageResponse, PageResponseSDKType } fr
 import { NFT, NFTSDKType, Class, ClassSDKType } from "./nft";
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryBalanceRequest, QueryBalanceRequestSDKType, QueryBalanceResponse, QueryBalanceResponseSDKType, QueryOwnerRequest, QueryOwnerRequestSDKType, QueryOwnerResponse, QueryOwnerResponseSDKType, QuerySupplyRequest, QuerySupplyRequestSDKType, QuerySupplyResponse, QuerySupplyResponseSDKType, QueryNFTsRequest, QueryNFTsRequestSDKType, QueryNFTsResponse, QueryNFTsResponseSDKType, QueryNFTRequest, QueryNFTRequestSDKType, QueryNFTResponse, QueryNFTResponseSDKType, QueryClassRequest, QueryClassRequestSDKType, QueryClassResponse, QueryClassResponseSDKType, QueryClassesRequest, QueryClassesRequestSDKType, QueryClassesResponse, QueryClassesResponseSDKType } from "./query";
 /** Query defines the gRPC querier service. */
 export interface Query {
@@ -75,30 +74,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => QueryClassesResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    balance(request: QueryBalanceRequest): Promise<QueryBalanceResponse> {
-      return queryService.balance(request);
-    },
-    owner(request: QueryOwnerRequest): Promise<QueryOwnerResponse> {
-      return queryService.owner(request);
-    },
-    supply(request: QuerySupplyRequest): Promise<QuerySupplyResponse> {
-      return queryService.supply(request);
-    },
-    nFTs(request: QueryNFTsRequest): Promise<QueryNFTsResponse> {
-      return queryService.nFTs(request);
-    },
-    nFT(request: QueryNFTRequest): Promise<QueryNFTResponse> {
-      return queryService.nFT(request);
-    },
-    class(request: QueryClassRequest): Promise<QueryClassResponse> {
-      return queryService.class(request);
-    },
-    classes(request?: QueryClassesRequest): Promise<QueryClassesResponse> {
-      return queryService.classes(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };

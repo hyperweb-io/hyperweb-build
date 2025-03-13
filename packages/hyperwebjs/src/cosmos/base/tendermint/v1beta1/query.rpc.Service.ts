@@ -8,7 +8,6 @@ import { BlockSDKType as Block2SDKType } from "./types";
 import { DefaultNodeInfo, DefaultNodeInfoSDKType } from "../../../../tendermint/p2p/types";
 import { TxRpc } from "../../../../types";
 import { BinaryReader } from "../../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { GetNodeInfoRequest, GetNodeInfoRequestSDKType, GetNodeInfoResponse, GetNodeInfoResponseSDKType, GetSyncingRequest, GetSyncingRequestSDKType, GetSyncingResponse, GetSyncingResponseSDKType, GetLatestBlockRequest, GetLatestBlockRequestSDKType, GetLatestBlockResponse, GetLatestBlockResponseSDKType, GetBlockByHeightRequest, GetBlockByHeightRequestSDKType, GetBlockByHeightResponse, GetBlockByHeightResponseSDKType, GetLatestValidatorSetRequest, GetLatestValidatorSetRequestSDKType, GetLatestValidatorSetResponse, GetLatestValidatorSetResponseSDKType, GetValidatorSetByHeightRequest, GetValidatorSetByHeightRequestSDKType, GetValidatorSetByHeightResponse, GetValidatorSetByHeightResponseSDKType, ABCIQueryRequest, ABCIQueryRequestSDKType, ABCIQueryResponse, ABCIQueryResponseSDKType } from "./query";
 /** Service defines the gRPC querier service for tendermint queries. */
 export interface Service {
@@ -87,30 +86,6 @@ export class ServiceClientImpl implements Service {
     return promise.then(data => ABCIQueryResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new ServiceClientImpl(rpc);
-  return {
-    getNodeInfo(request?: GetNodeInfoRequest): Promise<GetNodeInfoResponse> {
-      return queryService.getNodeInfo(request);
-    },
-    getSyncing(request?: GetSyncingRequest): Promise<GetSyncingResponse> {
-      return queryService.getSyncing(request);
-    },
-    getLatestBlock(request?: GetLatestBlockRequest): Promise<GetLatestBlockResponse> {
-      return queryService.getLatestBlock(request);
-    },
-    getBlockByHeight(request: GetBlockByHeightRequest): Promise<GetBlockByHeightResponse> {
-      return queryService.getBlockByHeight(request);
-    },
-    getLatestValidatorSet(request?: GetLatestValidatorSetRequest): Promise<GetLatestValidatorSetResponse> {
-      return queryService.getLatestValidatorSet(request);
-    },
-    getValidatorSetByHeight(request: GetValidatorSetByHeightRequest): Promise<GetValidatorSetByHeightResponse> {
-      return queryService.getValidatorSetByHeight(request);
-    },
-    aBCIQuery(request: ABCIQueryRequest): Promise<ABCIQueryResponse> {
-      return queryService.aBCIQuery(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new ServiceClientImpl(rpc);
 };

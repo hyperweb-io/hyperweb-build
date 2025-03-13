@@ -13,9 +13,9 @@ export interface NetAddressProtoMsg {
   value: Uint8Array;
 }
 export interface NetAddressAmino {
-  id?: string;
-  ip?: string;
-  port?: number;
+  id: string;
+  ip: string;
+  port: number;
 }
 export interface NetAddressAminoMsg {
   type: "/tendermint.p2p.NetAddress";
@@ -36,9 +36,9 @@ export interface ProtocolVersionProtoMsg {
   value: Uint8Array;
 }
 export interface ProtocolVersionAmino {
-  p2p?: string;
-  block?: string;
-  app?: string;
+  p2p: string;
+  block: string;
+  app: string;
 }
 export interface ProtocolVersionAminoMsg {
   type: "/tendermint.p2p.ProtocolVersion";
@@ -64,14 +64,14 @@ export interface DefaultNodeInfoProtoMsg {
   value: Uint8Array;
 }
 export interface DefaultNodeInfoAmino {
-  protocol_version?: ProtocolVersionAmino;
-  default_node_id?: string;
-  listen_addr?: string;
-  network?: string;
-  version?: string;
-  channels?: string;
-  moniker?: string;
-  other?: DefaultNodeInfoOtherAmino;
+  protocol_version: ProtocolVersionAmino;
+  default_node_id: string;
+  listen_addr: string;
+  network: string;
+  version: string;
+  channels: string;
+  moniker: string;
+  other: DefaultNodeInfoOtherAmino;
 }
 export interface DefaultNodeInfoAminoMsg {
   type: "/tendermint.p2p.DefaultNodeInfo";
@@ -96,8 +96,8 @@ export interface DefaultNodeInfoOtherProtoMsg {
   value: Uint8Array;
 }
 export interface DefaultNodeInfoOtherAmino {
-  tx_index?: string;
-  rpc_address?: string;
+  tx_index: string;
+  rpc_address: string;
 }
 export interface DefaultNodeInfoOtherAminoMsg {
   type: "/tendermint.p2p.DefaultNodeInfoOther";
@@ -229,9 +229,9 @@ export const NetAddress = {
       typeUrl: "/tendermint.p2p.NetAddress",
       value: NetAddress.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(NetAddress.typeUrl, NetAddress);
 function createBaseProtocolVersion(): ProtocolVersion {
   return {
     p2p: BigInt(0),
@@ -341,9 +341,9 @@ export const ProtocolVersion = {
   },
   toAmino(message: ProtocolVersion): ProtocolVersionAmino {
     const obj: any = {};
-    obj.p2p = message.p2p !== BigInt(0) ? (message.p2p?.toString)() : undefined;
-    obj.block = message.block !== BigInt(0) ? (message.block?.toString)() : undefined;
-    obj.app = message.app !== BigInt(0) ? (message.app?.toString)() : undefined;
+    obj.p2p = message.p2p !== BigInt(0) ? message.p2p?.toString() : undefined;
+    obj.block = message.block !== BigInt(0) ? message.block?.toString() : undefined;
+    obj.app = message.app !== BigInt(0) ? message.app?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ProtocolVersionAminoMsg): ProtocolVersion {
@@ -360,9 +360,9 @@ export const ProtocolVersion = {
       typeUrl: "/tendermint.p2p.ProtocolVersion",
       value: ProtocolVersion.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ProtocolVersion.typeUrl, ProtocolVersion);
 function createBaseDefaultNodeInfo(): DefaultNodeInfo {
   return {
     protocolVersion: ProtocolVersion.fromPartial({}),
@@ -569,9 +569,12 @@ export const DefaultNodeInfo = {
       typeUrl: "/tendermint.p2p.DefaultNodeInfo",
       value: DefaultNodeInfo.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ProtocolVersion.registerTypeUrl();
+    DefaultNodeInfoOther.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(DefaultNodeInfo.typeUrl, DefaultNodeInfo);
 function createBaseDefaultNodeInfoOther(): DefaultNodeInfoOther {
   return {
     txIndex: "",
@@ -678,6 +681,6 @@ export const DefaultNodeInfoOther = {
       typeUrl: "/tendermint.p2p.DefaultNodeInfoOther",
       value: DefaultNodeInfoOther.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(DefaultNodeInfoOther.typeUrl, DefaultNodeInfoOther);

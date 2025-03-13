@@ -2,7 +2,6 @@ import { Timestamp, TimestampAmino, TimestampSDKType } from "../../../google/pro
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { toTimestamp, fromTimestamp, isSet, DeepPartial } from "../../../helpers";
 import { JsonSafe } from "../../../json-safe";
-import { GlobalDecoderRegistry } from "../../../registry";
 export const protobufPackage = "cosmos.evidence.v1beta1";
 /**
  * Equivocation implements the Evidence interface and defines evidence of double
@@ -28,13 +27,13 @@ export interface EquivocationProtoMsg {
  */
 export interface EquivocationAmino {
   /** height is the equivocation height. */
-  height?: string;
+  height: string;
   /** time is the equivocation time. */
   time: string;
   /** power is the equivocation validator power. */
-  power?: string;
+  power: string;
   /** consensus_address is the equivocation validator consensus address. */
-  consensus_address?: string;
+  consensus_address: string;
 }
 export interface EquivocationAminoMsg {
   type: "cosmos-sdk/Equivocation";
@@ -173,9 +172,9 @@ export const Equivocation = {
   },
   toAmino(message: Equivocation): EquivocationAmino {
     const obj: any = {};
-    obj.height = message.height !== BigInt(0) ? (message.height?.toString)() : undefined;
+    obj.height = message.height !== BigInt(0) ? message.height?.toString() : undefined;
     obj.time = message.time ? Timestamp.toAmino(toTimestamp(message.time)) : new Date();
-    obj.power = message.power !== BigInt(0) ? (message.power?.toString)() : undefined;
+    obj.power = message.power !== BigInt(0) ? message.power?.toString() : undefined;
     obj.consensus_address = message.consensusAddress === "" ? undefined : message.consensusAddress;
     return obj;
   },
@@ -199,7 +198,6 @@ export const Equivocation = {
       typeUrl: "/cosmos.evidence.v1beta1.Equivocation",
       value: Equivocation.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Equivocation.typeUrl, Equivocation);
-GlobalDecoderRegistry.registerAminoProtoMapping(Equivocation.aminoType, Equivocation.typeUrl);

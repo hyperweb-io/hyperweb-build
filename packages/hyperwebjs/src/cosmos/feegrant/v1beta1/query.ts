@@ -19,9 +19,9 @@ export interface QueryAllowanceRequestProtoMsg {
 /** QueryAllowanceRequest is the request type for the Query/Allowance RPC method. */
 export interface QueryAllowanceRequestAmino {
   /** granter is the address of the user granting an allowance of their funds. */
-  granter?: string;
+  granter: string;
   /** grantee is the address of the user being granted an allowance of another user's funds. */
-  grantee?: string;
+  grantee: string;
 }
 export interface QueryAllowanceRequestAminoMsg {
   type: "cosmos-sdk/QueryAllowanceRequest";
@@ -66,7 +66,7 @@ export interface QueryAllowancesRequestProtoMsg {
 }
 /** QueryAllowancesRequest is the request type for the Query/Allowances RPC method. */
 export interface QueryAllowancesRequestAmino {
-  grantee?: string;
+  grantee: string;
   /** pagination defines an pagination for the request. */
   pagination?: PageRequestAmino;
 }
@@ -93,7 +93,7 @@ export interface QueryAllowancesResponseProtoMsg {
 /** QueryAllowancesResponse is the response type for the Query/Allowances RPC method. */
 export interface QueryAllowancesResponseAmino {
   /** allowances are allowance's granted for grantee by granter. */
-  allowances?: GrantAmino[];
+  allowances: GrantAmino[];
   /** pagination defines an pagination for the response. */
   pagination?: PageResponseAmino;
 }
@@ -126,7 +126,7 @@ export interface QueryAllowancesByGranterRequestProtoMsg {
  * Since: cosmos-sdk 0.46
  */
 export interface QueryAllowancesByGranterRequestAmino {
-  granter?: string;
+  granter: string;
   /** pagination defines an pagination for the request. */
   pagination?: PageRequestAmino;
 }
@@ -165,7 +165,7 @@ export interface QueryAllowancesByGranterResponseProtoMsg {
  */
 export interface QueryAllowancesByGranterResponseAmino {
   /** allowances that have been issued by the granter. */
-  allowances?: GrantAmino[];
+  allowances: GrantAmino[];
   /** pagination defines an pagination for the response. */
   pagination?: PageResponseAmino;
 }
@@ -295,10 +295,9 @@ export const QueryAllowanceRequest = {
       typeUrl: "/cosmos.feegrant.v1beta1.QueryAllowanceRequest",
       value: QueryAllowanceRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryAllowanceRequest.typeUrl, QueryAllowanceRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAllowanceRequest.aminoType, QueryAllowanceRequest.typeUrl);
 function createBaseQueryAllowanceResponse(): QueryAllowanceResponse {
   return {
     allowance: undefined
@@ -398,10 +397,11 @@ export const QueryAllowanceResponse = {
       typeUrl: "/cosmos.feegrant.v1beta1.QueryAllowanceResponse",
       value: QueryAllowanceResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Grant.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryAllowanceResponse.typeUrl, QueryAllowanceResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAllowanceResponse.aminoType, QueryAllowanceResponse.typeUrl);
 function createBaseQueryAllowancesRequest(): QueryAllowancesRequest {
   return {
     grantee: "",
@@ -517,10 +517,11 @@ export const QueryAllowancesRequest = {
       typeUrl: "/cosmos.feegrant.v1beta1.QueryAllowancesRequest",
       value: QueryAllowancesRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryAllowancesRequest.typeUrl, QueryAllowancesRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAllowancesRequest.aminoType, QueryAllowancesRequest.typeUrl);
 function createBaseQueryAllowancesResponse(): QueryAllowancesResponse {
   return {
     allowances: [],
@@ -646,10 +647,12 @@ export const QueryAllowancesResponse = {
       typeUrl: "/cosmos.feegrant.v1beta1.QueryAllowancesResponse",
       value: QueryAllowancesResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Grant.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryAllowancesResponse.typeUrl, QueryAllowancesResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAllowancesResponse.aminoType, QueryAllowancesResponse.typeUrl);
 function createBaseQueryAllowancesByGranterRequest(): QueryAllowancesByGranterRequest {
   return {
     granter: "",
@@ -765,10 +768,11 @@ export const QueryAllowancesByGranterRequest = {
       typeUrl: "/cosmos.feegrant.v1beta1.QueryAllowancesByGranterRequest",
       value: QueryAllowancesByGranterRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryAllowancesByGranterRequest.typeUrl, QueryAllowancesByGranterRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAllowancesByGranterRequest.aminoType, QueryAllowancesByGranterRequest.typeUrl);
 function createBaseQueryAllowancesByGranterResponse(): QueryAllowancesByGranterResponse {
   return {
     allowances: [],
@@ -894,7 +898,9 @@ export const QueryAllowancesByGranterResponse = {
       typeUrl: "/cosmos.feegrant.v1beta1.QueryAllowancesByGranterResponse",
       value: QueryAllowancesByGranterResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Grant.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryAllowancesByGranterResponse.typeUrl, QueryAllowancesByGranterResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryAllowancesByGranterResponse.aminoType, QueryAllowancesByGranterResponse.typeUrl);

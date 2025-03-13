@@ -1,7 +1,7 @@
 import { BinaryReader, BinaryWriter } from "../binary";
+import { GlobalDecoderRegistry } from "../registry";
 import { isSet, bytesFromBase64, base64FromBytes, DeepPartial } from "../helpers";
 import { JsonSafe } from "../json-safe";
-import { GlobalDecoderRegistry } from "../registry";
 export const protobufPackage = "ics23";
 export enum HashOp {
   /** NO_HASH - NO_HASH is the default if no data passed. Note this is an illegal argument some places. */
@@ -203,10 +203,10 @@ export interface ExistenceProofProtoMsg {
  * length-prefix the data before hashing it.
  */
 export interface ExistenceProofAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
   leaf?: LeafOpAmino;
-  path?: InnerOpAmino[];
+  path: InnerOpAmino[];
 }
 export interface ExistenceProofAminoMsg {
   type: "/ics23.ExistenceProof";
@@ -261,7 +261,7 @@ export interface NonExistenceProofProtoMsg {
  */
 export interface NonExistenceProofAmino {
   /** TODO: remove this as unnecessary??? we prove a range */
-  key?: string;
+  key: string;
   left?: ExistenceProofAmino;
   right?: ExistenceProofAmino;
 }
@@ -356,15 +356,15 @@ export interface LeafOpProtoMsg {
  * output = hash(prefix || length(hkey) || hkey || length(hvalue) || hvalue)
  */
 export interface LeafOpAmino {
-  hash?: HashOp;
-  prehash_key?: HashOp;
-  prehash_value?: HashOp;
-  length?: LengthOp;
+  hash: HashOp;
+  prehash_key: HashOp;
+  prehash_value: HashOp;
+  length: LengthOp;
   /**
    * prefix is a fixed bytes that may optionally be included at the beginning to differentiate
    * a leaf node from an inner node.
    */
-  prefix?: string;
+  prefix: string;
 }
 export interface LeafOpAminoMsg {
   type: "/ics23.LeafOp";
@@ -437,9 +437,9 @@ export interface InnerOpProtoMsg {
  * If either of prefix or suffix is empty, we just treat it as an empty string
  */
 export interface InnerOpAmino {
-  hash?: HashOp;
-  prefix?: string;
-  suffix?: string;
+  hash: HashOp;
+  prefix: string;
+  suffix: string;
 }
 export interface InnerOpAminoMsg {
   type: "/ics23.InnerOp";
@@ -515,9 +515,9 @@ export interface ProofSpecAmino {
   leaf_spec?: LeafOpAmino;
   inner_spec?: InnerSpecAmino;
   /** max_depth (if > 0) is the maximum number of InnerOps allowed (mainly for fixed-depth tries) */
-  max_depth?: number;
+  max_depth: number;
   /** min_depth (if > 0) is the minimum number of InnerOps allowed (mainly for fixed-depth tries) */
-  min_depth?: number;
+  min_depth: number;
 }
 export interface ProofSpecAminoMsg {
   type: "/ics23.ProofSpec";
@@ -586,14 +586,14 @@ export interface InnerSpecAmino {
    * iavl tree is [0, 1] (left then right)
    * merk is [0, 2, 1] (left, right, here)
    */
-  child_order?: number[];
-  child_size?: number;
-  min_prefix_length?: number;
-  max_prefix_length?: number;
+  child_order: number[];
+  child_size: number;
+  min_prefix_length: number;
+  max_prefix_length: number;
   /** empty child is the prehash image that is used when one child is nil (eg. 20 bytes of 0) */
-  empty_child?: string;
+  empty_child: string;
   /** hash is the algorithm that must be used for each InnerOp */
-  hash?: HashOp;
+  hash: HashOp;
 }
 export interface InnerSpecAminoMsg {
   type: "/ics23.InnerSpec";
@@ -627,7 +627,7 @@ export interface BatchProofProtoMsg {
 }
 /** BatchProof is a group of multiple proof types than can be compressed */
 export interface BatchProofAmino {
-  entries?: BatchEntryAmino[];
+  entries: BatchEntryAmino[];
 }
 export interface BatchProofAminoMsg {
   type: "/ics23.BatchProof";
@@ -669,8 +669,8 @@ export interface CompressedBatchProofProtoMsg {
   value: Uint8Array;
 }
 export interface CompressedBatchProofAmino {
-  entries?: CompressedBatchEntryAmino[];
-  lookup_inners?: InnerOpAmino[];
+  entries: CompressedBatchEntryAmino[];
+  lookup_inners: InnerOpAmino[];
 }
 export interface CompressedBatchProofAminoMsg {
   type: "/ics23.CompressedBatchProof";
@@ -715,11 +715,11 @@ export interface CompressedExistenceProofProtoMsg {
   value: Uint8Array;
 }
 export interface CompressedExistenceProofAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
   leaf?: LeafOpAmino;
   /** these are indexes into the lookup_inners table in CompressedBatchProof */
-  path?: number[];
+  path: number[];
 }
 export interface CompressedExistenceProofAminoMsg {
   type: "/ics23.CompressedExistenceProof";
@@ -743,7 +743,7 @@ export interface CompressedNonExistenceProofProtoMsg {
 }
 export interface CompressedNonExistenceProofAmino {
   /** TODO: remove this as unnecessary??? we prove a range */
-  key?: string;
+  key: string;
   left?: CompressedExistenceProofAmino;
   right?: CompressedExistenceProofAmino;
 }
@@ -906,9 +906,12 @@ export const ExistenceProof = {
       typeUrl: "/ics23.ExistenceProof",
       value: ExistenceProof.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    LeafOp.registerTypeUrl();
+    InnerOp.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ExistenceProof.typeUrl, ExistenceProof);
 function createBaseNonExistenceProof(): NonExistenceProof {
   return {
     key: new Uint8Array(),
@@ -1035,9 +1038,11 @@ export const NonExistenceProof = {
       typeUrl: "/ics23.NonExistenceProof",
       value: NonExistenceProof.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ExistenceProof.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(NonExistenceProof.typeUrl, NonExistenceProof);
 function createBaseCommitmentProof(): CommitmentProof {
   return {
     exist: undefined,
@@ -1184,9 +1189,14 @@ export const CommitmentProof = {
       typeUrl: "/ics23.CommitmentProof",
       value: CommitmentProof.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ExistenceProof.registerTypeUrl();
+    NonExistenceProof.registerTypeUrl();
+    BatchProof.registerTypeUrl();
+    CompressedBatchProof.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CommitmentProof.typeUrl, CommitmentProof);
 function createBaseLeafOp(): LeafOp {
   return {
     hash: 0,
@@ -1341,9 +1351,9 @@ export const LeafOp = {
       typeUrl: "/ics23.LeafOp",
       value: LeafOp.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(LeafOp.typeUrl, LeafOp);
 function createBaseInnerOp(): InnerOp {
   return {
     hash: 0,
@@ -1466,9 +1476,9 @@ export const InnerOp = {
       typeUrl: "/ics23.InnerOp",
       value: InnerOp.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(InnerOp.typeUrl, InnerOp);
 function createBaseProofSpec(): ProofSpec {
   return {
     leafSpec: undefined,
@@ -1611,9 +1621,12 @@ export const ProofSpec = {
       typeUrl: "/ics23.ProofSpec",
       value: ProofSpec.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    LeafOp.registerTypeUrl();
+    InnerSpec.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(ProofSpec.typeUrl, ProofSpec);
 function createBaseInnerSpec(): InnerSpec {
   return {
     childOrder: [],
@@ -1803,9 +1816,9 @@ export const InnerSpec = {
       typeUrl: "/ics23.InnerSpec",
       value: InnerSpec.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(InnerSpec.typeUrl, InnerSpec);
 function createBaseBatchProof(): BatchProof {
   return {
     entries: []
@@ -1906,9 +1919,11 @@ export const BatchProof = {
       typeUrl: "/ics23.BatchProof",
       value: BatchProof.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    BatchEntry.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(BatchProof.typeUrl, BatchProof);
 function createBaseBatchEntry(): BatchEntry {
   return {
     exist: undefined,
@@ -2019,9 +2034,12 @@ export const BatchEntry = {
       typeUrl: "/ics23.BatchEntry",
       value: BatchEntry.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ExistenceProof.registerTypeUrl();
+    NonExistenceProof.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(BatchEntry.typeUrl, BatchEntry);
 function createBaseCompressedBatchProof(): CompressedBatchProof {
   return {
     entries: [],
@@ -2148,9 +2166,12 @@ export const CompressedBatchProof = {
       typeUrl: "/ics23.CompressedBatchProof",
       value: CompressedBatchProof.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CompressedBatchEntry.registerTypeUrl();
+    InnerOp.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CompressedBatchProof.typeUrl, CompressedBatchProof);
 function createBaseCompressedBatchEntry(): CompressedBatchEntry {
   return {
     exist: undefined,
@@ -2261,9 +2282,12 @@ export const CompressedBatchEntry = {
       typeUrl: "/ics23.CompressedBatchEntry",
       value: CompressedBatchEntry.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CompressedExistenceProof.registerTypeUrl();
+    CompressedNonExistenceProof.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CompressedBatchEntry.typeUrl, CompressedBatchEntry);
 function createBaseCompressedExistenceProof(): CompressedExistenceProof {
   return {
     key: new Uint8Array(),
@@ -2423,9 +2447,11 @@ export const CompressedExistenceProof = {
       typeUrl: "/ics23.CompressedExistenceProof",
       value: CompressedExistenceProof.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    LeafOp.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CompressedExistenceProof.typeUrl, CompressedExistenceProof);
 function createBaseCompressedNonExistenceProof(): CompressedNonExistenceProof {
   return {
     key: new Uint8Array(),
@@ -2552,6 +2578,8 @@ export const CompressedNonExistenceProof = {
       typeUrl: "/ics23.CompressedNonExistenceProof",
       value: CompressedNonExistenceProof.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    CompressedExistenceProof.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(CompressedNonExistenceProof.typeUrl, CompressedNonExistenceProof);

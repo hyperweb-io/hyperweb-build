@@ -42,15 +42,15 @@ export interface ValidatorSigningInfoProtoMsg {
  * liveness activity.
  */
 export interface ValidatorSigningInfoAmino {
-  address?: string;
+  address: string;
   /** Height at which validator was first a candidate OR was un-jailed */
-  start_height?: string;
+  start_height: string;
   /**
    * Index which is incremented every time a validator is bonded in a block and
    * _may_ have signed a pre-commit or not. This in conjunction with the
    * signed_blocks_window param determines the index in the missed block bitmap.
    */
-  index_offset?: string;
+  index_offset: string;
   /** Timestamp until which the validator is jailed due to liveness downtime. */
   jailed_until: string;
   /**
@@ -58,12 +58,12 @@ export interface ValidatorSigningInfoAmino {
    * set). It is set once the validator commits an equivocation or for any other
    * configured misbehavior.
    */
-  tombstoned?: boolean;
+  tombstoned: boolean;
   /**
    * A counter of missed (unsigned) blocks. It is used to avoid unnecessary
    * reads in the missed block bitmap.
    */
-  missed_blocks_counter?: string;
+  missed_blocks_counter: string;
 }
 export interface ValidatorSigningInfoAminoMsg {
   type: "cosmos-sdk/ValidatorSigningInfo";
@@ -95,7 +95,7 @@ export interface ParamsProtoMsg {
 }
 /** Params represents the parameters used for by the slashing module. */
 export interface ParamsAmino {
-  signed_blocks_window?: string;
+  signed_blocks_window: string;
   min_signed_per_window: string;
   downtime_jail_duration: DurationAmino;
   slash_fraction_double_sign: string;
@@ -269,11 +269,11 @@ export const ValidatorSigningInfo = {
   toAmino(message: ValidatorSigningInfo): ValidatorSigningInfoAmino {
     const obj: any = {};
     obj.address = message.address === "" ? undefined : message.address;
-    obj.start_height = message.startHeight !== BigInt(0) ? (message.startHeight?.toString)() : undefined;
-    obj.index_offset = message.indexOffset !== BigInt(0) ? (message.indexOffset?.toString)() : undefined;
+    obj.start_height = message.startHeight !== BigInt(0) ? message.startHeight?.toString() : undefined;
+    obj.index_offset = message.indexOffset !== BigInt(0) ? message.indexOffset?.toString() : undefined;
     obj.jailed_until = message.jailedUntil ? Timestamp.toAmino(toTimestamp(message.jailedUntil)) : new Date();
     obj.tombstoned = message.tombstoned === false ? undefined : message.tombstoned;
-    obj.missed_blocks_counter = message.missedBlocksCounter !== BigInt(0) ? (message.missedBlocksCounter?.toString)() : undefined;
+    obj.missed_blocks_counter = message.missedBlocksCounter !== BigInt(0) ? message.missedBlocksCounter?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ValidatorSigningInfoAminoMsg): ValidatorSigningInfo {
@@ -296,10 +296,9 @@ export const ValidatorSigningInfo = {
       typeUrl: "/cosmos.slashing.v1beta1.ValidatorSigningInfo",
       value: ValidatorSigningInfo.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(ValidatorSigningInfo.typeUrl, ValidatorSigningInfo);
-GlobalDecoderRegistry.registerAminoProtoMapping(ValidatorSigningInfo.aminoType, ValidatorSigningInfo.typeUrl);
 function createBaseParams(): Params {
   return {
     signedBlocksWindow: BigInt(0),
@@ -438,7 +437,7 @@ export const Params = {
   },
   toAmino(message: Params): ParamsAmino {
     const obj: any = {};
-    obj.signed_blocks_window = message.signedBlocksWindow !== BigInt(0) ? (message.signedBlocksWindow?.toString)() : undefined;
+    obj.signed_blocks_window = message.signedBlocksWindow !== BigInt(0) ? message.signedBlocksWindow?.toString() : undefined;
     obj.min_signed_per_window = message.minSignedPerWindow ? base64FromBytes(message.minSignedPerWindow) : "";
     obj.downtime_jail_duration = message.downtimeJailDuration ? Duration.toAmino(message.downtimeJailDuration) : Duration.toAmino(Duration.fromPartial({}));
     obj.slash_fraction_double_sign = message.slashFractionDoubleSign ? base64FromBytes(message.slashFractionDoubleSign) : "";
@@ -465,7 +464,6 @@ export const Params = {
       typeUrl: "/cosmos.slashing.v1beta1.Params",
       value: Params.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(Params.typeUrl, Params);
-GlobalDecoderRegistry.registerAminoProtoMapping(Params.aminoType, Params.typeUrl);

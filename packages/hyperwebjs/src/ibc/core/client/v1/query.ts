@@ -24,7 +24,7 @@ export interface QueryClientStateRequestProtoMsg {
  */
 export interface QueryClientStateRequestAmino {
   /** client state unique identifier */
-  client_id?: string;
+  client_id: string;
 }
 export interface QueryClientStateRequestAminoMsg {
   type: "cosmos-sdk/QueryClientStateRequest";
@@ -63,9 +63,9 @@ export interface QueryClientStateResponseAmino {
   /** client state associated with the request identifier */
   client_state?: AnyAmino;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryClientStateResponseAminoMsg {
   type: "cosmos-sdk/QueryClientStateResponse";
@@ -132,7 +132,7 @@ export interface QueryClientStatesResponseProtoMsg {
  */
 export interface QueryClientStatesResponseAmino {
   /** list of stored ClientStates of the chain. */
-  client_states?: IdentifiedClientStateAmino[];
+  client_states: IdentifiedClientStateAmino[];
   /** pagination response */
   pagination?: PageResponseAmino;
 }
@@ -177,16 +177,16 @@ export interface QueryConsensusStateRequestProtoMsg {
  */
 export interface QueryConsensusStateRequestAmino {
   /** client identifier */
-  client_id?: string;
+  client_id: string;
   /** consensus state revision number */
-  revision_number?: string;
+  revision_number: string;
   /** consensus state revision height */
-  revision_height?: string;
+  revision_height: string;
   /**
    * latest_height overrrides the height field and queries the latest stored
    * ConsensusState
    */
-  latest_height?: boolean;
+  latest_height: boolean;
 }
 export interface QueryConsensusStateRequestAminoMsg {
   type: "cosmos-sdk/QueryConsensusStateRequest";
@@ -227,9 +227,9 @@ export interface QueryConsensusStateResponseAmino {
   /** consensus state associated with the client identifier at the given height */
   consensus_state?: AnyAmino;
   /** merkle proof of existence */
-  proof?: string;
+  proof: string;
   /** height at which the proof was retrieved */
-  proof_height?: HeightAmino;
+  proof_height: HeightAmino;
 }
 export interface QueryConsensusStateResponseAminoMsg {
   type: "cosmos-sdk/QueryConsensusStateResponse";
@@ -264,7 +264,7 @@ export interface QueryConsensusStatesRequestProtoMsg {
  */
 export interface QueryConsensusStatesRequestAmino {
   /** client identifier */
-  client_id?: string;
+  client_id: string;
   /** pagination request */
   pagination?: PageRequestAmino;
 }
@@ -300,7 +300,7 @@ export interface QueryConsensusStatesResponseProtoMsg {
  */
 export interface QueryConsensusStatesResponseAmino {
   /** consensus states associated with the identifier */
-  consensus_states?: ConsensusStateWithHeightAmino[];
+  consensus_states: ConsensusStateWithHeightAmino[];
   /** pagination response */
   pagination?: PageResponseAmino;
 }
@@ -334,7 +334,7 @@ export interface QueryClientStatusRequestProtoMsg {
  */
 export interface QueryClientStatusRequestAmino {
   /** client unique identifier */
-  client_id?: string;
+  client_id: string;
 }
 export interface QueryClientStatusRequestAminoMsg {
   type: "cosmos-sdk/QueryClientStatusRequest";
@@ -363,7 +363,7 @@ export interface QueryClientStatusResponseProtoMsg {
  * method. It returns the current status of the IBC client.
  */
 export interface QueryClientStatusResponseAmino {
-  status?: string;
+  status: string;
 }
 export interface QueryClientStatusResponseAminoMsg {
   type: "cosmos-sdk/QueryClientStatusResponse";
@@ -635,10 +635,9 @@ export const QueryClientStateRequest = {
       typeUrl: "/ibc.core.client.v1.QueryClientStateRequest",
       value: QueryClientStateRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryClientStateRequest.typeUrl, QueryClientStateRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientStateRequest.aminoType, QueryClientStateRequest.typeUrl);
 function createBaseQueryClientStateResponse(): QueryClientStateResponse {
   return {
     clientState: undefined,
@@ -772,10 +771,11 @@ export const QueryClientStateResponse = {
       typeUrl: "/ibc.core.client.v1.QueryClientStateResponse",
       value: QueryClientStateResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryClientStateResponse.typeUrl, QueryClientStateResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientStateResponse.aminoType, QueryClientStateResponse.typeUrl);
 function createBaseQueryClientStatesRequest(): QueryClientStatesRequest {
   return {
     pagination: undefined
@@ -875,10 +875,11 @@ export const QueryClientStatesRequest = {
       typeUrl: "/ibc.core.client.v1.QueryClientStatesRequest",
       value: QueryClientStatesRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryClientStatesRequest.typeUrl, QueryClientStatesRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientStatesRequest.aminoType, QueryClientStatesRequest.typeUrl);
 function createBaseQueryClientStatesResponse(): QueryClientStatesResponse {
   return {
     clientStates: [],
@@ -1004,10 +1005,12 @@ export const QueryClientStatesResponse = {
       typeUrl: "/ibc.core.client.v1.QueryClientStatesResponse",
       value: QueryClientStatesResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    IdentifiedClientState.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryClientStatesResponse.typeUrl, QueryClientStatesResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientStatesResponse.aminoType, QueryClientStatesResponse.typeUrl);
 function createBaseQueryConsensusStateRequest(): QueryConsensusStateRequest {
   return {
     clientId: "",
@@ -1132,8 +1135,8 @@ export const QueryConsensusStateRequest = {
   toAmino(message: QueryConsensusStateRequest): QueryConsensusStateRequestAmino {
     const obj: any = {};
     obj.client_id = message.clientId === "" ? undefined : message.clientId;
-    obj.revision_number = message.revisionNumber !== BigInt(0) ? (message.revisionNumber?.toString)() : undefined;
-    obj.revision_height = message.revisionHeight !== BigInt(0) ? (message.revisionHeight?.toString)() : undefined;
+    obj.revision_number = message.revisionNumber !== BigInt(0) ? message.revisionNumber?.toString() : undefined;
+    obj.revision_height = message.revisionHeight !== BigInt(0) ? message.revisionHeight?.toString() : undefined;
     obj.latest_height = message.latestHeight === false ? undefined : message.latestHeight;
     return obj;
   },
@@ -1157,10 +1160,9 @@ export const QueryConsensusStateRequest = {
       typeUrl: "/ibc.core.client.v1.QueryConsensusStateRequest",
       value: QueryConsensusStateRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryConsensusStateRequest.typeUrl, QueryConsensusStateRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConsensusStateRequest.aminoType, QueryConsensusStateRequest.typeUrl);
 function createBaseQueryConsensusStateResponse(): QueryConsensusStateResponse {
   return {
     consensusState: undefined,
@@ -1294,10 +1296,11 @@ export const QueryConsensusStateResponse = {
       typeUrl: "/ibc.core.client.v1.QueryConsensusStateResponse",
       value: QueryConsensusStateResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Height.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConsensusStateResponse.typeUrl, QueryConsensusStateResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConsensusStateResponse.aminoType, QueryConsensusStateResponse.typeUrl);
 function createBaseQueryConsensusStatesRequest(): QueryConsensusStatesRequest {
   return {
     clientId: "",
@@ -1413,10 +1416,11 @@ export const QueryConsensusStatesRequest = {
       typeUrl: "/ibc.core.client.v1.QueryConsensusStatesRequest",
       value: QueryConsensusStatesRequest.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    PageRequest.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConsensusStatesRequest.typeUrl, QueryConsensusStatesRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConsensusStatesRequest.aminoType, QueryConsensusStatesRequest.typeUrl);
 function createBaseQueryConsensusStatesResponse(): QueryConsensusStatesResponse {
   return {
     consensusStates: [],
@@ -1542,10 +1546,12 @@ export const QueryConsensusStatesResponse = {
       typeUrl: "/ibc.core.client.v1.QueryConsensusStatesResponse",
       value: QueryConsensusStatesResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    ConsensusStateWithHeight.registerTypeUrl();
+    PageResponse.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryConsensusStatesResponse.typeUrl, QueryConsensusStatesResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryConsensusStatesResponse.aminoType, QueryConsensusStatesResponse.typeUrl);
 function createBaseQueryClientStatusRequest(): QueryClientStatusRequest {
   return {
     clientId: ""
@@ -1643,10 +1649,9 @@ export const QueryClientStatusRequest = {
       typeUrl: "/ibc.core.client.v1.QueryClientStatusRequest",
       value: QueryClientStatusRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryClientStatusRequest.typeUrl, QueryClientStatusRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientStatusRequest.aminoType, QueryClientStatusRequest.typeUrl);
 function createBaseQueryClientStatusResponse(): QueryClientStatusResponse {
   return {
     status: ""
@@ -1744,10 +1749,9 @@ export const QueryClientStatusResponse = {
       typeUrl: "/ibc.core.client.v1.QueryClientStatusResponse",
       value: QueryClientStatusResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryClientStatusResponse.typeUrl, QueryClientStatusResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientStatusResponse.aminoType, QueryClientStatusResponse.typeUrl);
 function createBaseQueryClientParamsRequest(): QueryClientParamsRequest {
   return {};
 }
@@ -1827,10 +1831,9 @@ export const QueryClientParamsRequest = {
       typeUrl: "/ibc.core.client.v1.QueryClientParamsRequest",
       value: QueryClientParamsRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryClientParamsRequest.typeUrl, QueryClientParamsRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientParamsRequest.aminoType, QueryClientParamsRequest.typeUrl);
 function createBaseQueryClientParamsResponse(): QueryClientParamsResponse {
   return {
     params: undefined
@@ -1930,10 +1933,11 @@ export const QueryClientParamsResponse = {
       typeUrl: "/ibc.core.client.v1.QueryClientParamsResponse",
       value: QueryClientParamsResponse.encode(message).finish()
     };
+  },
+  registerTypeUrl() {
+    Params.registerTypeUrl();
   }
 };
-GlobalDecoderRegistry.register(QueryClientParamsResponse.typeUrl, QueryClientParamsResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryClientParamsResponse.aminoType, QueryClientParamsResponse.typeUrl);
 function createBaseQueryUpgradedClientStateRequest(): QueryUpgradedClientStateRequest {
   return {};
 }
@@ -2013,10 +2017,9 @@ export const QueryUpgradedClientStateRequest = {
       typeUrl: "/ibc.core.client.v1.QueryUpgradedClientStateRequest",
       value: QueryUpgradedClientStateRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryUpgradedClientStateRequest.typeUrl, QueryUpgradedClientStateRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryUpgradedClientStateRequest.aminoType, QueryUpgradedClientStateRequest.typeUrl);
 function createBaseQueryUpgradedClientStateResponse(): QueryUpgradedClientStateResponse {
   return {
     upgradedClientState: undefined
@@ -2116,10 +2119,9 @@ export const QueryUpgradedClientStateResponse = {
       typeUrl: "/ibc.core.client.v1.QueryUpgradedClientStateResponse",
       value: QueryUpgradedClientStateResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryUpgradedClientStateResponse.typeUrl, QueryUpgradedClientStateResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryUpgradedClientStateResponse.aminoType, QueryUpgradedClientStateResponse.typeUrl);
 function createBaseQueryUpgradedConsensusStateRequest(): QueryUpgradedConsensusStateRequest {
   return {};
 }
@@ -2199,10 +2201,9 @@ export const QueryUpgradedConsensusStateRequest = {
       typeUrl: "/ibc.core.client.v1.QueryUpgradedConsensusStateRequest",
       value: QueryUpgradedConsensusStateRequest.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryUpgradedConsensusStateRequest.typeUrl, QueryUpgradedConsensusStateRequest);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryUpgradedConsensusStateRequest.aminoType, QueryUpgradedConsensusStateRequest.typeUrl);
 function createBaseQueryUpgradedConsensusStateResponse(): QueryUpgradedConsensusStateResponse {
   return {
     upgradedConsensusState: undefined
@@ -2302,7 +2303,6 @@ export const QueryUpgradedConsensusStateResponse = {
       typeUrl: "/ibc.core.client.v1.QueryUpgradedConsensusStateResponse",
       value: QueryUpgradedConsensusStateResponse.encode(message).finish()
     };
-  }
+  },
+  registerTypeUrl() {}
 };
-GlobalDecoderRegistry.register(QueryUpgradedConsensusStateResponse.typeUrl, QueryUpgradedConsensusStateResponse);
-GlobalDecoderRegistry.registerAminoProtoMapping(QueryUpgradedConsensusStateResponse.aminoType, QueryUpgradedConsensusStateResponse.typeUrl);

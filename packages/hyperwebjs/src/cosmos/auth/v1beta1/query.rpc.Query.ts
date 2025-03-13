@@ -3,7 +3,6 @@ import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf
 import { Params, ParamsSDKType, BaseAccount, BaseAccountSDKType, ModuleAccount, ModuleAccountSDKType } from "./auth";
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { QueryAccountsRequest, QueryAccountsRequestSDKType, QueryAccountsResponse, QueryAccountsResponseSDKType, QueryAccountRequest, QueryAccountRequestSDKType, QueryAccountResponse, QueryAccountResponseSDKType, QueryAccountAddressByIDRequest, QueryAccountAddressByIDRequestSDKType, QueryAccountAddressByIDResponse, QueryAccountAddressByIDResponseSDKType, QueryParamsRequest, QueryParamsRequestSDKType, QueryParamsResponse, QueryParamsResponseSDKType, QueryModuleAccountsRequest, QueryModuleAccountsRequestSDKType, QueryModuleAccountsResponse, QueryModuleAccountsResponseSDKType, QueryModuleAccountByNameRequest, QueryModuleAccountByNameRequestSDKType, QueryModuleAccountByNameResponse, QueryModuleAccountByNameResponseSDKType, Bech32PrefixRequest, Bech32PrefixRequestSDKType, Bech32PrefixResponse, Bech32PrefixResponseSDKType, AddressBytesToStringRequest, AddressBytesToStringRequestSDKType, AddressBytesToStringResponse, AddressBytesToStringResponseSDKType, AddressStringToBytesRequest, AddressStringToBytesRequestSDKType, AddressStringToBytesResponse, AddressStringToBytesResponseSDKType, QueryAccountInfoRequest, QueryAccountInfoRequestSDKType, QueryAccountInfoResponse, QueryAccountInfoResponseSDKType } from "./query";
 /** Query defines the gRPC querier service. */
 export interface Query {
@@ -144,39 +143,6 @@ export class QueryClientImpl implements Query {
     return promise.then(data => QueryAccountInfoResponse.decode(new BinaryReader(data)));
   };
 }
-export const createRpcQueryExtension = (base: QueryClient) => {
-  const rpc = createProtobufRpcClient(base);
-  const queryService = new QueryClientImpl(rpc);
-  return {
-    accounts(request?: QueryAccountsRequest): Promise<QueryAccountsResponse> {
-      return queryService.accounts(request);
-    },
-    account(request: QueryAccountRequest): Promise<QueryAccountResponse> {
-      return queryService.account(request);
-    },
-    accountAddressByID(request: QueryAccountAddressByIDRequest): Promise<QueryAccountAddressByIDResponse> {
-      return queryService.accountAddressByID(request);
-    },
-    params(request?: QueryParamsRequest): Promise<QueryParamsResponse> {
-      return queryService.params(request);
-    },
-    moduleAccounts(request?: QueryModuleAccountsRequest): Promise<QueryModuleAccountsResponse> {
-      return queryService.moduleAccounts(request);
-    },
-    moduleAccountByName(request: QueryModuleAccountByNameRequest): Promise<QueryModuleAccountByNameResponse> {
-      return queryService.moduleAccountByName(request);
-    },
-    bech32Prefix(request?: Bech32PrefixRequest): Promise<Bech32PrefixResponse> {
-      return queryService.bech32Prefix(request);
-    },
-    addressBytesToString(request: AddressBytesToStringRequest): Promise<AddressBytesToStringResponse> {
-      return queryService.addressBytesToString(request);
-    },
-    addressStringToBytes(request: AddressStringToBytesRequest): Promise<AddressStringToBytesResponse> {
-      return queryService.addressStringToBytes(request);
-    },
-    accountInfo(request: QueryAccountInfoRequest): Promise<QueryAccountInfoResponse> {
-      return queryService.accountInfo(request);
-    }
-  };
+export const createClientImpl = (rpc: TxRpc) => {
+  return new QueryClientImpl(rpc);
 };
