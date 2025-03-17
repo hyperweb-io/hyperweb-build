@@ -7,12 +7,12 @@ export const AminoConverter = {
     fromAmino: MsgUpdateParams.fromAmino
   },
   "/hyperweb.hvm.MsgInstantiate": {
-    aminoType: "/hyperweb.hvm.MsgInstantiate",
+    aminoType: "hvm/x/hvm/MsgInstantiate",
     toAmino: MsgInstantiate.toAmino,
     fromAmino: MsgInstantiate.fromAmino
   },
   "/hyperweb.hvm.MsgEval": {
-    aminoType: "/hyperweb.hvm.MsgEval",
+    aminoType: "hvm/x/hvm/MsgEval",
     toAmino: MsgEval.toAmino,
     fromAmino: MsgEval.fromAmino
   }

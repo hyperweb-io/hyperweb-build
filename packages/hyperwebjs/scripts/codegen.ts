@@ -106,6 +106,26 @@ export const options: TelescopeInput = {
       useProtoOptionality: true,
       customTypes: {
         useCosmosSDKDec: true
+      },
+      exceptions: {
+        '/hyperweb.hvm.MsgEval': {
+          aminoType: 'hvm/x/hvm/MsgEval'
+        },
+        '/hyperweb.hvm.MsgEvalResponse': {
+          aminoType: 'hvm/x/hvm/MsgEvalResponse'
+        },
+        '/hyperweb.hvm.MsgInstantiate': {
+          aminoType: 'hvm/x/hvm/MsgInstantiate'
+        },
+        '/hyperweb.hvm.MsgInstantiateResponse': {
+          aminoType: 'hvm/x/hvm/MsgInstantiateResponse'
+        },
+        '/hyperweb.hvm.MsgUpdateParams': {
+          aminoType: 'hvm/x/hvm/MsgUpdateParams'
+        },
+        '/hyperweb.hvm.MsgUpdateParamsResponse': {
+          aminoType: 'hvm/x/hvm/MsgUpdateParamsResponse'
+        },
       }
     }
   }
