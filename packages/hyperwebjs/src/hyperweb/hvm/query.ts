@@ -1,6 +1,6 @@
+import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../cosmos/base/query/v1beta1/pagination";
 import { Params, ParamsAmino, ParamsSDKType } from "./params";
 import { Contracts, ContractsAmino, ContractsSDKType } from "./contracts";
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../cosmos/base/query/v1beta1/pagination";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { JsonSafe } from "../../json-safe";
 import { DeepPartial, isSet } from "../../helpers";
@@ -636,7 +636,7 @@ export const GetContractByIndexResponse = {
   },
   toAmino(message: GetContractByIndexResponse): GetContractByIndexResponseAmino {
     const obj: any = {};
-    obj.contract = message.contract ? Contracts.toAmino(message.contract) : undefined;
+    obj.contract = message.contract ? Contracts.toAmino(message.contract) : Contracts.toAmino(Contracts.fromPartial({}));
     return obj;
   },
   fromAminoMsg(object: GetContractByIndexResponseAminoMsg): GetContractByIndexResponse {
@@ -826,7 +826,7 @@ export const GetContractResponse = {
   },
   toAmino(message: GetContractResponse): GetContractResponseAmino {
     const obj: any = {};
-    obj.contract = message.contract ? Contracts.toAmino(message.contract) : undefined;
+    obj.contract = message.contract ? Contracts.toAmino(message.contract) : Contracts.toAmino(Contracts.fromPartial({}));
     return obj;
   },
   fromAminoMsg(object: GetContractResponseAminoMsg): GetContractResponse {
