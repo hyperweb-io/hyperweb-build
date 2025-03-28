@@ -29,7 +29,7 @@ export interface MsgUpdateParamsAmino {
   params: ParamsAmino;
 }
 export interface MsgUpdateParamsAminoMsg {
-  type: "hvm/x/hvm/MsgUpdateParams";
+  type: "hvm/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
 }
 /** MsgUpdateParams is the Msg/UpdateParams request type. */
@@ -37,28 +37,19 @@ export interface MsgUpdateParamsSDKType {
   authority: string;
   params: ParamsSDKType;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- */
+/** MsgUpdateParamsResponse defines the response structure for executing a */
 export interface MsgUpdateParamsResponse {}
 export interface MsgUpdateParamsResponseProtoMsg {
   typeUrl: "/hyperweb.hvm.MsgUpdateParamsResponse";
   value: Uint8Array;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- */
+/** MsgUpdateParamsResponse defines the response structure for executing a */
 export interface MsgUpdateParamsResponseAmino {}
 export interface MsgUpdateParamsResponseAminoMsg {
-  type: "hvm/x/hvm/MsgUpdateParamsResponse";
+  type: "/hyperweb.hvm.MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- */
+/** MsgUpdateParamsResponse defines the response structure for executing a */
 export interface MsgUpdateParamsResponseSDKType {}
 /** msg instantiate */
 export interface MsgInstantiate {
@@ -79,7 +70,7 @@ export interface MsgInstantiateAmino {
   source: string;
 }
 export interface MsgInstantiateAminoMsg {
-  type: "hvm/x/hvm/MsgInstantiate";
+  type: "hvm/MsgInstantiate";
   value: MsgInstantiateAmino;
 }
 /** msg instantiate */
@@ -103,7 +94,7 @@ export interface MsgInstantiateResponseAmino {
   address: string;
 }
 export interface MsgInstantiateResponseAminoMsg {
-  type: "hvm/x/hvm/MsgInstantiateResponse";
+  type: "/hyperweb.hvm.MsgInstantiateResponse";
   value: MsgInstantiateResponseAmino;
 }
 /** msg instantiate response */
@@ -142,7 +133,7 @@ export interface MsgEvalAmino {
   args: string[];
 }
 export interface MsgEvalAminoMsg {
-  type: "hvm/x/hvm/MsgEval";
+  type: "hvm/MsgEval";
   value: MsgEvalAmino;
 }
 /** msg eval response */
@@ -165,7 +156,7 @@ export interface MsgEvalResponseAmino {
   result: string;
 }
 export interface MsgEvalResponseAminoMsg {
-  type: "hvm/x/hvm/MsgEvalResponse";
+  type: "/hyperweb.hvm.MsgEvalResponse";
   value: MsgEvalResponseAmino;
 }
 /** msg eval response */
@@ -180,7 +171,7 @@ function createBaseMsgUpdateParams(): MsgUpdateParams {
 }
 export const MsgUpdateParams = {
   typeUrl: "/hyperweb.hvm.MsgUpdateParams",
-  aminoType: "hvm/x/hvm/MsgUpdateParams",
+  aminoType: "hvm/MsgUpdateParams",
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
   },
@@ -272,7 +263,7 @@ export const MsgUpdateParams = {
   },
   toAminoMsg(message: MsgUpdateParams): MsgUpdateParamsAminoMsg {
     return {
-      type: "hvm/x/hvm/MsgUpdateParams",
+      type: "hvm/MsgUpdateParams",
       value: MsgUpdateParams.toAmino(message)
     };
   },
@@ -297,7 +288,6 @@ function createBaseMsgUpdateParamsResponse(): MsgUpdateParamsResponse {
 }
 export const MsgUpdateParamsResponse = {
   typeUrl: "/hyperweb.hvm.MsgUpdateParamsResponse",
-  aminoType: "hvm/x/hvm/MsgUpdateParamsResponse",
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -354,12 +344,6 @@ export const MsgUpdateParamsResponse = {
   fromAminoMsg(object: MsgUpdateParamsResponseAminoMsg): MsgUpdateParamsResponse {
     return MsgUpdateParamsResponse.fromAmino(object.value);
   },
-  toAminoMsg(message: MsgUpdateParamsResponse): MsgUpdateParamsResponseAminoMsg {
-    return {
-      type: "hvm/x/hvm/MsgUpdateParamsResponse",
-      value: MsgUpdateParamsResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgUpdateParamsResponseProtoMsg): MsgUpdateParamsResponse {
     return MsgUpdateParamsResponse.decode(message.value);
   },
@@ -383,7 +367,7 @@ function createBaseMsgInstantiate(): MsgInstantiate {
 }
 export const MsgInstantiate = {
   typeUrl: "/hyperweb.hvm.MsgInstantiate",
-  aminoType: "hvm/x/hvm/MsgInstantiate",
+  aminoType: "hvm/MsgInstantiate",
   is(o: any): o is MsgInstantiate {
     return o && (o.$typeUrl === MsgInstantiate.typeUrl || typeof o.creator === "string" && typeof o.code === "string" && typeof o.source === "string");
   },
@@ -488,7 +472,7 @@ export const MsgInstantiate = {
   },
   toAminoMsg(message: MsgInstantiate): MsgInstantiateAminoMsg {
     return {
-      type: "hvm/x/hvm/MsgInstantiate",
+      type: "hvm/MsgInstantiate",
       value: MsgInstantiate.toAmino(message)
     };
   },
@@ -514,7 +498,6 @@ function createBaseMsgInstantiateResponse(): MsgInstantiateResponse {
 }
 export const MsgInstantiateResponse = {
   typeUrl: "/hyperweb.hvm.MsgInstantiateResponse",
-  aminoType: "hvm/x/hvm/MsgInstantiateResponse",
   is(o: any): o is MsgInstantiateResponse {
     return o && (o.$typeUrl === MsgInstantiateResponse.typeUrl || typeof o.index === "bigint" && typeof o.address === "string");
   },
@@ -604,12 +587,6 @@ export const MsgInstantiateResponse = {
   fromAminoMsg(object: MsgInstantiateResponseAminoMsg): MsgInstantiateResponse {
     return MsgInstantiateResponse.fromAmino(object.value);
   },
-  toAminoMsg(message: MsgInstantiateResponse): MsgInstantiateResponseAminoMsg {
-    return {
-      type: "hvm/x/hvm/MsgInstantiateResponse",
-      value: MsgInstantiateResponse.toAmino(message)
-    };
-  },
   fromProtoMsg(message: MsgInstantiateResponseProtoMsg): MsgInstantiateResponse {
     return MsgInstantiateResponse.decode(message.value);
   },
@@ -634,7 +611,7 @@ function createBaseMsgEval(): MsgEval {
 }
 export const MsgEval = {
   typeUrl: "/hyperweb.hvm.MsgEval",
-  aminoType: "hvm/x/hvm/MsgEval",
+  aminoType: "hvm/MsgEval",
   is(o: any): o is MsgEval {
     return o && (o.$typeUrl === MsgEval.typeUrl || typeof o.creator === "string" && typeof o.address === "string" && typeof o.callee === "string" && Array.isArray(o.args) && (!o.args.length || typeof o.args[0] === "string"));
   },
@@ -764,7 +741,7 @@ export const MsgEval = {
   },
   toAminoMsg(message: MsgEval): MsgEvalAminoMsg {
     return {
-      type: "hvm/x/hvm/MsgEval",
+      type: "hvm/MsgEval",
       value: MsgEval.toAmino(message)
     };
   },
@@ -789,7 +766,6 @@ function createBaseMsgEvalResponse(): MsgEvalResponse {
 }
 export const MsgEvalResponse = {
   typeUrl: "/hyperweb.hvm.MsgEvalResponse",
-  aminoType: "hvm/x/hvm/MsgEvalResponse",
   is(o: any): o is MsgEvalResponse {
     return o && (o.$typeUrl === MsgEvalResponse.typeUrl || typeof o.result === "string");
   },
@@ -861,12 +837,6 @@ export const MsgEvalResponse = {
   },
   fromAminoMsg(object: MsgEvalResponseAminoMsg): MsgEvalResponse {
     return MsgEvalResponse.fromAmino(object.value);
-  },
-  toAminoMsg(message: MsgEvalResponse): MsgEvalResponseAminoMsg {
-    return {
-      type: "hvm/x/hvm/MsgEvalResponse",
-      value: MsgEvalResponse.toAmino(message)
-    };
   },
   fromProtoMsg(message: MsgEvalResponseProtoMsg): MsgEvalResponse {
     return MsgEvalResponse.decode(message.value);

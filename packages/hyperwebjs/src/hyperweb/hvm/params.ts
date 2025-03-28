@@ -11,7 +11,7 @@ export interface ParamsProtoMsg {
 /** Params defines the parameters for the module. */
 export interface ParamsAmino {}
 export interface ParamsAminoMsg {
-  type: "hvm/x/hvm/Params";
+  type: "hvm/Params";
   value: ParamsAmino;
 }
 /** Params defines the parameters for the module. */
@@ -21,7 +21,7 @@ function createBaseParams(): Params {
 }
 export const Params = {
   typeUrl: "/hyperweb.hvm.Params",
-  aminoType: "hvm/x/hvm/Params",
+  aminoType: "hvm/Params",
   is(o: any): o is Params {
     return o && o.$typeUrl === Params.typeUrl;
   },
@@ -80,7 +80,7 @@ export const Params = {
   },
   toAminoMsg(message: Params): ParamsAminoMsg {
     return {
-      type: "hvm/x/hvm/Params",
+      type: "hvm/Params",
       value: Params.toAmino(message)
     };
   },
