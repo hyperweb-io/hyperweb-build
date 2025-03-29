@@ -1,0 +1,115 @@
+{
+  "state": {
+    "type": "object",
+    "properties": {
+      "count": {
+        "type": "any"
+      }
+    }
+  },
+  "methods": [
+    {
+      "name": "fetchData",
+      "parameters": [],
+      "returnType": {
+        "type": "object",
+        "properties": {
+          "then": {
+            "type": "any"
+          },
+          "catch": {
+            "type": "any"
+          },
+          "finally": {
+            "type": "any"
+          },
+          "__@toStringTag@159": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ],
+  "decorators": [
+    {
+      "name": "external",
+      "args": [],
+      "targetName": "getCount",
+      "targetType": "method",
+      "location": {
+        "file": "class.ts",
+        "line": 16,
+        "column": 3
+      }
+    },
+    {
+      "name": "admin",
+      "args": [],
+      "targetName": "getCount",
+      "targetType": "method",
+      "location": {
+        "file": "class.ts",
+        "line": 17,
+        "column": 3
+      }
+    },
+    {
+      "name": "internal",
+      "args": [],
+      "targetName": "increment",
+      "targetType": "method",
+      "location": {
+        "file": "class.ts",
+        "line": 23,
+        "column": 3
+      }
+    },
+    {
+      "name": "admin",
+      "args": [],
+      "targetName": "increment",
+      "targetType": "method",
+      "location": {
+        "file": "class.ts",
+        "line": 24,
+        "column": 3
+      }
+    },
+    {
+      "name": "creator",
+      "args": [],
+      "targetName": "decrement",
+      "targetType": "method",
+      "location": {
+        "file": "class.ts",
+        "line": 30,
+        "column": 3
+      }
+    },
+    {
+      "name": "permission",
+      "args": [
+        "debug",
+        "level"
+      ],
+      "targetName": "fetchData",
+      "targetType": "method",
+      "location": {
+        "file": "index.ts",
+        "line": 4,
+        "column": 3
+      }
+    },
+    {
+      "name": "performance",
+      "args": [],
+      "targetName": "fetchData",
+      "targetType": "method",
+      "location": {
+        "file": "index.ts",
+        "line": 5,
+        "column": 3
+      }
+    }
+  ]
+}

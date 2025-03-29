@@ -12,6 +12,7 @@ const runTest = async (fixtureName: string) => {
   const buildOptions: Partial<HyperwebBuildOptions> = {
     entryPoints: [join(fixtureDir, 'index.ts')],
     outfile: join(outputDir, `${fixtureName}.bundle.js`),
+    external: ['@hyperweb/decorators'],
     customPlugins: [
       schemaExtractorPlugin({
         outputPath: schemaOutputPath,
@@ -68,6 +69,19 @@ describe('schemaExtractorPlugin', () => {
     expect(methodNames).toContain('baseMethod');
     expect(methodNames).toContain('increment');
     expect(methodNames).not.toContain('reset');
+
+    expect(schemaData).toMatchSnapshot();
+  });
+
+
+  it('should extract decorators and state from source', async () => {
+    const schemaData = await runTest('decorators');
+
+    expect(schemaData).toHaveProperty('state');
+    expect(schemaData.state).toHaveProperty('type', 'object');
+    expect(schemaData.state).toHaveProperty('properties');
+
+    expect(schemaData).toHaveProperty('decorators');
 
     expect(schemaData).toMatchSnapshot();
   });
