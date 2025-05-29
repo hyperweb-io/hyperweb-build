@@ -1,5 +1,5 @@
 import * as parser from '@babel/parser';
-import traverse from '@babel/traverse';
+import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 
 export interface AnalysisResult {
@@ -42,23 +42,79 @@ export class ContractAnalyzer {
 
     const queries: string[] = [];
     const mutations: string[] = [];
+    let foundDefaultExport = false;
+
+    const self = this;
 
     traverse(this.ast, {
-      ClassMethod(path) {
+      // Handle both export default class and export { Contract as default }
+      ExportDefaultDeclaration(path) {
+        const declaration = path.node.declaration;
+        
+        // Check if the default export is a class declaration
+        if (t.isClassDeclaration(declaration)) {
+          foundDefaultExport = true;
+          self.analyzeClassMethods(path, declaration, queries, mutations);
+        }
+      },
+      // Handle named exports with default alias
+      ExportNamedDeclaration(path) {
+        const specifiers = path.node.specifiers;
+        for (const specifier of specifiers) {
+          if (
+            t.isExportSpecifier(specifier) &&
+            specifier.exported.type === 'Identifier' &&
+            specifier.exported.name === 'default'
+          ) {
+            // Find the variable declaration for the exported class
+            const binding = path.scope.getBinding(specifier.local.name);
+            if (binding) {
+              const declaration = binding.path.node;
+              if (
+                t.isVariableDeclarator(declaration) &&
+                t.isClassExpression(declaration.init)
+              ) {
+                foundDefaultExport = true;
+                self.analyzeClassMethods(binding.path, declaration.init, queries, mutations);
+              }
+            }
+          }
+        }
+      },
+    });
+
+    if (!foundDefaultExport) {
+      throw new Error('No default exported class found in the code');
+    }
+
+    return { queries, mutations };
+  }
+
+  /**
+   * Analyzes methods within a class declaration or expression
+   */
+  private analyzeClassMethods(
+    parentPath: NodePath,
+    classNode: t.ClassDeclaration | t.ClassExpression,
+    queries: string[],
+    mutations: string[]
+  ): void {
+    parentPath.traverse({
+      ClassMethod(methodPath: NodePath<t.ClassMethod>) {
         // Skip static methods and constructors
-        if (path.node.static || path.node.kind === 'constructor') {
+        if (methodPath.node.static || methodPath.node.kind === 'constructor') {
           return;
         }
 
-        const methodName = path.node.key.type === 'Identifier' ? path.node.key.name : '';
+        const methodName = methodPath.node.key.type === 'Identifier' ? methodPath.node.key.name : '';
         if (!methodName) return;
 
         let readsState = false;
         let writesState = false;
 
         // Check for state access
-        path.traverse({
-          MemberExpression(memberPath) {
+        methodPath.traverse({
+          MemberExpression(memberPath: NodePath<t.MemberExpression>) {
             const object = memberPath.node.object;
             const property = memberPath.node.property;
 
@@ -92,7 +148,5 @@ export class ContractAnalyzer {
         }
       },
     });
-
-    return { queries, mutations };
   }
 } 

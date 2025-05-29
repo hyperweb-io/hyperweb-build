@@ -9,7 +9,7 @@ describe('ContractAnalyzer', () => {
 
   it('should identify query methods', () => {
     const code = `
-      class Contract {
+      export default class Contract {
         state: any;
         
         getState() {
@@ -30,7 +30,7 @@ describe('ContractAnalyzer', () => {
 
   it('should identify mutation methods', () => {
     const code = `
-      class Contract {
+      export default class Contract {
         state: any;
         
         setState(newState: any) {
@@ -50,7 +50,7 @@ describe('ContractAnalyzer', () => {
 
   it('should identify both query and mutation methods', () => {
     const code = `
-      class Contract {
+      export default class Contract {
         state: any;
         
         getState() {
@@ -75,7 +75,7 @@ describe('ContractAnalyzer', () => {
 
   it('should ignore static methods and constructors', () => {
     const code = `
-      class Contract {
+      export default class Contract {
         state: any;
         
         constructor() {
@@ -95,5 +95,56 @@ describe('ContractAnalyzer', () => {
     const result = analyzer.analyzeFromCode(code);
     expect(result.queries).toEqual(['getState']);
     expect(result.mutations).toEqual([]);
+  });
+
+  it('should handle class expression with named export', () => {
+    const code = `
+      var Contract = class {
+        state = {};
+        
+        initialize() {
+          this.state.value = 2.02234;
+        }
+        
+        getState() {
+          return this.state.value;
+        }
+        
+        exp() {
+          this.state.value = this.state.value * this.state.value;
+          return this.state.value;
+        }
+      };
+      
+      export { Contract as default };
+    `;
+
+    const result = analyzer.analyzeFromCode(code);
+    expect(result.queries).toEqual(['getState']);
+    expect(result.mutations).toEqual(['initialize', 'exp']);
+  });
+
+  it('should throw error when no default export is found', () => {
+    const code = `
+      class Contract {
+        state: any;
+        
+        getState() {
+          return this.state;
+        }
+      }
+    `;
+
+    expect(() => analyzer.analyzeFromCode(code)).toThrow('No default exported class found in the code');
+  });
+
+  it('should throw error when default export is not a class', () => {
+    const code = `
+      export default function Contract() {
+        return {};
+      }
+    `;
+
+    expect(() => analyzer.analyzeFromCode(code)).toThrow('No default exported class found in the code');
   });
 }); 
