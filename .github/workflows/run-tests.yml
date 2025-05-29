@@ -32,9 +32,12 @@ jobs:
           yarn build
           yarn symlink
 
-      - name: Test @hyperweb/build 🔍
+      - name: Test @hyperweb/build
         run: cd packages/build && yarn test
+
+      - name: Test @hyperweb/parse
+        run: cd packages/parse && yarn test
       
-      - name: Test @hyperweb/ts-json-schema 🔍
+      - name: Test @hyperweb/ts-json-schema
         run: cd packages/ts-json-schema && yarn test
       
