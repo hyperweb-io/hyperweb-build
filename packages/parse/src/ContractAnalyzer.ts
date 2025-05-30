@@ -2,10 +2,17 @@
 import * as parser from '@babel/parser';
 import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
+import generate from '@babel/generator';
 
 export interface AnalysisResult {
-  queries: string[];
-  mutations: string[];
+  queries: MethodInfo[];
+  mutations: MethodInfo[];
+}
+
+export interface MethodInfo {
+  name: string;
+  params: { name: string; type: string }[];
+  returnType: string;
 }
 
 export class ContractAnalyzer {
@@ -41,8 +48,8 @@ export class ContractAnalyzer {
       throw new Error('No code has been parsed. Call analyzeFromCode first.');
     }
 
-    const queries: string[] = [];
-    const mutations: string[] = [];
+    const queries: MethodInfo[] = [];
+    const mutations: MethodInfo[] = [];
     let foundDefaultExport = false;
 
     const self = this;
@@ -97,8 +104,8 @@ export class ContractAnalyzer {
   private analyzeClassMethods(
     parentPath: NodePath,
     classNode: t.ClassDeclaration | t.ClassExpression,
-    queries: string[],
-    mutations: string[]
+    queries: MethodInfo[],
+    mutations: MethodInfo[]
   ): void {
     parentPath.traverse({
       ClassMethod(methodPath: NodePath<t.ClassMethod>) {
@@ -107,13 +114,50 @@ export class ContractAnalyzer {
           return;
         }
 
-        const methodName = methodPath.node.key.type === 'Identifier' ? methodPath.node.key.name : '';
+        const methodName = methodPath.node.key.type === 'Identifier'
+          ? methodPath.node.key.name
+          : '';
         if (!methodName) return;
+
+        // Collect parameters
+        const params = methodPath.node.params.map(param => {
+          if (t.isIdentifier(param)) {
+            const name = param.name;
+            let type = 'any';
+            if (param.typeAnnotation) {
+              // generate and compact the type annotation
+              const rawType = generate(param.typeAnnotation.typeAnnotation).code;
+              type = rawType.replace(/\n/g, ' ')
+                            .replace(/;/g, '')
+                            .replace(/\s+/g, ' ')
+                            .trim();
+            }
+            return { name, type };
+          } else {
+            const code = generate(param).code;
+            return { name: code, type: 'unknown' };
+          }
+        });
+
+        // Collect return type
+        let returnType = 'void';
+        if (
+          methodPath.node.returnType &&
+          methodPath.node.returnType.typeAnnotation
+        ) {
+          // generate and compact the return type annotation
+          const rawRet = generate(methodPath.node.returnType.typeAnnotation).code;
+          returnType = rawRet.replace(/\n/g, ' ')
+                             .replace(/;/g, '')
+                             .replace(/\s+/g, ' ')
+                             .trim();
+        }
 
         let readsState = false;
         let writesState = false;
+        let hasReturn = false;
 
-        // Check for state access
+        // Check for state access and return statements
         methodPath.traverse({
           MemberExpression(memberPath: NodePath<t.MemberExpression>) {
             const object = memberPath.node.object;
@@ -129,7 +173,7 @@ export class ContractAnalyzer {
               const parent = memberPath.parentPath;
               if (
                 t.isAssignmentExpression(parent.node) ||
-                (t.isMemberExpression(parent.node) && 
+                (t.isMemberExpression(parent.node) &&
                  t.isAssignmentExpression(parent.parentPath.node))
               ) {
                 writesState = true;
@@ -138,14 +182,23 @@ export class ContractAnalyzer {
               }
             }
           },
+          ReturnStatement(returnPath: NodePath<t.ReturnStatement>) {
+            if (returnPath.node.argument) {
+              hasReturn = true;
+            }
+          },
         });
 
-        // If a method writes to state, it's a mutation
-        // If it only reads from state, it's a query
+        const methodInfo: MethodInfo = {
+          name: methodName,
+          params,
+          returnType,
+        };
+        // If a method writes to state, it's a mutation; else if it reads state or returns something, it's a query
         if (writesState) {
-          mutations.push(methodName);
-        } else if (readsState) {
-          queries.push(methodName);
+          mutations.push(methodInfo);
+        } else if (readsState || hasReturn) {
+          queries.push(methodInfo);
         }
       },
     });
