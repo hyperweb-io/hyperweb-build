@@ -280,6 +280,106 @@ describe('ContractAnalyzer', () => {
     expect(result.mutations).toEqual([]);
   });
 
+  describe('advanced mutation detection', () => {
+    it('should detect increment and decrement mutations', () => {
+      const code = `
+        export default class Contract {
+          inc() { this.state.count++; }
+          dec() { --this.state.count; }
+          postDec() { this.state.count--; }
+          preInc() { ++this.state.count; }
+        }
+      `;
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.mutations.map(m => m.name)).toEqual(['inc','dec','postDec','preInc']);
+      expect(result.queries).toEqual([]);
+    });
+    it('should detect compound assignment mutations', () => {
+      const code = `
+        export default class Contract {
+          add() { this.state.total += 5; }
+          append() { this.state.name += ' Smith'; }
+          mul() { this.state.count *= 2; }
+          or() { this.state.flag |= 1; }
+        }
+      `;
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.mutations.map(m => m.name)).toEqual(['add','append','mul','or']);
+      expect(result.queries).toEqual([]);
+    });
+    it('should detect object property mutations', () => {
+      const code = `
+        export default class Contract {
+          setName() { this.state.user.name = 'Dan'; }
+          setTheme() { this.state.settings.theme = 'dark'; }
+          incAge() { this.state.profile.age++; }
+        }
+      `;
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.mutations.map(m => m.name)).toEqual(['setName','setTheme','incAge']);
+      expect(result.queries).toEqual([]);
+    });
+    it('should detect array operation mutations', () => {
+      const code = `
+        export default class Contract {
+          pushItem() { this.state.items.push('item'); }
+          popHist() { this.state.history.pop(); }
+          doSplice() { this.state.list.splice(1, 2); }
+          shiftQueue() { this.state.queue.shift(); }
+        }
+      `;
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.mutations.map(m => m.name)).toEqual(['pushItem','popHist','doSplice','shiftQueue']);
+      expect(result.queries).toEqual([]);
+    });
+    it('should detect method-based and assign mutations', () => {
+      const code = `
+        export default class Contract {
+          setSomething() { this.state.setSomething('value'); }
+          assignConfig() { Object.assign(this.state.config, { debug: true }); }
+          customUpdate() { this.state.data.update({ key: 'val' }); }
+        }
+      `;
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.mutations.map(m => m.name)).toEqual(['setSomething','assignConfig','customUpdate']);
+      expect(result.queries).toEqual([]);
+    });
+    it('should detect destructuring and spread mutations', () => {
+      const code = `
+        export default class Contract {
+          reset() { this.state = { ...this.state, newProp: true }; }
+          destr() { ({ a: this.state.a } = source); }
+          spreadCoords() { this.state.coords = [...this.state.coords, [x, y]]; }
+        }
+      `;
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.mutations.map(m => m.name)).toEqual(['reset','destr','spreadCoords']);
+      expect(result.queries).toEqual([]);
+    });
+    it('should detect chained and nested mutations', () => {
+      const code = `
+        export default class Contract {
+          incNested() { this.state.obj.nested.count += 1; }
+          statInc() { this.state.stats.increment('xp'); }
+        }
+      `;
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.mutations.map(m => m.name)).toEqual(['incNested','statInc']);
+      expect(result.queries).toEqual([]);
+    });
+    it('should detect assignment of function calls and negation', () => {
+      const code = `
+        export default class Contract {
+          assignCall() { this.state.value = getNewValue(); }
+          assignNot() { this.state.flag = !this.state.flag; }
+        }
+      `;
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.mutations.map(m => m.name)).toEqual(['assignCall','assignNot']);
+      expect(result.queries).toEqual([]);
+    });
+  });
+
   describe('analyzeWithSchema', () => {
     it('should handle array types', () => {
       const code = `

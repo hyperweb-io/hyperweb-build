@@ -129,6 +129,7 @@ export class ContractAnalyzer {
     queries: MethodInfo[],
     mutations: MethodInfo[]
   ): void {
+    const analyzer = this;
     parentPath.traverse({
       ClassMethod(methodPath: NodePath<t.ClassMethod>) {
         // Skip static methods and constructors
@@ -207,6 +208,35 @@ export class ContractAnalyzer {
           ReturnStatement(returnPath: NodePath<t.ReturnStatement>) {
             if (returnPath.node.argument) {
               hasReturn = true;
+            }
+          },
+          AssignmentExpression(assignPath: NodePath<t.AssignmentExpression>) {
+            if (analyzer.containsStateMember(assignPath.node.left as t.Node)) {
+              writesState = true;
+            }
+          },
+          UpdateExpression(updatePath: NodePath<t.UpdateExpression>) {
+            if (analyzer.isStateMemberExpression(updatePath.node.argument as t.Node)) {
+              writesState = true;
+            }
+          },
+          CallExpression(callPath: NodePath<t.CallExpression>) {
+            const callee = callPath.node.callee;
+            if (t.isMemberExpression(callee)) {
+              // method calls on state (e.g., this.state.setX())
+              if (analyzer.isStateMemberExpression(callee.object)) {
+                writesState = true;
+              }
+              // Object.assign(this.state.prop, ...)
+              if (
+                t.isIdentifier(callee.object) && callee.object.name === 'Object' &&
+                t.isIdentifier(callee.property) && callee.property.name === 'assign'
+              ) {
+                const target = callPath.node.arguments[0];
+                if (target && analyzer.isStateMemberExpression(target as t.Node)) {
+                  writesState = true;
+                }
+              }
             }
           },
         });
@@ -480,6 +510,33 @@ export class ContractAnalyzer {
           ReturnStatement(retPath: NodePath<t.ReturnStatement>) {
             if (retPath.node.argument) hasRet = true;
           },
+          AssignmentExpression(assignPath: NodePath<t.AssignmentExpression>) {
+            if (self.containsStateMember(assignPath.node.left as t.Node)) {
+              writes = true;
+            }
+          },
+          UpdateExpression(updatePath: NodePath<t.UpdateExpression>) {
+            if (self.isStateMemberExpression(updatePath.node.argument as t.Node)) {
+              writes = true;
+            }
+          },
+          CallExpression(callPath: NodePath<t.CallExpression>) {
+            const callee = callPath.node.callee;
+            if (t.isMemberExpression(callee)) {
+              if (self.isStateMemberExpression(callee.object)) {
+                writes = true;
+              }
+              if (
+                t.isIdentifier(callee.object) && callee.object.name === 'Object' &&
+                t.isIdentifier(callee.property) && callee.property.name === 'assign'
+              ) {
+                const target = callPath.node.arguments[0];
+                if (target && self.isStateMemberExpression(target as t.Node)) {
+                  writes = true;
+                }
+              }
+            }
+          },
         });
         const info: SchemaMethodInfo = { name: methodName, params, returnSchema };
         if (writes) mutations.push(info);
@@ -560,11 +617,82 @@ export class ContractAnalyzer {
           ReturnStatement(retPath: NodePath<t.ReturnStatement>) {
             if (retPath.node.argument) hasRet = true;
           },
+          AssignmentExpression(assignPath: NodePath<t.AssignmentExpression>) {
+            if (self.containsStateMember(assignPath.node.left as t.Node)) {
+              writes = true;
+            }
+          },
+          UpdateExpression(updatePath: NodePath<t.UpdateExpression>) {
+            if (self.isStateMemberExpression(updatePath.node.argument as t.Node)) {
+              writes = true;
+            }
+          },
+          CallExpression(callPath: NodePath<t.CallExpression>) {
+            const callee = callPath.node.callee;
+            if (t.isMemberExpression(callee)) {
+              if (self.isStateMemberExpression(callee.object)) {
+                writes = true;
+              }
+              if (
+                t.isIdentifier(callee.object) && callee.object.name === 'Object' &&
+                t.isIdentifier(callee.property) && callee.property.name === 'assign'
+              ) {
+                const target = callPath.node.arguments[0];
+                if (target && self.isStateMemberExpression(target as t.Node)) {
+                  writes = true;
+                }
+              }
+            }
+          },
         });
         const info: SchemaMethodInfo = { name: methodName, params, returnSchema };
         if (writes) mutations.push(info);
         else if (reads || hasRet) queries.push(info);
       },
     });
+  }
+
+  // Helper to detect if a MemberExpression references this.state at any depth
+  private isStateMemberExpression(node: t.Node): boolean {
+    if (!t.isMemberExpression(node)) return false;
+    const { object, property } = node;
+    if (t.isThisExpression(object) && t.isIdentifier(property) && property.name === 'state') {
+      return true;
+    }
+    if (t.isMemberExpression(object)) {
+      return this.isStateMemberExpression(object);
+    }
+    return false;
+  }
+
+  // Helper to detect state member usage in assignment patterns or member expressions
+  private containsStateMember(node: t.Node): boolean {
+    if (t.isMemberExpression(node) && this.isStateMemberExpression(node)) {
+      return true;
+    }
+    if (t.isObjectPattern(node)) {
+      for (const prop of node.properties) {
+        if (t.isRestElement(prop) && this.containsStateMember(prop.argument as t.Node)) {
+          return true;
+        }
+        if (t.isObjectProperty(prop) && this.containsStateMember(prop.value as t.Node)) {
+          return true;
+        }
+      }
+    }
+    if (t.isArrayPattern(node)) {
+      for (const elem of node.elements) {
+        if (elem && this.containsStateMember(elem as t.Node)) {
+          return true;
+        }
+      }
+    }
+    if (t.isAssignmentPattern(node)) {
+      return this.containsStateMember(node.left as t.Node);
+    }
+    if (t.isRestElement(node)) {
+      return this.containsStateMember(node.argument as t.Node);
+    }
+    return false;
   }
 } 
