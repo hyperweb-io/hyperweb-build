@@ -23,6 +23,7 @@ export interface JSONSchema {
   items?: JSONSchema;
   additionalProperties?: JSONSchema;
   anyOf?: JSONSchema[];
+  enum?: (string | number | boolean)[];
   $ref?: string;
 }
 
@@ -315,12 +316,29 @@ export class ContractAnalyzer {
   // Map of interface declarations for schema inlining
   private interfaceMap: Record<string, t.TSInterfaceDeclaration> = {};
 
-  // Collect interface declarations from AST
+  // Collect interface declarations and type aliases from AST
   private gatherInterfaces(): void {
     this.interfaceMap = {};
     traverse(this.ast!, {
       TSInterfaceDeclaration: (path) => {
         this.interfaceMap[path.node.id.name] = path.node;
+      },
+      TSTypeAliasDeclaration: (path) => {
+        // Convert type alias to interface-like structure for consistent handling
+        const interfaceNode: t.TSInterfaceDeclaration = {
+          type: 'TSInterfaceDeclaration',
+          id: path.node.id,
+          body: path.node.typeAnnotation as any, // Will be handled by typeToSchema
+          typeParameters: path.node.typeParameters,
+          extends: null,
+          declare: false,
+          loc: path.node.loc,
+          range: path.node.range,
+          leadingComments: path.node.leadingComments,
+          innerComments: path.node.innerComments,
+          trailingComments: path.node.trailingComments,
+        };
+        this.interfaceMap[path.node.id.name] = interfaceNode;
       },
     });
   }
@@ -334,9 +352,9 @@ export class ContractAnalyzer {
     // literal types (e.g. 'on', 1, true)
     if (t.isTSLiteralType(node)) {
       const lit = node.literal;
-      if (t.isStringLiteral(lit)) return { type: 'string' };
-      if (t.isNumericLiteral(lit)) return { type: 'number' };
-      if (t.isBooleanLiteral(lit)) return { type: 'boolean' };
+      if (t.isStringLiteral(lit)) return { const: lit.value };
+      if (t.isNumericLiteral(lit)) return { const: Number(lit.value) };
+      if (t.isBooleanLiteral(lit)) return { const: lit.value };
       return {};
     }
     if (t.isTSAnyKeyword(node)) return {};
@@ -412,16 +430,51 @@ export class ContractAnalyzer {
           additionalProperties: this.typeToSchema(node.typeParameters.params[1]),
         };
       }
-      // inline interface
+      // inline interface or type alias
       const iface = this.interfaceMap[name];
       if (iface) {
-        return this.typeToSchema(iface.body as t.TSTypeLiteral);
+        // Handle both interfaces (TSTypeLiteral body) and type aliases (any TSType body)
+        return this.typeToSchema(iface.body as t.TSType);
       }
-      return { $ref: name };
+      // For unknown types, return empty schema instead of $ref
+      return {};
     }
     // union types
     if (t.isTSUnionType(node)) {
-      // map to schemas and dedupe identical entries
+      // Check if all union members are literals of the same type
+      const literalValues: any[] = [];
+      let allSameTypeLiterals = true;
+      let literalType: string | null = null;
+
+      for (const unionType of node.types) {
+        if (t.isTSLiteralType(unionType)) {
+          const lit = unionType.literal;
+          if (t.isStringLiteral(lit)) {
+            if (literalType === null) literalType = 'string';
+            else if (literalType !== 'string') allSameTypeLiterals = false;
+            literalValues.push(lit.value);
+          } else if (t.isNumericLiteral(lit)) {
+            if (literalType === null) literalType = 'number';
+            else if (literalType !== 'number') allSameTypeLiterals = false;
+            literalValues.push(Number(lit.value));
+          } else if (t.isBooleanLiteral(lit)) {
+            if (literalType === null) literalType = 'boolean';
+            else if (literalType !== 'boolean') allSameTypeLiterals = false;
+            literalValues.push(lit.value);
+          } else {
+            allSameTypeLiterals = false;
+          }
+        } else {
+          allSameTypeLiterals = false;
+        }
+      }
+
+      // If all union members are literals of the same type, use enum
+      if (allSameTypeLiterals && literalValues.length > 0) {
+        return { type: literalType!, enum: literalValues };
+      }
+
+      // Otherwise, use anyOf with individual schemas
       const schemas = node.types.map((tn) => this.typeToSchema(tn));
       const unique = Array.from(new Map(schemas.map((s) => [JSON.stringify(s), s])).values());
       return { anyOf: unique };
@@ -1122,24 +1175,8 @@ export class ContractAnalyzer {
     sourceFiles: Record<string, string>,
     entryFile?: string
   ): AnalysisResult {
-    const resolvedEntryFile = entryFile || this.autoDetectEntryFile(sourceFiles);
-
-    if (!sourceFiles[resolvedEntryFile]) {
-      throw new Error(`Entry file ${resolvedEntryFile} not found in source files`);
-    }
-
-    // Parse all source files into ASTs
-    const asts = this.parseAllFiles(sourceFiles);
-
-    // Build import/export mapping
-    const importMap = this.buildImportMap(asts, sourceFiles);
-
-    // Analyze the entry file with access to all other files
-    this.ast = asts[resolvedEntryFile];
-    this.currentImportMap = importMap;
-    this.allAsts = asts;
-
-    return this.analyze();
+    const combinedCode = this.combineSourceFiles(sourceFiles, entryFile);
+    return this.analyzeFromCode(combinedCode);
   }
 
   /**
@@ -1152,32 +1189,9 @@ export class ContractAnalyzer {
     sourceFiles: Record<string, string>,
     entryFile?: string
   ): SchemaAnalysisResult {
-    const resolvedEntryFile = entryFile || this.autoDetectEntryFile(sourceFiles);
-
-    if (!sourceFiles[resolvedEntryFile]) {
-      throw new Error(`Entry file ${resolvedEntryFile} not found in source files`);
-    }
-
-    // Parse all source files into ASTs
-    const asts = this.parseAllFiles(sourceFiles);
-
-    // Build import/export mapping
-    const importMap = this.buildImportMap(asts, sourceFiles);
-
-    // Gather all interfaces from all files
-    this.gatherAllInterfaces(asts);
-
-    // Analyze the entry file with access to all other files
-    this.ast = asts[resolvedEntryFile];
-    this.currentImportMap = importMap;
-    this.allAsts = asts;
-
-    return this.analyzeSchema();
+    const combinedCode = this.combineSourceFiles(sourceFiles, entryFile);
+    return this.analyzeWithSchema(combinedCode);
   }
-
-  // Internal state for project analysis
-  private currentImportMap: Record<string, Record<string, string>> = {};
-  private allAsts: Record<string, parser.ParseResult<t.File>> = {};
 
   /**
    * Parses all source files into ASTs
@@ -1202,131 +1216,120 @@ export class ContractAnalyzer {
   }
 
   /**
-   * Builds a mapping of imports for each file
+   * Combines multiple source files into a single TypeScript file
+   * @param sourceFiles Record of file paths to their source code content
+   * @param entryFile The path to the entry file (optional - will auto-detect if not provided)
+   * @returns Combined TypeScript code as a string
    */
-  private buildImportMap(
-    asts: Record<string, parser.ParseResult<t.File>>,
-    sourceFiles: Record<string, string>
-  ): Record<string, Record<string, string>> {
-    const importMap: Record<string, Record<string, string>> = {};
+  private combineSourceFiles(sourceFiles: Record<string, string>, entryFile?: string): string {
+    const resolvedEntryFile = entryFile || this.detectEntryFile(sourceFiles);
 
+    if (!sourceFiles[resolvedEntryFile]) {
+      throw new Error(`Entry file ${resolvedEntryFile} not found in source files`);
+    }
+
+    // Parse all files to extract their content
+    const asts = this.parseAllFiles(sourceFiles);
+    const combinedParts: string[] = [];
+
+    // Process files in dependency order, starting with non-entry files
+    const entryAst = asts[resolvedEntryFile];
+
+    // First, add all non-entry files (interfaces, types, helper classes)
     for (const [filePath, ast] of Object.entries(asts)) {
-      importMap[filePath] = {};
+      if (filePath === resolvedEntryFile) continue;
 
-      traverse(ast, {
-        ImportDeclaration: (path) => {
-          const source = path.node.source.value;
-          const resolvedPath = this.resolveImport(source, filePath, sourceFiles);
-
-          if (resolvedPath) {
-            for (const specifier of path.node.specifiers) {
-              if (t.isImportSpecifier(specifier) && t.isIdentifier(specifier.imported)) {
-                // Named import: import { Foo } from './file'
-                const importedName = specifier.imported.name;
-                const localName = specifier.local.name;
-                importMap[filePath][localName] = `${resolvedPath}:${importedName}`;
-              } else if (t.isImportDefaultSpecifier(specifier)) {
-                // Default import: import Foo from './file'
-                const localName = specifier.local.name;
-                importMap[filePath][localName] = `${resolvedPath}:default`;
-              } else if (t.isImportNamespaceSpecifier(specifier)) {
-                // Namespace import: import * as Foo from './file'
-                const localName = specifier.local.name;
-                importMap[filePath][localName] = `${resolvedPath}:*`;
-              }
-            }
-          }
-        },
-      });
-    }
-
-    return importMap;
-  }
-
-  /**
-   * Resolves an import path relative to the importing file
-   */
-  private resolveImport(
-    importPath: string,
-    fromFile: string,
-    sourceFiles: Record<string, string>
-  ): string | null {
-    // Skip external imports (non-relative)
-    if (!importPath.startsWith('./') && !importPath.startsWith('../')) {
-      return null;
-    }
-
-    const fromDir = fromFile.split('/').slice(0, -1).join('/');
-    const resolvedBase = this.normalizePath(fromDir ? `${fromDir}/${importPath}` : importPath);
-
-    // Try different extensions and index files
-    const candidates = [
-      `${resolvedBase}.ts`,
-      `${resolvedBase}.tsx`,
-      `${resolvedBase}/index.ts`,
-      `${resolvedBase}/index.tsx`,
-    ];
-
-    for (const candidate of candidates) {
-      if (sourceFiles[candidate]) {
-        return candidate;
+      const content = this.extractFileContent(ast, sourceFiles[filePath], filePath, true);
+      if (content.trim()) {
+        combinedParts.push(content);
       }
     }
 
-    return null;
+    // Finally, add the entry file (the main contract class)
+    const entryContent = this.extractFileContent(
+      entryAst,
+      sourceFiles[resolvedEntryFile],
+      resolvedEntryFile,
+      false
+    );
+    combinedParts.push(entryContent);
+
+    return combinedParts.join('\n\n');
   }
 
   /**
-   * Normalizes a file path by resolving .. and . segments
+   * Extracts relevant content from a file's AST, removing imports/exports as needed
+   * @param ast The parsed AST of the file
+   * @param originalCode The original source code
+   * @param filePath The file path (for context)
+   * @param removeExports Whether to remove export statements (true for non-entry files)
+   * @returns Processed file content
    */
-  private normalizePath(path: string): string {
-    const parts = path.split('/');
-    const result: string[] = [];
+  private extractFileContent(
+    ast: parser.ParseResult<t.File>,
+    originalCode: string,
+    filePath: string,
+    removeExports: boolean
+  ): string {
+    const statements: string[] = [];
 
-    for (const part of parts) {
-      if (part === '..') {
-        result.pop();
-      } else if (part !== '.' && part !== '') {
-        result.push(part);
-      }
-    }
+    traverse(ast, {
+      // Skip import declarations
+      ImportDeclaration(path) {
+        path.skip();
+      },
 
-    return result.join('/');
-  }
-
-  /**
-   * Gathers interfaces from all files for schema analysis
-   */
-  private gatherAllInterfaces(asts: Record<string, parser.ParseResult<t.File>>): void {
-    this.interfaceMap = {};
-
-    for (const ast of Object.values(asts)) {
-      traverse(ast, {
-        TSInterfaceDeclaration: (path) => {
-          this.interfaceMap[path.node.id.name] = path.node;
-        },
-        TSTypeAliasDeclaration: (path) => {
-          // Treat type aliases as interfaces for schema purposes
-          if (t.isTSTypeLiteral(path.node.typeAnnotation)) {
-            // Convert type alias to interface-like structure
-            const interfaceNode: t.TSInterfaceDeclaration = {
-              type: 'TSInterfaceDeclaration',
-              id: path.node.id,
-              body: path.node.typeAnnotation,
-              typeParameters: path.node.typeParameters,
-              extends: null,
-              declare: false,
-              loc: path.node.loc,
-              range: path.node.range,
-              leadingComments: path.node.leadingComments,
-              innerComments: path.node.innerComments,
-              trailingComments: path.node.trailingComments,
-            };
-            this.interfaceMap[path.node.id.name] = interfaceNode;
+      // Handle export declarations
+      ExportNamedDeclaration(path) {
+        if (removeExports) {
+          // For non-entry files, convert exports to regular declarations
+          if (path.node.declaration) {
+            statements.push(generate(path.node.declaration).code);
           }
-        },
-      });
-    }
+        } else {
+          // For entry file, keep exports as-is
+          statements.push(generate(path.node).code);
+        }
+        path.skip();
+      },
+
+      ExportDefaultDeclaration(path) {
+        if (removeExports) {
+          // For non-entry files, convert default export to regular declaration
+          statements.push(generate(path.node.declaration).code);
+        } else {
+          // For entry file, keep default export
+          statements.push(generate(path.node).code);
+        }
+        path.skip();
+      },
+
+      // Keep all other top-level statements
+      Statement(path) {
+        // Only process top-level statements
+        if (path.parentPath?.isProgram()) {
+          statements.push(generate(path.node).code);
+          path.skip();
+        }
+      },
+
+      // Keep interface and type declarations
+      TSInterfaceDeclaration(path) {
+        if (path.parentPath?.isProgram()) {
+          statements.push(generate(path.node).code);
+          path.skip();
+        }
+      },
+
+      TSTypeAliasDeclaration(path) {
+        if (path.parentPath?.isProgram()) {
+          statements.push(generate(path.node).code);
+          path.skip();
+        }
+      },
+    });
+
+    return statements.join('\n');
   }
 
   /**
@@ -1334,7 +1337,7 @@ export class ContractAnalyzer {
    * @param sourceFiles Record of file paths to their source code content
    * @returns The path to the detected entry file
    */
-  private autoDetectEntryFile(sourceFiles: Record<string, string>): string {
+  private detectEntryFile(sourceFiles: Record<string, string>): string {
     const candidateFiles: string[] = [];
 
     // Parse all files to find those with default exported classes

@@ -743,8 +743,8 @@ describe('ContractAnalyzer', () => {
       expect(result.queries).toEqual([
         {
           name: 'mode',
-          params: [{ name: 'm', schema: { anyOf: [{ type: 'string' }] } }],
-          returnSchema: { anyOf: [{ type: 'string' }] },
+          params: [{ name: 'm', schema: { type: 'string', enum: ['on', 'off'] } }],
+          returnSchema: { type: 'string', enum: ['on', 'off'] },
         },
       ]);
       expect(result.mutations).toEqual([]);
@@ -1933,13 +1933,13 @@ describe('ContractAnalyzer', () => {
       expect(result.mutations).toEqual([
         {
           name: 'handleList',
-          params: [{ name: 'list', schema: { $ref: 'StringList' } }],
+          params: [{ name: 'list', schema: { type: 'array', items: { type: 'string' } } }],
           returnSchema: {},
         },
         {
           name: 'updateNumbers',
-          params: [{ name: 'nums', schema: { $ref: 'NumberArray' } }],
-          returnSchema: { $ref: 'NumberArray' },
+          params: [{ name: 'nums', schema: { type: 'array', items: { type: 'number' } } }],
+          returnSchema: { type: 'array', items: { type: 'number' } },
         },
       ]);
     });
@@ -2184,7 +2184,7 @@ describe('ContractAnalyzer', () => {
           params: [
             {
               name: 'mode',
-              schema: { anyOf: [{ type: 'string' }] },
+              schema: { type: 'string', enum: ['read', 'write', 'admin'] },
             },
           ],
           returnSchema: {},
@@ -2576,7 +2576,7 @@ describe('ContractAnalyzer', () => {
       ]);
     });
 
-    it('should handle type aliases as interface references', () => {
+    it('should handle type aliases with proper schema expansion', () => {
       const sourceFiles = {
         'src/types.ts': `
           export type Status = 'pending' | 'completed' | 'failed';
@@ -2599,7 +2599,7 @@ describe('ContractAnalyzer', () => {
             }
             
             setUserRole(role: UserRole): void {
-              // set role logic
+              this.state.users.push({ role });
             }
             
             processTask(task: TaskData): TaskData {
@@ -2615,10 +2615,17 @@ describe('ContractAnalyzer', () => {
         {
           name: 'getStatus',
           params: [],
-          returnSchema: { $ref: 'Status' },
+          returnSchema: { type: 'string', enum: ['pending', 'completed', 'failed'] },
         },
       ]);
       expect(result.mutations).toEqual([
+        {
+          name: 'setUserRole',
+          params: [
+            { name: 'role', schema: { type: 'string', enum: ['admin', 'user', 'guest'] } },
+          ],
+          returnSchema: {},
+        },
         {
           name: 'processTask',
           params: [
@@ -2629,7 +2636,7 @@ describe('ContractAnalyzer', () => {
                 properties: {
                   id: { type: 'string' },
                   title: { type: 'string' },
-                  status: { $ref: 'Status' },
+                  status: { type: 'string', enum: ['pending', 'completed', 'failed'] },
                 },
                 required: ['id', 'title', 'status'],
               },
@@ -2640,7 +2647,7 @@ describe('ContractAnalyzer', () => {
             properties: {
               id: { type: 'string' },
               title: { type: 'string' },
-              status: { $ref: 'Status' },
+              status: { type: 'string', enum: ['pending', 'completed', 'failed'] },
             },
             required: ['id', 'title', 'status'],
           },
