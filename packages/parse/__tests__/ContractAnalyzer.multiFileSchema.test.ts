@@ -47,22 +47,61 @@ describe('ContractAnalyzer - Multi-File with Schema', () => {
       {
         name: 'getPoints',
         params: [],
-        returnSchema: { type: 'array', items: {} },
+        returnSchema: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              x: { type: 'number' },
+              y: { type: 'number' },
+            },
+            required: ['x', 'y'],
+          },
+        },
       },
     ]);
     expect(result.mutations).toEqual([
       {
         name: 'addPoint',
-        params: [{ name: 'point', schema: {} }],
+        params: [
+          {
+            name: 'point',
+            schema: {
+              type: 'object',
+              properties: {
+                x: { type: 'number' },
+                y: { type: 'number' },
+              },
+              required: ['x', 'y'],
+            },
+          },
+        ],
         returnSchema: {},
       },
       {
         name: 'movePoint',
         params: [
           { name: 'index', schema: { type: 'number' } },
-          { name: 'delta', schema: {} },
+          {
+            name: 'delta',
+            schema: {
+              type: 'object',
+              properties: {
+                x: { type: 'number' },
+                y: { type: 'number' },
+              },
+              required: ['x', 'y'],
+            },
+          },
         ],
-        returnSchema: {},
+        returnSchema: {
+          type: 'object',
+          properties: {
+            x: { type: 'number' },
+            y: { type: 'number' },
+          },
+          required: ['x', 'y'],
+        },
       },
     ]);
   });
@@ -538,7 +577,18 @@ describe('ContractAnalyzer - Multi-File with Schema', () => {
         name: 'getUser',
         params: [{ name: 'id', schema: { type: 'string' } }],
         returnSchema: {
-          anyOf: [{}],
+          anyOf: [
+            {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                name: { type: 'string' },
+                age: { type: 'number' },
+              },
+              required: ['id', 'name', 'age'],
+            },
+            {},
+          ],
         },
       },
     ]);
@@ -548,17 +598,40 @@ describe('ContractAnalyzer - Multi-File with Schema', () => {
         params: [
           {
             name: 'userData',
-            schema: {},
+            schema: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                name: { type: 'string' },
+                age: { type: 'number' },
+              },
+              required: ['id', 'name', 'age'],
+            },
           },
         ],
-        returnSchema: {},
+        returnSchema: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            name: { type: 'string' },
+            age: { type: 'number' },
+          },
+          required: ['id', 'name', 'age'],
+        },
       },
       {
         name: 'updateConfig',
         params: [
           {
             name: 'config',
-            schema: {},
+            schema: {
+              type: 'object',
+              properties: {
+                debug: { type: 'boolean' },
+                timeout: { type: 'number' },
+              },
+              required: ['debug'],
+            },
           },
         ],
         returnSchema: {},
@@ -681,7 +754,19 @@ describe('ContractAnalyzer - Multi-File with Schema', () => {
     expect(result.mutations).toEqual([
       {
         name: 'addItem',
-        params: [{ name: 'item', schema: {} }],
+        params: [
+          {
+            name: 'item',
+            schema: {
+              type: 'object',
+              properties: {
+                id: { type: 'string' },
+                value: { type: 'number' },
+              },
+              required: ['id', 'value'],
+            },
+          },
+        ],
         returnSchema: {},
       },
     ]);
@@ -736,19 +821,75 @@ describe('ContractAnalyzer - Multi-File with Schema', () => {
       {
         name: 'getProfile',
         params: [{ name: 'id', schema: { type: 'string' } }],
-        returnSchema: {},
+        returnSchema: {
+          type: 'object',
+          properties: {
+            username: { type: 'string' },
+            email: { type: 'string' },
+            preferences: {
+              type: 'object',
+              properties: {
+                theme: { type: 'string', enum: ['light', 'dark'] },
+                notifications: { type: 'boolean' },
+              },
+              required: ['theme', 'notifications'],
+            },
+          },
+          required: ['username', 'email', 'preferences'],
+        },
       },
     ]);
     expect(result.mutations).toEqual([
       {
         name: 'saveProfile',
-        params: [{ name: 'profile', schema: {} }],
+        params: [
+          {
+            name: 'profile',
+            schema: {
+              type: 'object',
+              properties: {
+                username: { type: 'string' },
+                email: { type: 'string' },
+                preferences: {
+                  type: 'object',
+                  properties: {
+                    theme: { type: 'string', enum: ['light', 'dark'] },
+                    notifications: { type: 'boolean' },
+                  },
+                  required: ['theme', 'notifications'],
+                },
+              },
+              required: ['username', 'email', 'preferences'],
+            },
+          },
+        ],
         returnSchema: {},
       },
       {
         name: 'handleResponse',
-        params: [{ name: 'response', schema: {} }],
-        returnSchema: {},
+        params: [
+          {
+            name: 'response',
+            schema: {
+              type: 'object',
+              properties: {
+                data: {},
+                status: { type: 'number' },
+                message: { type: 'string' },
+              },
+              required: ['data', 'status', 'message'],
+            },
+          },
+        ],
+        returnSchema: {
+          type: 'object',
+          properties: {
+            data: {},
+            status: { type: 'number' },
+            message: { type: 'string' },
+          },
+          required: ['data', 'status', 'message'],
+        },
       },
     ]);
   });
