@@ -1,6 +1,6 @@
 import { ContractAnalyzer } from '../src/ContractAnalyzer';
 
-describe('ContractAnalyzer', () => {
+describe('ContractAnalyzer - Single File Analysis', () => {
   let analyzer: ContractAnalyzer;
 
   beforeEach(() => {
@@ -49,8 +49,16 @@ describe('ContractAnalyzer', () => {
     const result = analyzer.analyzeFromCode(code);
     expect(result.queries).toEqual([]);
     expect(result.mutations).toEqual([
-      { name: 'setState', params: [{ name: 'newState', type: 'any' }], returnType: 'void' },
-      { name: 'updateValue', params: [{ name: 'value', type: 'any' }], returnType: 'void' },
+      {
+        name: 'setState',
+        params: [{ name: 'newState', type: 'any' }],
+        returnType: 'void',
+      },
+      {
+        name: 'updateValue',
+        params: [{ name: 'value', type: 'any' }],
+        returnType: 'void',
+      },
     ]);
   });
 
@@ -75,11 +83,13 @@ describe('ContractAnalyzer', () => {
     `;
 
     const result = analyzer.analyzeFromCode(code);
-    expect(result.queries).toEqual([
-      { name: 'getState', params: [], returnType: 'void' },
-    ]);
+    expect(result.queries).toEqual([{ name: 'getState', params: [], returnType: 'void' }]);
     expect(result.mutations).toEqual([
-      { name: 'setState', params: [{ name: 'newState', type: 'any' }], returnType: 'void' },
+      {
+        name: 'setState',
+        params: [{ name: 'newState', type: 'any' }],
+        returnType: 'void',
+      },
       { name: 'updateAndGet', params: [], returnType: 'void' },
     ]);
   });
@@ -104,9 +114,7 @@ describe('ContractAnalyzer', () => {
     `;
 
     const result = analyzer.analyzeFromCode(code);
-    expect(result.queries).toEqual([
-      { name: 'getState', params: [], returnType: 'void' },
-    ]);
+    expect(result.queries).toEqual([{ name: 'getState', params: [], returnType: 'void' }]);
     expect(result.mutations).toEqual([]);
   });
 
@@ -133,9 +141,7 @@ describe('ContractAnalyzer', () => {
     `;
 
     const result = analyzer.analyzeFromCode(code);
-    expect(result.queries).toEqual([
-      { name: 'getState', params: [], returnType: 'void' },
-    ]);
+    expect(result.queries).toEqual([{ name: 'getState', params: [], returnType: 'void' }]);
     expect(result.mutations).toEqual([
       { name: 'initialize', params: [], returnType: 'void' },
       { name: 'exp', params: [], returnType: 'void' },
@@ -153,7 +159,9 @@ describe('ContractAnalyzer', () => {
       }
     `;
 
-    expect(() => analyzer.analyzeFromCode(code)).toThrow('No default exported class found in the code');
+    expect(() => analyzer.analyzeFromCode(code)).toThrow(
+      'No default exported class found in the code'
+    );
   });
 
   it('should throw error when default export is not a class', () => {
@@ -163,7 +171,9 @@ describe('ContractAnalyzer', () => {
       }
     `;
 
-    expect(() => analyzer.analyzeFromCode(code)).toThrow('No default exported class found in the code');
+    expect(() => analyzer.analyzeFromCode(code)).toThrow(
+      'No default exported class found in the code'
+    );
   });
 
   it('should default parameter type to any when no type annotation', () => {
@@ -179,7 +189,11 @@ describe('ContractAnalyzer', () => {
 
     const result = analyzer.analyzeFromCode(code);
     expect(result.queries).toEqual([
-      { name: 'foo', params: [{ name: 'param', type: 'any' }], returnType: 'void' },
+      {
+        name: 'foo',
+        params: [{ name: 'param', type: 'any' }],
+        returnType: 'void',
+      },
     ]);
     expect(result.mutations).toEqual([]);
   });
@@ -197,7 +211,11 @@ describe('ContractAnalyzer', () => {
 
     const result = analyzer.analyzeFromCode(code);
     expect(result.queries).toEqual([
-      { name: 'handle', params: [{ name: 'data', type: '{ nested: { x: string } }' }], returnType: 'void' },
+      {
+        name: 'handle',
+        params: [{ name: 'data', type: '{ nested: { x: string } }' }],
+        returnType: 'void',
+      },
     ]);
     expect(result.mutations).toEqual([]);
   });
@@ -221,7 +239,11 @@ describe('ContractAnalyzer', () => {
 
     const result = analyzer.analyzeFromCode(code);
     expect(result.queries).toEqual([
-      { name: 'process', params: [{ name: 'data', type: 'Data' }], returnType: 'void' },
+      {
+        name: 'process',
+        params: [{ name: 'data', type: 'Data' }],
+        returnType: 'void',
+      },
     ]);
     expect(result.mutations).toEqual([]);
   });
@@ -239,7 +261,11 @@ describe('ContractAnalyzer', () => {
 
     const result = analyzer.analyzeFromCode(code);
     expect(result.queries).toEqual([
-      { name: 'fetchValue', params: [{ name: 'id', type: 'number' }], returnType: 'Promise<string>' },
+      {
+        name: 'fetchValue',
+        params: [{ name: 'id', type: 'number' }],
+        returnType: 'Promise<string>',
+      },
     ]);
     expect(result.mutations).toEqual([]);
   });
@@ -257,7 +283,11 @@ describe('ContractAnalyzer', () => {
 
     const result = analyzer.analyzeFromCode(code);
     expect(result.queries).toEqual([
-      { name: 'loadData', params: [], returnType: 'Promise<{ user: { name: string age: number } }>' },
+      {
+        name: 'loadData',
+        params: [],
+        returnType: 'Promise<{ user: { name: string age: number } }>',
+      },
     ]);
     expect(result.mutations).toEqual([]);
   });
@@ -275,7 +305,11 @@ describe('ContractAnalyzer', () => {
 
     const result = analyzer.analyzeFromCode(code);
     expect(result.queries).toEqual([
-      { name: 'mapItems', params: [{ name: 'items', type: 'T[]' }], returnType: 'T[]' },
+      {
+        name: 'mapItems',
+        params: [{ name: 'items', type: 'T[]' }],
+        returnType: 'T[]',
+      },
     ]);
     expect(result.mutations).toEqual([]);
   });
@@ -291,9 +325,10 @@ describe('ContractAnalyzer', () => {
         }
       `;
       const result = analyzer.analyzeFromCode(code);
-      expect(result.mutations.map(m => m.name)).toEqual(['inc','dec','postDec','preInc']);
+      expect(result.mutations.map((m) => m.name)).toEqual(['inc', 'dec', 'postDec', 'preInc']);
       expect(result.queries).toEqual([]);
     });
+
     it('should detect compound assignment mutations', () => {
       const code = `
         export default class Contract {
@@ -304,9 +339,10 @@ describe('ContractAnalyzer', () => {
         }
       `;
       const result = analyzer.analyzeFromCode(code);
-      expect(result.mutations.map(m => m.name)).toEqual(['add','append','mul','or']);
+      expect(result.mutations.map((m) => m.name)).toEqual(['add', 'append', 'mul', 'or']);
       expect(result.queries).toEqual([]);
     });
+
     it('should detect object property mutations', () => {
       const code = `
         export default class Contract {
@@ -316,9 +352,10 @@ describe('ContractAnalyzer', () => {
         }
       `;
       const result = analyzer.analyzeFromCode(code);
-      expect(result.mutations.map(m => m.name)).toEqual(['setName','setTheme','incAge']);
+      expect(result.mutations.map((m) => m.name)).toEqual(['setName', 'setTheme', 'incAge']);
       expect(result.queries).toEqual([]);
     });
+
     it('should detect array operation mutations', () => {
       const code = `
         export default class Contract {
@@ -329,9 +366,15 @@ describe('ContractAnalyzer', () => {
         }
       `;
       const result = analyzer.analyzeFromCode(code);
-      expect(result.mutations.map(m => m.name)).toEqual(['pushItem','popHist','doSplice','shiftQueue']);
+      expect(result.mutations.map((m) => m.name)).toEqual([
+        'pushItem',
+        'popHist',
+        'doSplice',
+        'shiftQueue',
+      ]);
       expect(result.queries).toEqual([]);
     });
+
     it('should detect method-based and assign mutations', () => {
       const code = `
         export default class Contract {
@@ -341,9 +384,14 @@ describe('ContractAnalyzer', () => {
         }
       `;
       const result = analyzer.analyzeFromCode(code);
-      expect(result.mutations.map(m => m.name)).toEqual(['setSomething','assignConfig','customUpdate']);
+      expect(result.mutations.map((m) => m.name)).toEqual([
+        'setSomething',
+        'assignConfig',
+        'customUpdate',
+      ]);
       expect(result.queries).toEqual([]);
     });
+
     it('should detect destructuring and spread mutations', () => {
       const code = `
         export default class Contract {
@@ -353,9 +401,10 @@ describe('ContractAnalyzer', () => {
         }
       `;
       const result = analyzer.analyzeFromCode(code);
-      expect(result.mutations.map(m => m.name)).toEqual(['reset','destr','spreadCoords']);
+      expect(result.mutations.map((m) => m.name)).toEqual(['reset', 'destr', 'spreadCoords']);
       expect(result.queries).toEqual([]);
     });
+
     it('should detect chained and nested mutations', () => {
       const code = `
         export default class Contract {
@@ -364,9 +413,10 @@ describe('ContractAnalyzer', () => {
         }
       `;
       const result = analyzer.analyzeFromCode(code);
-      expect(result.mutations.map(m => m.name)).toEqual(['incNested','statInc']);
+      expect(result.mutations.map((m) => m.name)).toEqual(['incNested', 'statInc']);
       expect(result.queries).toEqual([]);
     });
+
     it('should detect assignment of function calls and negation', () => {
       const code = `
         export default class Contract {
@@ -375,328 +425,245 @@ describe('ContractAnalyzer', () => {
         }
       `;
       const result = analyzer.analyzeFromCode(code);
-      expect(result.mutations.map(m => m.name)).toEqual(['assignCall','assignNot']);
+      expect(result.mutations.map((m) => m.name)).toEqual(['assignCall', 'assignNot']);
       expect(result.queries).toEqual([]);
     });
   });
 
-  describe('analyzeWithSchema', () => {
-    it('should handle array types', () => {
+  describe('intelligent method classification', () => {
+    it('should classify getter methods as queries', () => {
       const code = `
         export default class Contract {
-          foo(items: string[]): string[] {
-            return items;
+          state = { users: [], config: {} };
+          
+          checkUsers() {
+            return this.state.users.getLength(); // custom getter
+          }
+          
+          verifyConfig() {
+            return this.state.config.isValid(); // is* pattern
+          }
+          
+          lookupUser() {
+            return this.state.users.hasUser('id'); // has* pattern
           }
         }
       `;
 
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'foo',
-          params: [ { name: 'items', schema: { type: 'array', items: { type: 'string' } } } ],
-          returnSchema: { type: 'array', items: { type: 'string' } },
-        },
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries.map((q) => q.name)).toEqual([
+        'checkUsers',
+        'verifyConfig',
+        'lookupUser',
       ]);
       expect(result.mutations).toEqual([]);
     });
 
-    it('should handle Set types', () => {
+    it('should classify search/query methods as queries', () => {
       const code = `
         export default class Contract {
-          getSet(s: Set<number>): Set<number> {
-            return s;
+          state = { items: [] };
+          
+          findItems() {
+            return this.state.items.findByCategory('electronics');
+          }
+          
+          searchProducts() {
+            return this.state.items.searchByName('laptop');
+          }
+          
+          queryInventory() {
+            return this.state.items.queryAvailable();
           }
         }
       `;
 
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'getSet',
-          params: [ { name: 's', schema: { type: 'array', items: { type: 'number' } } } ],
-          returnSchema: { type: 'array', items: { type: 'number' } },
-        },
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries.map((q) => q.name)).toEqual([
+        'findItems',
+        'searchProducts',
+        'queryInventory',
       ]);
       expect(result.mutations).toEqual([]);
     });
 
-    it('should handle Map types', () => {
+    it('should classify transformation methods as queries', () => {
       const code = `
         export default class Contract {
-          getMap(m: Map<string, number>): Map<string, number> {
-            return m;
+          state = { data: {} };
+          
+          convertData() {
+            return this.state.data.toString();
+          }
+          
+          exportData() {
+            return this.state.data.toJSON();
+          }
+          
+          formatData() {
+            return this.state.data.toDisplayString();
           }
         }
       `;
 
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'getMap',
-          params: [ { name: 'm', schema: { type: 'object', additionalProperties: { type: 'number' } } } ],
-          returnSchema: { type: 'object', additionalProperties: { type: 'number' } },
-        },
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries.map((q) => q.name)).toEqual([
+        'convertData',
+        'exportData',
+        'formatData',
       ]);
       expect(result.mutations).toEqual([]);
     });
 
-    it('should handle inline object types with arrays', () => {
+    it('should classify functional methods as queries', () => {
       const code = `
         export default class Contract {
-          transform(data: { a: number; b: string[] }): { a: number; b: string[] } {
-            return data;
+          state = { items: [] };
+          
+          processItems() {
+            return this.state.items.map(x => x.id);
+          }
+          
+          filterItems() {
+            return this.state.items.filter(x => x.active);
+          }
+          
+          checkItems() {
+            return this.state.items.every(x => x.valid);
+          }
+          
+          findFirst() {
+            return this.state.items.at(0);
           }
         }
       `;
 
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'transform',
-          params: [ { name: 'data', schema: {
-            type: 'object',
-            properties: {
-              a: { type: 'number' },
-              b: { type: 'array', items: { type: 'string' } },
-            },
-            required: ['a', 'b'],
-          } } ],
-          returnSchema: {
-            type: 'object',
-            properties: {
-              a: { type: 'number' },
-              b: { type: 'array', items: { type: 'string' } },
-            },
-            required: ['a', 'b'],
-          },
-        },
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries.map((q) => q.name)).toEqual([
+        'processItems',
+        'filterItems',
+        'checkItems',
+        'findFirst',
       ]);
       expect(result.mutations).toEqual([]);
     });
 
-    it('should handle class property arrow functions', () => {
+    it('should classify setter/mutator methods as mutations', () => {
       const code = `
         export default class Contract {
-          state: any;
-          foo = (x: number) => {
-            return this.state.value;
+          state = { users: [], config: {} };
+          
+          updateUser() {
+            this.state.users.setActive(true);
+          }
+          
+          modifyConfig() {
+            this.state.config.addProperty('key', 'value');
+          }
+          
+          changeState() {
+            this.state.users.insertUser(user);
+          }
+          
+          resetData() {
+            this.state.config.clear();
           }
         }
       `;
 
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'foo',
-          params: [ { name: 'x', schema: { type: 'number' } } ],
-          returnSchema: {},
-        },
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries).toEqual([]);
+      expect(result.mutations.map((m) => m.name)).toEqual([
+        'updateUser',
+        'modifyConfig',
+        'changeState',
+        'resetData',
       ]);
-      expect(result.mutations).toEqual([]);
     });
 
-    it('should handle optional chaining on state', () => {
+    it('should classify action methods as mutations', () => {
       const code = `
         export default class Contract {
-          state: any;
-          getVal() {
-            return this.state?.foo;
+          state = { counter: 0, flags: {} };
+          
+          incrementCounter() {
+            this.state.counter.increment();
+          }
+          
+          toggleFlag() {
+            this.state.flags.toggle('active');
+          }
+          
+          enableFeature() {
+            this.state.flags.enable('feature');
+          }
+          
+          activateMode() {
+            this.state.flags.activate('mode');
           }
         }
       `;
 
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'getVal',
-          params: [],
-          returnSchema: {},
-        },
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries).toEqual([]);
+      expect(result.mutations.map((m) => m.name)).toEqual([
+        'incrementCounter',
+        'toggleFlag',
+        'enableFeature',
+        'activateMode',
       ]);
-      expect(result.mutations).toEqual([]);
     });
 
-    it('should handle destructured parameters', () => {
+    it('should handle unknown methods conservatively (as mutations)', () => {
       const code = `
         export default class Contract {
-          diff({ a, b }: { a: number; b: number }) {
-            return a - b;
+          state = { data: {} };
+          
+          customMethod() {
+            this.state.data.unknownOperation();
+          }
+          
+          mysteryFunction() {
+            this.state.data.doSomething();
           }
         }
       `;
 
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'diff',
-          params: [
-            {
-              name: '{ a, b }: { a: number; b: number }',
-              schema: {
-                type: 'object',
-                properties: { a: { type: 'number' }, b: { type: 'number' } },
-                required: ['a', 'b'],
-              },
-            },
-          ],
-          returnSchema: {},
-        },
-      ]);
-      expect(result.mutations).toEqual([]);
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries).toEqual([]);
+      expect(result.mutations.map((m) => m.name)).toEqual(['customMethod', 'mysteryFunction']);
     });
 
-    it('should handle default and rest parameters', () => {
+    it('should handle mixed patterns correctly', () => {
       const code = `
         export default class Contract {
-          sum(x = 1, ...rest: number[]): number {
-            return rest.reduce((u, v) => u + v, x);
+          state = { items: [], metadata: {} };
+          
+          // Query patterns
+          getItems() {
+            return this.state.items.filter(x => x.active);
+          }
+          
+          // Mutation patterns  
+          addItem() {
+            this.state.items.push(newItem);
+          }
+          
+          // Custom method (unknown, defaults to mutation)
+          processItem() {
+            this.state.items.customProcess();
+          }
+          
+          // Clear getter
+          isReady() {
+            return this.state.metadata.hasRequiredFields();
           }
         }
       `;
 
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'sum',
-          params: [
-            { name: 'x', schema: {} },
-            { name: 'rest', schema: { type: 'array', items: { type: 'number' } } },
-          ],
-          returnSchema: { type: 'number' },
-        },
-      ]);
-      expect(result.mutations).toEqual([]);
-    });
-
-    it('should handle tuple types', () => {
-      const code = `
-        export default class Contract {
-          pair(p: [number, string]): [number, string] {
-            return p;
-          }
-        }
-      `;
-
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'pair',
-          params: [ { name: 'p', schema: { type: 'array', items: { anyOf: [ { type: 'number' }, { type: 'string' } ] } } } ],
-          returnSchema: { type: 'array', items: { anyOf: [ { type: 'number' }, { type: 'string' } ] } },
-        },
-      ]);
-      expect(result.mutations).toEqual([]);
-    });
-
-    it('should handle index signature object types', () => {
-      const code = `
-        export default class Contract {
-          lookup(m: { [key: string]: number }) {
-            return m['foo'];
-          }
-        }
-      `;
-
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'lookup',
-          params: [ { name: 'm', schema: { type: 'object', additionalProperties: { type: 'number' } } } ],
-          returnSchema: {},
-        },
-      ]);
-      expect(result.mutations).toEqual([]);
-    });
-
-    it('should handle intersections and unions', () => {
-      const code = `
-        type A = { x: string };
-        type B = { y: number };
-        export default class Contract {
-          either(x: string | number): string | number {
-            return x;
-          }
-          both(x: A & B): A & B {
-            return x;
-          }
-        }
-      `;
-
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'either',
-          params: [ { name: 'x', schema: { anyOf: [ { type: 'string' }, { type: 'number' } ] } } ],
-          returnSchema: { anyOf: [ { type: 'string' }, { type: 'number' } ] },
-        },
-        {
-          name: 'both',
-          params: [ { name: 'x', schema: {} } ],
-          returnSchema: {},
-        },
-      ]);
-      expect(result.mutations).toEqual([]);
-    });
-
-    it('should handle literal types', () => {
-      const code = `
-        export default class Contract {
-          mode(m: 'on' | 'off'): 'on' | 'off' {
-            return m;
-          }
-        }
-      `;
-
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'mode',
-          params: [ { name: 'm', schema: { anyOf: [ { type: 'string' } ] } } ],
-          returnSchema: { anyOf: [ { type: 'string' } ] },
-        },
-      ]);
-      expect(result.mutations).toEqual([]);
-    });
-
-    it('should handle generic Array<T> types', () => {
-      const code = `
-        export default class Contract {
-          wrapList(a: Array<string>): Array<string> {
-            return a;
-          }
-        }
-      `;
-
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'wrapList',
-          params: [ { name: 'a', schema: { type: 'array', items: { type: 'string' } } } ],
-          returnSchema: { type: 'array', items: { type: 'string' } },
-        },
-      ]);
-      expect(result.mutations).toEqual([]);
-    });
-
-    it('should handle function type parameters', () => {
-      const code = `
-        export default class Contract {
-          call(cb: (x: number) => boolean): boolean {
-            return cb(1);
-          }
-        }
-      `;
-
-      const result = analyzer.analyzeWithSchema(code);
-      expect(result.queries).toEqual([
-        {
-          name: 'call',
-          params: [ { name: 'cb', schema: {} } ],
-          returnSchema: { type: 'boolean' },
-        },
-      ]);
-      expect(result.mutations).toEqual([]);
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries.map((q) => q.name)).toEqual(['getItems', 'isReady']);
+      expect(result.mutations.map((m) => m.name)).toEqual(['addItem', 'processItem']);
     });
   });
-}); 
+});

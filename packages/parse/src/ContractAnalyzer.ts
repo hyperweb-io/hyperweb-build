@@ -4,41 +4,24 @@ import traverse, { NodePath } from '@babel/traverse';
 import * as t from '@babel/types';
 import generate from '@babel/generator';
 
-export interface AnalysisResult {
-  queries: MethodInfo[];
-  mutations: MethodInfo[];
-}
-
-export interface MethodInfo {
-  name: string;
-  params: { name: string; type: string }[];
-  returnType: string;
-}
-
-// JSON-schema types
-export interface JSONSchema {
-  type?: string;
-  properties?: Record<string, JSONSchema>;
-  required?: string[];
-  items?: JSONSchema;
-  additionalProperties?: JSONSchema;
-  anyOf?: JSONSchema[];
-  $ref?: string;
-}
-
-export interface SchemaMethodInfo {
-  name: string;
-  params: { name: string; schema: JSONSchema }[];
-  returnSchema: JSONSchema;
-}
-
-export interface SchemaAnalysisResult {
-  queries: SchemaMethodInfo[];
-  mutations: SchemaMethodInfo[];
-}
+import {
+  AnalysisResult,
+  MethodInfo,
+  SchemaMethodInfo,
+  SchemaAnalysisResult,
+  JSONSchema,
+  MethodAnalysisState,
+} from './types';
+import { SchemaConverter } from './schema-converter';
+import { ASTHelpers } from './ast-helpers';
+import { MethodClassifier } from './method-classifier';
+import { MultiFileProcessor } from './multi-file-processor';
 
 export class ContractAnalyzer {
   private ast: parser.ParseResult<t.File> | null = null;
+  private schemaConverter: SchemaConverter = new SchemaConverter();
+  private methodClassifier: MethodClassifier = new MethodClassifier();
+  private multiFileProcessor: MultiFileProcessor = new MultiFileProcessor();
 
   /**
    * Analyzes a TypeScript contract class to identify query and mutation methods
@@ -80,7 +63,7 @@ export class ContractAnalyzer {
       // Handle both export default class and export { Contract as default }
       ExportDefaultDeclaration(path) {
         const declaration = path.node.declaration;
-        
+
         // Check if the default export is a class declaration
         if (t.isClassDeclaration(declaration)) {
           foundDefaultExport = true;
@@ -137,23 +120,19 @@ export class ContractAnalyzer {
           return;
         }
 
-        const methodName = methodPath.node.key.type === 'Identifier'
-          ? methodPath.node.key.name
-          : '';
+        const methodName =
+          methodPath.node.key.type === 'Identifier' ? methodPath.node.key.name : '';
         if (!methodName) return;
 
         // Collect parameters
-        const params = methodPath.node.params.map(param => {
+        const params = methodPath.node.params.map((param) => {
           if (t.isIdentifier(param)) {
             const name = param.name;
             let type = 'any';
             if (param.typeAnnotation) {
               // generate and compact the type annotation
               const rawType = generate(param.typeAnnotation.typeAnnotation).code;
-              type = rawType.replace(/\n/g, ' ')
-                            .replace(/;/g, '')
-                            .replace(/\s+/g, ' ')
-                            .trim();
+              type = rawType.replace(/\n/g, ' ').replace(/;/g, '').replace(/\s+/g, ' ').trim();
             }
             return { name, type };
           } else {
@@ -164,16 +143,14 @@ export class ContractAnalyzer {
 
         // Collect return type
         let returnType = 'void';
-        if (
-          methodPath.node.returnType &&
-          methodPath.node.returnType.typeAnnotation
-        ) {
+        if (methodPath.node.returnType && methodPath.node.returnType.typeAnnotation) {
           // generate and compact the return type annotation
           const rawRet = generate(methodPath.node.returnType.typeAnnotation).code;
-          returnType = rawRet.replace(/\n/g, ' ')
-                             .replace(/;/g, '')
-                             .replace(/\s+/g, ' ')
-                             .trim();
+          returnType = rawRet
+            .replace(/\n/g, ' ')
+            .replace(/;/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
         }
 
         let readsState = false;
@@ -197,7 +174,7 @@ export class ContractAnalyzer {
               if (
                 t.isAssignmentExpression(parent.node) ||
                 (t.isMemberExpression(parent.node) &&
-                 t.isAssignmentExpression(parent.parentPath.node))
+                  t.isAssignmentExpression(parent.parentPath.node))
               ) {
                 writesState = true;
               } else {
@@ -211,12 +188,12 @@ export class ContractAnalyzer {
             }
           },
           AssignmentExpression(assignPath: NodePath<t.AssignmentExpression>) {
-            if (analyzer.containsStateMember(assignPath.node.left as t.Node)) {
+            if (ASTHelpers.containsStateMember(assignPath.node.left as t.Node)) {
               writesState = true;
             }
           },
           UpdateExpression(updatePath: NodePath<t.UpdateExpression>) {
-            if (analyzer.isStateMemberExpression(updatePath.node.argument as t.Node)) {
+            if (ASTHelpers.isStateMemberExpression(updatePath.node.argument as t.Node)) {
               writesState = true;
             }
           },
@@ -224,16 +201,67 @@ export class ContractAnalyzer {
             const callee = callPath.node.callee;
             if (t.isMemberExpression(callee)) {
               // method calls on state (e.g., this.state.setX())
-              if (analyzer.isStateMemberExpression(callee.object)) {
-                writesState = true;
+              if (ASTHelpers.isStateMemberExpression(callee.object)) {
+                if (t.isIdentifier(callee.property)) {
+                  // For pure AST analysis, check the context of the method call
+                  // rather than trying to analyze the method implementation
+
+                  // Walk up the AST to find if this call is in a read context
+                  let isInReadContext = false;
+                  let currentPath: NodePath | null = callPath.parentPath;
+
+                  while (currentPath && !isInReadContext) {
+                    const node = currentPath.node;
+
+                    // Direct read contexts
+                    if (
+                      t.isReturnStatement(node) ||
+                      t.isVariableDeclarator(node) ||
+                      (t.isAssignmentExpression(node) &&
+                        !ASTHelpers.isStateMemberExpression(node.left))
+                    ) {
+                      isInReadContext = true;
+                      break;
+                    }
+
+                    // Expression contexts that typically indicate reads
+                    if (
+                      t.isBinaryExpression(node) ||
+                      t.isLogicalExpression(node) ||
+                      t.isConditionalExpression(node) ||
+                      t.isArrayExpression(node) ||
+                      t.isObjectExpression(node)
+                    ) {
+                      isInReadContext = true;
+                      break;
+                    }
+
+                    // If we hit an expression statement, this is likely a standalone call
+                    if (t.isExpressionStatement(node)) {
+                      break;
+                    }
+
+                    currentPath = currentPath.parentPath;
+                  }
+
+                  if (isInReadContext) {
+                    readsState = true;
+                  } else {
+                    // If the method call is a standalone statement,
+                    // it's more likely a mutation operation
+                    writesState = true;
+                  }
+                }
               }
               // Object.assign(this.state.prop, ...)
               if (
-                t.isIdentifier(callee.object) && callee.object.name === 'Object' &&
-                t.isIdentifier(callee.property) && callee.property.name === 'assign'
+                t.isIdentifier(callee.object) &&
+                callee.object.name === 'Object' &&
+                t.isIdentifier(callee.property) &&
+                callee.property.name === 'assign'
               ) {
                 const target = callPath.node.arguments[0];
-                if (target && analyzer.isStateMemberExpression(target as t.Node)) {
+                if (target && ASTHelpers.isStateMemberExpression(target as t.Node)) {
                   writesState = true;
                 }
               }
@@ -261,119 +289,8 @@ export class ContractAnalyzer {
    */
   public analyzeWithSchema(code: string): SchemaAnalysisResult {
     this.parseCode(code);
-    this.gatherInterfaces();
+    this.schemaConverter.gatherInterfaces(this.ast!);
     return this.analyzeSchema();
-  }
-
-  // Map of interface declarations for schema inlining
-  private interfaceMap: Record<string, t.TSInterfaceDeclaration> = {};
-
-  // Collect interface declarations from AST
-  private gatherInterfaces(): void {
-    this.interfaceMap = {};
-    traverse(this.ast!, {
-      TSInterfaceDeclaration: path => {
-        this.interfaceMap[path.node.id.name] = path.node;
-      },
-    });
-  }
-
-  // Recursively convert TypeScript types to JSON-schema
-  private typeToSchema(node: t.TSType): JSONSchema {
-    // primitive keywords
-    if (t.isTSStringKeyword(node)) return { type: 'string' };
-    if (t.isTSNumberKeyword(node)) return { type: 'number' };
-    if (t.isTSBooleanKeyword(node)) return { type: 'boolean' };
-    // literal types (e.g. 'on', 1, true)
-    if (t.isTSLiteralType(node)) {
-      const lit = node.literal;
-      if (t.isStringLiteral(lit)) return { type: 'string' };
-      if (t.isNumericLiteral(lit)) return { type: 'number' };
-      if (t.isBooleanLiteral(lit)) return { type: 'boolean' };
-      return {};
-    }
-    if (t.isTSAnyKeyword(node)) return {};
-    if (t.isTSVoidKeyword(node)) return { type: 'null' };
-    // array types
-    if (t.isTSArrayType(node)) {
-      return { type: 'array', items: this.typeToSchema(node.elementType) };
-    }
-    // tuple types
-    if (t.isTSTupleType(node)) {
-      return {
-        type: 'array',
-        items: { anyOf: node.elementTypes.map(el => this.typeToSchema(el)) },
-      };
-    }
-    // object literal types
-    if (t.isTSTypeLiteral(node)) {
-      const props: Record<string, JSONSchema> = {};
-      const required: string[] = [];
-      let indexSchema: JSONSchema | undefined;
-      for (const member of node.members) {
-        // normal property
-        if (
-          t.isTSPropertySignature(member) &&
-          t.isIdentifier(member.key) &&
-          member.typeAnnotation
-        ) {
-          const key = member.key.name;
-          props[key] = this.typeToSchema(member.typeAnnotation.typeAnnotation);
-          if (!member.optional) required.push(key);
-        }
-        // index signature [key: string]: Type
-        else if (t.isTSIndexSignature(member) && member.typeAnnotation) {
-          indexSchema = this.typeToSchema(member.typeAnnotation.typeAnnotation);
-        }
-      }
-      // only index signature, no named properties
-      if (Object.keys(props).length === 0 && indexSchema) {
-        return { type: 'object', additionalProperties: indexSchema };
-      }
-      // object with named properties (and maybe index signature)
-      const schema: JSONSchema = { type: 'object' };
-      if (Object.keys(props).length) schema.properties = props;
-      if (required.length) schema.required = required;
-      if (indexSchema) schema.additionalProperties = indexSchema;
-      return schema;
-    }
-    // references (Promise, Set, Map, interfaces, Array)
-    if (t.isTSTypeReference(node) && t.isIdentifier(node.typeName)) {
-      const name = node.typeName.name;
-      // unwrap Promise<T>
-      if (name === 'Promise' && node.typeParameters?.params.length === 1) {
-        return this.typeToSchema(node.typeParameters.params[0]);
-      }
-      // unwrap Array<T>
-      if (name === 'Array' && node.typeParameters?.params.length === 1) {
-        return { type: 'array', items: this.typeToSchema(node.typeParameters.params[0]) };
-      }
-      // handle Set<T> as array
-      if (name === 'Set' && node.typeParameters?.params.length === 1) {
-        return { type: 'array', items: this.typeToSchema(node.typeParameters.params[0]) };
-      }
-      // handle Map<K,V> as object
-      if (name === 'Map' && node.typeParameters?.params.length === 2) {
-        return { type: 'object', additionalProperties: this.typeToSchema(node.typeParameters.params[1]) };
-      }
-      // inline interface
-      const iface = this.interfaceMap[name];
-      if (iface) {
-        return this.typeToSchema(iface.body as t.TSTypeLiteral);
-      }
-      return { $ref: name };
-    }
-    // union types
-    if (t.isTSUnionType(node)) {
-      // map to schemas and dedupe identical entries
-      const schemas = node.types.map(tn => this.typeToSchema(tn));
-      const unique = Array.from(
-        new Map(schemas.map(s => [JSON.stringify(s), s])).values()
-      );
-      return { anyOf: unique };
-    }
-    // fallback empty schema
-    return {};
   }
 
   /**
@@ -403,10 +320,7 @@ export class ContractAnalyzer {
             const binding = path.scope.getBinding(specifier.local.name);
             if (binding) {
               const decl = binding.path.node;
-              if (
-                t.isVariableDeclarator(decl) &&
-                t.isClassExpression(decl.init)
-              ) {
+              if (t.isVariableDeclarator(decl) && t.isClassExpression(decl.init)) {
                 foundDefaultExport = true;
                 self.analyzeClassMethodsSchema(binding.path, decl.init, queries, mutations);
               }
@@ -430,17 +344,15 @@ export class ContractAnalyzer {
     parentPath.traverse({
       ClassMethod(methodPath: NodePath<t.ClassMethod>) {
         if (methodPath.node.static || methodPath.node.kind === 'constructor') return;
-        const methodName = t.isIdentifier(methodPath.node.key)
-          ? methodPath.node.key.name
-          : '';
+        const methodName = t.isIdentifier(methodPath.node.key) ? methodPath.node.key.name : '';
         if (!methodName) return;
         // parameter schemas
-        const params = methodPath.node.params.map(param => {
+        const params = methodPath.node.params.map((param) => {
           // identifier parameter
           if (t.isIdentifier(param)) {
             const name = param.name;
             const schema = param.typeAnnotation
-              ? self.typeToSchema(param.typeAnnotation.typeAnnotation)
+              ? self.schemaConverter.typeToSchema(param.typeAnnotation.typeAnnotation)
               : {};
             return { name, schema };
           }
@@ -458,7 +370,7 @@ export class ContractAnalyzer {
               name = `${patternRaw}: ${typeCompact}`;
             }
             const schema = param.typeAnnotation
-              ? self.typeToSchema(param.typeAnnotation.typeAnnotation)
+              ? self.schemaConverter.typeToSchema(param.typeAnnotation.typeAnnotation)
               : {};
             return { name, schema };
           }
@@ -466,7 +378,7 @@ export class ContractAnalyzer {
           if (t.isAssignmentPattern(param) && t.isIdentifier(param.left)) {
             const name = param.left.name;
             const schema = param.left.typeAnnotation
-              ? self.typeToSchema(param.left.typeAnnotation.typeAnnotation)
+              ? self.schemaConverter.typeToSchema(param.left.typeAnnotation.typeAnnotation)
               : {};
             return { name, schema };
           }
@@ -476,8 +388,9 @@ export class ContractAnalyzer {
             // typeAnnotation may be on RestElement or on its argument identifier
             let ann: t.TSType | undefined;
             if (param.typeAnnotation) ann = param.typeAnnotation.typeAnnotation;
-            else if (param.argument.typeAnnotation) ann = param.argument.typeAnnotation.typeAnnotation;
-            const schema = ann ? self.typeToSchema(ann) : {};
+            else if (param.argument.typeAnnotation)
+              ann = param.argument.typeAnnotation.typeAnnotation;
+            const schema = ann ? self.schemaConverter.typeToSchema(ann) : {};
             return { name, schema };
           }
           // fallback
@@ -485,25 +398,23 @@ export class ContractAnalyzer {
         });
         // return schema
         const returnSchema = methodPath.node.returnType
-          ? self.typeToSchema(methodPath.node.returnType.typeAnnotation)
+          ? self.schemaConverter.typeToSchema(methodPath.node.returnType.typeAnnotation)
           : {};
         // detect state access and returns
-        let reads = false, writes = false, hasRet = false;
+        let reads = false,
+          writes = false,
+          hasRet = false;
         methodPath.traverse({
           MemberExpression(memberPath: NodePath<t.MemberExpression>) {
             const obj = memberPath.node.object;
             const prop = memberPath.node.property;
-            if (
-              t.isThisExpression(obj) &&
-              t.isIdentifier(prop) &&
-              prop.name === 'state'
-            ) {
+            if (t.isThisExpression(obj) && t.isIdentifier(prop) && prop.name === 'state') {
               const p = memberPath.parentPath;
               if (
                 t.isAssignmentExpression(p.node) ||
-                (t.isMemberExpression(p.node) &&
-                 t.isAssignmentExpression(p.parentPath.node))
-              ) writes = true;
+                (t.isMemberExpression(p.node) && t.isAssignmentExpression(p.parentPath.node))
+              )
+                writes = true;
               else reads = true;
             }
           },
@@ -511,34 +422,53 @@ export class ContractAnalyzer {
             if (retPath.node.argument) hasRet = true;
           },
           AssignmentExpression(assignPath: NodePath<t.AssignmentExpression>) {
-            if (self.containsStateMember(assignPath.node.left as t.Node)) {
+            if (ASTHelpers.containsStateMember(assignPath.node.left as t.Node)) {
               writes = true;
             }
           },
           UpdateExpression(updatePath: NodePath<t.UpdateExpression>) {
-            if (self.isStateMemberExpression(updatePath.node.argument as t.Node)) {
+            if (ASTHelpers.isStateMemberExpression(updatePath.node.argument as t.Node)) {
               writes = true;
             }
           },
           CallExpression(callPath: NodePath<t.CallExpression>) {
             const callee = callPath.node.callee;
             if (t.isMemberExpression(callee)) {
-              if (self.isStateMemberExpression(callee.object)) {
-                writes = true;
+              if (ASTHelpers.isStateMemberExpression(callee.object)) {
+                // Use intelligent method classification
+                if (t.isIdentifier(callee.property)) {
+                  const methodName = callee.property.name;
+                  const isReadOnly = self.methodClassifier.isReadOnlyMethod(
+                    methodName,
+                    callPath
+                  );
+                  if (isReadOnly) {
+                    reads = true;
+                  } else {
+                    writes = true;
+                  }
+                }
               }
+              // Object.assign(this.state.prop, ...)
               if (
-                t.isIdentifier(callee.object) && callee.object.name === 'Object' &&
-                t.isIdentifier(callee.property) && callee.property.name === 'assign'
+                t.isIdentifier(callee.object) &&
+                callee.object.name === 'Object' &&
+                t.isIdentifier(callee.property) &&
+                callee.property.name === 'assign'
               ) {
                 const target = callPath.node.arguments[0];
-                if (target && self.isStateMemberExpression(target as t.Node)) {
+                if (target && ASTHelpers.isStateMemberExpression(target as t.Node)) {
                   writes = true;
                 }
               }
             }
           },
         });
-        const info: SchemaMethodInfo = { name: methodName, params, returnSchema };
+        const info: SchemaMethodInfo = {
+          name: methodName,
+          params,
+          returnSchema,
+        };
         if (writes) mutations.push(info);
         else if (reads || hasRet) queries.push(info);
       },
@@ -550,11 +480,11 @@ export class ContractAnalyzer {
         const value = propPath.node.value;
         if (!t.isArrowFunctionExpression(value)) return;
         // parameter schemas
-        const params = value.params.map(param => {
+        const params = value.params.map((param) => {
           if (t.isIdentifier(param)) {
             const name = param.name;
             const schema = param.typeAnnotation
-              ? self.typeToSchema(param.typeAnnotation.typeAnnotation)
+              ? self.schemaConverter.typeToSchema(param.typeAnnotation.typeAnnotation)
               : {};
             return { name, schema };
           }
@@ -571,14 +501,14 @@ export class ContractAnalyzer {
               name = `${patternRaw}: ${typeCompact}`;
             }
             const schema = param.typeAnnotation
-              ? self.typeToSchema(param.typeAnnotation.typeAnnotation)
+              ? self.schemaConverter.typeToSchema(param.typeAnnotation.typeAnnotation)
               : {};
             return { name, schema };
           }
           if (t.isAssignmentPattern(param) && t.isIdentifier(param.left)) {
             const name = param.left.name;
             const schema = param.left.typeAnnotation
-              ? self.typeToSchema(param.left.typeAnnotation.typeAnnotation)
+              ? self.schemaConverter.typeToSchema(param.left.typeAnnotation.typeAnnotation)
               : {};
             return { name, schema };
           }
@@ -586,8 +516,9 @@ export class ContractAnalyzer {
             const name = param.argument.name;
             let ann: t.TSType | undefined;
             if (param.typeAnnotation) ann = param.typeAnnotation.typeAnnotation;
-            else if (param.argument.typeAnnotation) ann = param.argument.typeAnnotation.typeAnnotation;
-            const schema = ann ? self.typeToSchema(ann) : {};
+            else if (param.argument.typeAnnotation)
+              ann = param.argument.typeAnnotation.typeAnnotation;
+            const schema = ann ? self.schemaConverter.typeToSchema(ann) : {};
             return { name, schema };
           }
           return { name: generate(param).code, schema: {} };
@@ -595,22 +526,20 @@ export class ContractAnalyzer {
         // arrow functions have no return annotation
         const returnSchema: JSONSchema = {};
         // detect state access and returns
-        let reads = false, writes = false, hasRet = false;
+        let reads = false,
+          writes = false,
+          hasRet = false;
         propPath.traverse({
           MemberExpression(memberPath: NodePath<t.MemberExpression>) {
             const obj = memberPath.node.object;
             const prop = memberPath.node.property;
-            if (
-              t.isThisExpression(obj) &&
-              t.isIdentifier(prop) &&
-              prop.name === 'state'
-            ) {
+            if (t.isThisExpression(obj) && t.isIdentifier(prop) && prop.name === 'state') {
               const p = memberPath.parentPath;
               if (
                 t.isAssignmentExpression(p.node) ||
-                (t.isMemberExpression(p.node) &&
-                 t.isAssignmentExpression(p.parentPath.node))
-              ) writes = true;
+                (t.isMemberExpression(p.node) && t.isAssignmentExpression(p.parentPath.node))
+              )
+                writes = true;
               else reads = true;
             }
           },
@@ -618,81 +547,84 @@ export class ContractAnalyzer {
             if (retPath.node.argument) hasRet = true;
           },
           AssignmentExpression(assignPath: NodePath<t.AssignmentExpression>) {
-            if (self.containsStateMember(assignPath.node.left as t.Node)) {
+            if (ASTHelpers.containsStateMember(assignPath.node.left as t.Node)) {
               writes = true;
             }
           },
           UpdateExpression(updatePath: NodePath<t.UpdateExpression>) {
-            if (self.isStateMemberExpression(updatePath.node.argument as t.Node)) {
+            if (ASTHelpers.isStateMemberExpression(updatePath.node.argument as t.Node)) {
               writes = true;
             }
           },
           CallExpression(callPath: NodePath<t.CallExpression>) {
             const callee = callPath.node.callee;
             if (t.isMemberExpression(callee)) {
-              if (self.isStateMemberExpression(callee.object)) {
-                writes = true;
+              if (ASTHelpers.isStateMemberExpression(callee.object)) {
+                // Use intelligent method classification
+                if (t.isIdentifier(callee.property)) {
+                  const methodName = callee.property.name;
+                  const isReadOnly = self.methodClassifier.isReadOnlyMethod(
+                    methodName,
+                    callPath
+                  );
+                  if (isReadOnly) {
+                    reads = true;
+                  } else {
+                    writes = true;
+                  }
+                }
               }
+              // Object.assign(this.state.prop, ...)
               if (
-                t.isIdentifier(callee.object) && callee.object.name === 'Object' &&
-                t.isIdentifier(callee.property) && callee.property.name === 'assign'
+                t.isIdentifier(callee.object) &&
+                callee.object.name === 'Object' &&
+                t.isIdentifier(callee.property) &&
+                callee.property.name === 'assign'
               ) {
                 const target = callPath.node.arguments[0];
-                if (target && self.isStateMemberExpression(target as t.Node)) {
+                if (target && ASTHelpers.isStateMemberExpression(target as t.Node)) {
                   writes = true;
                 }
               }
             }
           },
         });
-        const info: SchemaMethodInfo = { name: methodName, params, returnSchema };
+        const info: SchemaMethodInfo = {
+          name: methodName,
+          params,
+          returnSchema,
+        };
         if (writes) mutations.push(info);
         else if (reads || hasRet) queries.push(info);
       },
     });
   }
 
-  // Helper to detect if a MemberExpression references this.state at any depth
-  private isStateMemberExpression(node: t.Node): boolean {
-    if (!t.isMemberExpression(node)) return false;
-    const { object, property } = node;
-    if (t.isThisExpression(object) && t.isIdentifier(property) && property.name === 'state') {
-      return true;
-    }
-    if (t.isMemberExpression(object)) {
-      return this.isStateMemberExpression(object);
-    }
-    return false;
+  /**
+   * Analyzes a TypeScript project with multiple source files to identify query and mutation methods
+   * @param sourceFiles Record of file paths to their source code content
+   * @param entryFile The path to the entry file containing the default exported class (optional - will auto-detect if not provided)
+   * @returns An object containing arrays of query and mutation method information
+   */
+  public analyzeMultiFile(
+    sourceFiles: Record<string, string>,
+    entryFile?: string
+  ): AnalysisResult {
+    const combinedCode = this.multiFileProcessor.combineSourceFiles(sourceFiles, entryFile);
+    return this.analyzeFromCode(combinedCode);
   }
 
-  // Helper to detect state member usage in assignment patterns or member expressions
-  private containsStateMember(node: t.Node): boolean {
-    if (t.isMemberExpression(node) && this.isStateMemberExpression(node)) {
-      return true;
-    }
-    if (t.isObjectPattern(node)) {
-      for (const prop of node.properties) {
-        if (t.isRestElement(prop) && this.containsStateMember(prop.argument as t.Node)) {
-          return true;
-        }
-        if (t.isObjectProperty(prop) && this.containsStateMember(prop.value as t.Node)) {
-          return true;
-        }
-      }
-    }
-    if (t.isArrayPattern(node)) {
-      for (const elem of node.elements) {
-        if (elem && this.containsStateMember(elem as t.Node)) {
-          return true;
-        }
-      }
-    }
-    if (t.isAssignmentPattern(node)) {
-      return this.containsStateMember(node.left as t.Node);
-    }
-    if (t.isRestElement(node)) {
-      return this.containsStateMember(node.argument as t.Node);
-    }
-    return false;
+  /**
+   * Analyzes a TypeScript project and returns results with JSON schemas
+   * @param sourceFiles Record of file paths to their source code content
+   * @param entryFile The path to the entry file containing the default exported class (optional - will auto-detect if not provided)
+   * @returns An object containing arrays of query and mutation method information with schemas
+   */
+  public analyzeMultiFileWithSchema(
+    sourceFiles: Record<string, string>,
+    entryFile?: string
+  ): SchemaAnalysisResult {
+    const combinedCode = this.multiFileProcessor.combineSourceFiles(sourceFiles, entryFile);
+    return this.analyzeWithSchema(combinedCode);
   }
-} 
+}
