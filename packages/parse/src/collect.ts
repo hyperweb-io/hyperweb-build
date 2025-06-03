@@ -315,9 +315,16 @@ export class SourceCollector {
       const importParts = importPath.split('/');
 
       let i = 0;
-      while (i < importParts.length && importParts[i] === '..') {
+      while (i < importParts.length && importParts[i] === '..' && pathParts.length > 0) {
         pathParts.pop();
         i++;
+      }
+
+      // If there are still '..' parts but no more parent directories,
+      // the path is invalid (goes beyond root)
+      if (i < importParts.length && importParts[i] === '..') {
+        // Return an invalid path that won't resolve
+        return `__INVALID_PATH__/${importPath}`;
       }
 
       const remainingParts = importParts.slice(i);

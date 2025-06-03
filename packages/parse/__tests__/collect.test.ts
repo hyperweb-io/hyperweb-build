@@ -259,6 +259,41 @@ describe('SourceCollector', () => {
       });
     });
 
+    it('should not resolve excessive ../ paths that go beyond root', () => {
+      const files = [
+        {
+          path: 'packages/parse/src/main.ts',
+          content: 'import { dec } from "../../../../docs/test.ts";',
+        },
+        { path: 'docs/test.ts', content: 'export const dec = 1;' },
+      ];
+
+      const result = collector.collect('packages/parse/src/main.ts', files);
+
+      // Should only include the entry file, not the incorrectly resolved target
+      expect(result).toEqual({
+        'packages/parse/src/main.ts': 'import { dec } from "../../../../docs/test.ts";',
+      });
+      expect(result['docs/test.ts']).toBeUndefined();
+    });
+
+    it('should handle multiple excessive ../ at the beginning', () => {
+      const files = [
+        {
+          path: 'src/main.ts',
+          content: 'import { foo } from "../../../../../../../../utils/helper.ts";',
+        },
+        { path: 'utils/helper.ts', content: 'export const foo = 1;' },
+      ];
+
+      const result = collector.collect('src/main.ts', files);
+
+      expect(result).toEqual({
+        'src/main.ts': 'import { foo } from "../../../../../../../../utils/helper.ts";',
+      });
+      expect(result['utils/helper.ts']).toBeUndefined();
+    });
+
     it('should handle files with only comments', () => {
       const files = [
         { path: 'main.ts', content: '// This is a comment\n/* Block comment */' },
