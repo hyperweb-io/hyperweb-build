@@ -1,3 +1,7 @@
+import { parse, ParserOptions } from '@babel/parser';
+import traverse, { NodePath } from '@babel/traverse';
+import * as t from '@babel/types';
+
 /**
  * File map type
  */
@@ -21,150 +25,434 @@ export interface CollectOptions {
 }
 
 /**
- * Extract import paths from TypeScript/JavaScript content
+ * Represents a parsed file with its AST and metadata
  */
-function extractImportPaths(content: string): string[] {
-  const imports: string[] = [];
+interface ParsedFile {
+  path: string;
+  content: string;
+  ast: t.File | null;
+  imports: ImportInfo[];
+  exports: ExportInfo[];
+}
 
-  // Regex patterns for different import styles
-  const importPatterns = [
-    /import\s+.*?from\s+['"](.*?)['"]/g, // import ... from '...'
-    /import\s*\(\s*['"](.*?)['"]\s*\)/g, // import('...')
-    /require\s*\(\s*['"](.*?)['"]\s*\)/g, // require('...')
-    /export\s+.*?from\s+['"](.*?)['"]/g, // export ... from '...'
-  ];
+/**
+ * Import information extracted from AST
+ */
+interface ImportInfo {
+  source: string;
+  type: 'import' | 'require' | 'dynamic-import';
+  specifiers: string[];
+  resolvedPath?: string;
+}
 
-  for (const pattern of importPatterns) {
-    let match;
-    while ((match = pattern.exec(content)) !== null) {
-      const importPath = match[1];
-      if (importPath && isLocalImport(importPath)) {
-        imports.push(importPath);
+/**
+ * Export information extracted from AST
+ */
+interface ExportInfo {
+  source?: string;
+  specifiers: string[];
+  type: 'named' | 'default' | 'namespace';
+}
+
+/**
+ * Dependency graph node
+ */
+interface DependencyNode {
+  path: string;
+  dependencies: Set<string>;
+  dependents: Set<string>;
+}
+
+/**
+ * AST-based source file collector
+ */
+export class SourceCollector {
+  private files: Map<string, ParsedFile> = new Map();
+  private dependencyGraph: Map<string, DependencyNode> = new Map();
+  private extensions: string[];
+  private includeContent: boolean;
+
+  constructor(options: CollectOptions = {}) {
+    this.extensions = options.extensions ?? ['.ts', '.tsx', '.js', '.jsx'];
+    this.includeContent = options.includeContent ?? true;
+  }
+
+  /**
+   * Get parser options based on file extension
+   */
+  private getParserOptions(filePath: string): ParserOptions {
+    const ext = this.getFileExtension(filePath);
+    const isTypeScript = ext === '.ts' || ext === '.tsx';
+    const isJSX = ext === '.tsx' || ext === '.jsx';
+
+    return {
+      sourceType: 'module',
+      allowImportExportEverywhere: true,
+      allowReturnOutsideFunction: true,
+      errorRecovery: true,
+      plugins: [
+        ...(isTypeScript ? ['typescript' as const] : []),
+        ...(isJSX ? ['jsx' as const] : []),
+        'decorators-legacy',
+        'classProperties',
+        'objectRestSpread',
+        'asyncGenerators',
+        'functionBind',
+        'exportDefaultFrom',
+        'exportNamespaceFrom',
+        'dynamicImport',
+        'nullishCoalescingOperator',
+        'optionalChaining',
+        'optionalCatchBinding',
+        'throwExpressions',
+        'topLevelAwait',
+      ],
+    };
+  }
+
+  /**
+   * Parse a single file into AST and extract import/export information
+   */
+  private parseFile(path: string, content: string): ParsedFile {
+    const parsedFile: ParsedFile = {
+      path,
+      content,
+      ast: null,
+      imports: [],
+      exports: [],
+    };
+
+    try {
+      const parserOptions = this.getParserOptions(path);
+      parsedFile.ast = parse(content, parserOptions);
+
+      if (parsedFile.ast) {
+        this.extractImportsAndExports(parsedFile);
+      }
+    } catch (error) {
+      // If AST parsing fails, try to extract basic imports with regex fallback
+      parsedFile.imports = this.extractImportsWithRegex(content);
+    }
+
+    return parsedFile;
+  }
+
+  /**
+   * Extract imports and exports from AST
+   */
+  private extractImportsAndExports(parsedFile: ParsedFile): void {
+    if (!parsedFile.ast) return;
+
+    traverse(parsedFile.ast, {
+      // Handle: import ... from '...'
+      ImportDeclaration(path: NodePath<t.ImportDeclaration>) {
+        const source = path.node.source.value;
+        const specifiers = path.node.specifiers.map((spec) => {
+          if (t.isImportDefaultSpecifier(spec)) return 'default';
+          if (t.isImportNamespaceSpecifier(spec)) return '*';
+          return spec.imported.type === 'Identifier'
+            ? spec.imported.name
+            : spec.imported.value;
+        });
+
+        parsedFile.imports.push({
+          source,
+          type: 'import',
+          specifiers,
+        });
+      },
+
+      // Handle: export ... from '...'
+      ExportNamedDeclaration(path: NodePath<t.ExportNamedDeclaration>) {
+        const source = path.node.source?.value;
+        const specifiers =
+          path.node.specifiers?.map((spec) => {
+            if (t.isExportDefaultSpecifier(spec)) return 'default';
+            if (t.isExportNamespaceSpecifier(spec)) return '*';
+            return spec.exported.type === 'Identifier'
+              ? spec.exported.name
+              : spec.exported.value;
+          }) ?? [];
+
+        if (source) {
+          // Re-export from another module
+          parsedFile.imports.push({
+            source,
+            type: 'import',
+            specifiers: specifiers.length > 0 ? specifiers : ['*'],
+          });
+        }
+
+        parsedFile.exports.push({
+          source,
+          specifiers,
+          type: 'named',
+        });
+      },
+
+      // Handle: export * from '...'
+      ExportAllDeclaration(path: NodePath<t.ExportAllDeclaration>) {
+        const source = path.node.source.value;
+
+        parsedFile.imports.push({
+          source,
+          type: 'import',
+          specifiers: ['*'],
+        });
+
+        parsedFile.exports.push({
+          source,
+          specifiers: ['*'],
+          type: 'namespace',
+        });
+      },
+
+      // Handle: export default ...
+      ExportDefaultDeclaration(path: NodePath<t.ExportDefaultDeclaration>) {
+        parsedFile.exports.push({
+          specifiers: ['default'],
+          type: 'default',
+        });
+      },
+
+      // Handle: import('...') and require('...')
+      CallExpression(path: NodePath<t.CallExpression>) {
+        const callee = path.node.callee;
+
+        // Dynamic import()
+        if (t.isImport(callee)) {
+          const arg = path.node.arguments[0];
+          if (t.isStringLiteral(arg)) {
+            parsedFile.imports.push({
+              source: arg.value,
+              type: 'dynamic-import',
+              specifiers: ['*'],
+            });
+          }
+        }
+
+        // require('...')
+        if (t.isIdentifier(callee) && callee.name === 'require') {
+          const arg = path.node.arguments[0];
+          if (t.isStringLiteral(arg)) {
+            parsedFile.imports.push({
+              source: arg.value,
+              type: 'require',
+              specifiers: ['*'],
+            });
+          }
+        }
+      },
+    });
+  }
+
+  /**
+   * Fallback regex-based import extraction
+   */
+  private extractImportsWithRegex(content: string): ImportInfo[] {
+    const imports: ImportInfo[] = [];
+
+    const importPatterns = [
+      { pattern: /import\s+.*?from\s+['"](.*?)['"]/g, type: 'import' as const },
+      { pattern: /import\s*\(\s*['"](.*?)['"]\s*\)/g, type: 'dynamic-import' as const },
+      { pattern: /require\s*\(\s*['"](.*?)['"]\s*\)/g, type: 'require' as const },
+      { pattern: /export\s+.*?from\s+['"](.*?)['"]/g, type: 'import' as const },
+    ];
+
+    for (const { pattern, type } of importPatterns) {
+      let match;
+      while ((match = pattern.exec(content)) !== null) {
+        const source = match[1];
+        if (source && this.isLocalImport(source)) {
+          imports.push({
+            source,
+            type,
+            specifiers: ['*'],
+          });
+        }
       }
     }
+
+    return imports;
   }
 
-  return imports;
-}
-
-/**
- * Check if an import path is local (not from node_modules)
- */
-function isLocalImport(importPath: string): boolean {
-  return (
-    importPath.startsWith('./') || importPath.startsWith('../') || importPath.startsWith('/')
-  );
-}
-
-/**
- * Resolve import path relative to current directory
- */
-function resolveImportPath(importPath: string, currentDir: string): string {
-  // Handle absolute paths
-  if (importPath.startsWith('/')) {
-    return importPath.substring(1); // Remove leading slash
+  /**
+   * Check if an import path is local
+   */
+  private isLocalImport(importPath: string): boolean {
+    return (
+      importPath.startsWith('./') || importPath.startsWith('../') || importPath.startsWith('/')
+    );
   }
 
-  // Handle relative paths
-  if (importPath.startsWith('./')) {
-    const cleanPath = importPath.substring(2);
-    return currentDir ? `${currentDir}/${cleanPath}` : cleanPath;
+  /**
+   * Get file extension
+   */
+  private getFileExtension(filePath: string): string {
+    const lastDot = filePath.lastIndexOf('.');
+    return lastDot !== -1 ? filePath.substring(lastDot) : '';
   }
 
-  if (importPath.startsWith('../')) {
-    const pathParts = currentDir.split('/').filter((part) => part !== '');
-    const importParts = importPath.split('/');
+  /**
+   * Resolve import path relative to current file
+   */
+  private resolveImportPath(importPath: string, currentFilePath: string): string {
+    const currentDir = this.getParentPath(currentFilePath);
 
-    // Process ../ parts
-    let i = 0;
-    while (i < importParts.length && importParts[i] === '..') {
-      pathParts.pop(); // Go up one directory
-      i++;
+    // Handle absolute paths
+    if (importPath.startsWith('/')) {
+      return importPath.substring(1);
     }
 
-    // Add remaining import parts
-    const remainingParts = importParts.slice(i);
-    return [...pathParts, ...remainingParts].join('/');
+    // Handle relative paths
+    if (importPath.startsWith('./')) {
+      const cleanPath = importPath.substring(2);
+      return currentDir ? `${currentDir}/${cleanPath}` : cleanPath;
+    }
+
+    if (importPath.startsWith('../')) {
+      const pathParts = currentDir.split('/').filter((part) => part !== '');
+      const importParts = importPath.split('/');
+
+      let i = 0;
+      while (i < importParts.length && importParts[i] === '..') {
+        pathParts.pop();
+        i++;
+      }
+
+      const remainingParts = importParts.slice(i);
+      return [...pathParts, ...remainingParts].join('/');
+    }
+
+    return currentDir ? `${currentDir}/${importPath}` : importPath;
   }
 
-  // Handle direct paths (shouldn't happen for local imports but just in case)
-  return currentDir ? `${currentDir}/${importPath}` : importPath;
-}
-
-/**
- * Get parent directory path
- */
-function getParentPath(path: string): string {
-  return path.split('/').slice(0, -1).join('/');
-}
-
-/**
- * Collect source files and their dependencies
- *
- * @param entryFile - The entry point file path
- * @param files - Array of file objects with path and content
- * @param options - Collection options
- * @returns Map of file paths to their content
- */
-export function collectSourceFiles(
-  entryFile: string,
-  files: Array<{ path: string; content: string }>,
-  options: CollectOptions = {}
-): FileMap {
-  const { extensions = ['.ts', '.tsx', '.js', '.jsx'], includeContent = true } = options;
-
-  // Create file map for quick lookup
-  const fileMap = Object.fromEntries(files.map((file) => [file.path, file.content]));
-
-  const result: FileMap = {};
-  const visited = new Set<string>();
-
-  function readFile(filePath: string): string | null {
-    return fileMap[filePath] ?? null;
+  /**
+   * Get parent directory path
+   */
+  private getParentPath(path: string): string {
+    return path.split('/').slice(0, -1).join('/');
   }
 
-  function tryReadFile(filePath: string): { content: string; actualPath: string } | null {
+  /**
+   * Try to find a file with different extensions
+   */
+  private findFileWithExtensions(basePath: string): string | null {
     // Try exact path first
-    let content = readFile(filePath);
-    if (content !== null) {
-      return { content, actualPath: filePath };
+    if (this.files.has(basePath)) {
+      return basePath;
     }
 
     // Try with extensions
-    for (const ext of extensions) {
-      const tryPath = filePath + ext;
-      const tryContent = readFile(tryPath);
-      if (tryContent !== null) {
-        return { content: tryContent, actualPath: tryPath };
+    for (const ext of this.extensions) {
+      const tryPath = basePath + ext;
+      if (this.files.has(tryPath)) {
+        return tryPath;
       }
     }
 
     return null;
   }
 
-  function traverse(filePath: string): void {
-    if (visited.has(filePath)) return;
-    visited.add(filePath);
+  /**
+   * Build dependency graph from parsed files
+   */
+  private buildDependencyGraph(): void {
+    // Initialize nodes
+    for (const [path, parsedFile] of this.files) {
+      this.dependencyGraph.set(path, {
+        path,
+        dependencies: new Set(),
+        dependents: new Set(),
+      });
+    }
 
-    const fileResult = tryReadFile(filePath);
-    if (!fileResult) return;
+    // Resolve imports and build edges
+    for (const [path, parsedFile] of this.files) {
+      const node = this.dependencyGraph.get(path)!;
 
-    // Store content (or empty string if not including content)
-    result[fileResult.actualPath] = includeContent ? fileResult.content : '';
+      for (const importInfo of parsedFile.imports) {
+        if (this.isLocalImport(importInfo.source)) {
+          const resolvedPath = this.resolveImportPath(importInfo.source, path);
+          const actualPath = this.findFileWithExtensions(resolvedPath);
 
-    // Process imports
-    const imports = extractImportPaths(fileResult.content);
-    for (const importPath of imports) {
-      if (isLocalImport(importPath)) {
-        const resolvedPath = resolveImportPath(
-          importPath,
-          getParentPath(fileResult.actualPath)
-        );
-        traverse(resolvedPath);
+          if (actualPath) {
+            importInfo.resolvedPath = actualPath;
+            node.dependencies.add(actualPath);
+
+            const dependentNode = this.dependencyGraph.get(actualPath);
+            if (dependentNode) {
+              dependentNode.dependents.add(path);
+            }
+          }
+        }
       }
     }
   }
 
-  traverse(entryFile);
-  return result;
+  /**
+   * Collect files starting from entry point using dependency graph
+   */
+  private collectFromEntry(entryPath: string): Set<string> {
+    const collected = new Set<string>();
+    const queue = [entryPath];
+
+    while (queue.length > 0) {
+      const currentPath = queue.shift()!;
+
+      if (collected.has(currentPath)) continue;
+      if (!this.files.has(currentPath)) continue;
+
+      collected.add(currentPath);
+
+      const node = this.dependencyGraph.get(currentPath);
+      if (node) {
+        for (const dependency of node.dependencies) {
+          if (!collected.has(dependency)) {
+            queue.push(dependency);
+          }
+        }
+      }
+    }
+
+    return collected;
+  }
+
+  /**
+   * Main collection method
+   */
+  collect(entryFile: string, files: Array<{ path: string; content: string }>): FileMap {
+    // Clear previous state
+    this.files.clear();
+    this.dependencyGraph.clear();
+
+    // Parse all files into ASTs
+    for (const file of files) {
+      const parsedFile = this.parseFile(file.path, file.content);
+      this.files.set(file.path, parsedFile);
+    }
+
+    // Build dependency graph
+    this.buildDependencyGraph();
+
+    // Find the actual entry file (try with extensions if needed)
+    const actualEntryPath = this.findFileWithExtensions(entryFile);
+    if (!actualEntryPath) {
+      return {};
+    }
+
+    // Collect all dependencies from entry point
+    const collectedPaths = this.collectFromEntry(actualEntryPath);
+
+    // Build result map
+    const result: FileMap = {};
+    for (const path of collectedPaths) {
+      const parsedFile = this.files.get(path);
+      if (parsedFile) {
+        result[path] = this.includeContent ? parsedFile.content : '';
+      }
+    }
+
+    return result;
+  }
 }

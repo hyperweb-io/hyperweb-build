@@ -1,11 +1,21 @@
-import { collectSourceFiles, FileMap, CollectOptions } from '../src/collect';
+import { SourceCollector, FileMap, CollectOptions } from '../src/collect';
 
-describe('collectSourceFiles', () => {
+describe('SourceCollector', () => {
+  let collector: SourceCollector;
+  let collectorWithoutContent: SourceCollector;
+  let collectorWithCustomExtensions: SourceCollector;
+
+  beforeAll(() => {
+    collector = new SourceCollector();
+    collectorWithoutContent = new SourceCollector({ includeContent: false });
+    collectorWithCustomExtensions = new SourceCollector({ extensions: ['.custom', '.ts'] });
+  });
+
   describe('basic functionality', () => {
     it('should collect a single file with no imports', () => {
       const files = [{ path: 'main.ts', content: 'const x = 1;' }];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': 'const x = 1;',
@@ -15,7 +25,7 @@ describe('collectSourceFiles', () => {
     it('should return empty object when entry file not found', () => {
       const files = [{ path: 'other.ts', content: 'const x = 1;' }];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({});
     });
@@ -28,7 +38,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.ts', content: 'export const foo = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': 'import { foo } from "./helper";',
@@ -46,7 +56,7 @@ describe('collectSourceFiles', () => {
         { path: 'utils/shared.ts', content: 'export const bar = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': 'import { foo } from "./utils/helper";',
@@ -61,7 +71,7 @@ describe('collectSourceFiles', () => {
         { path: 'utils/helper.ts', content: 'export const foo = 1;' },
       ];
 
-      const result = collectSourceFiles('src/main.ts', files);
+      const result = collector.collect('src/main.ts', files);
 
       expect(result).toEqual({
         'src/main.ts': 'import { foo } from "../utils/helper";',
@@ -92,7 +102,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper6.ts', content: 'export const baz = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
       const keys = Object.keys(result);
 
       expect(keys).toHaveLength(7);
@@ -118,7 +128,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.ts', content: 'export const foo = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
       const keys = Object.keys(result);
 
       expect(keys).toHaveLength(2);
@@ -135,7 +145,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.ts', content: 'export const foo = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': 'import { foo } from "./helper";',
@@ -149,7 +159,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.jsx', content: 'export const foo = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': 'import { foo } from "./helper";',
@@ -163,11 +173,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.custom', content: 'export const foo = 1;' },
       ];
 
-      const options: CollectOptions = {
-        extensions: ['.custom', '.ts'],
-      };
-
-      const result = collectSourceFiles('main.ts', files, options);
+      const result = collectorWithCustomExtensions.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': 'import { foo } from "./helper";',
@@ -182,7 +188,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.ts', content: 'export const foo = "with-ext";' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result['helper']).toBe('export const foo = "exact";');
     });
@@ -195,7 +201,7 @@ describe('collectSourceFiles', () => {
         { path: 'b.ts', content: 'import { a } from "./a"; export const b = 2;' },
       ];
 
-      const result = collectSourceFiles('a.ts', files);
+      const result = collector.collect('a.ts', files);
 
       expect(result).toEqual({
         'a.ts': 'import { b } from "./b"; export const a = 1;',
@@ -208,7 +214,7 @@ describe('collectSourceFiles', () => {
         { path: 'main.ts', content: 'import { foo } from "./main"; export const foo = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': 'import { foo } from "./main"; export const foo = 1;',
@@ -223,11 +229,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.ts', content: 'export const foo = 1;' },
       ];
 
-      const options: CollectOptions = {
-        includeContent: false,
-      };
-
-      const result = collectSourceFiles('main.ts', files, options);
+      const result = collectorWithoutContent.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': '',
@@ -238,8 +240,9 @@ describe('collectSourceFiles', () => {
     it('should use default options when not provided', () => {
       const files = [{ path: 'main.ts', content: 'const x = 1;' }];
 
-      const result1 = collectSourceFiles('main.ts', files);
-      const result2 = collectSourceFiles('main.ts', files, {});
+      const result1 = collector.collect('main.ts', files);
+      const collector2 = new SourceCollector({});
+      const result2 = collector2.collect('main.ts', files);
 
       expect(result1).toEqual(result2);
     });
@@ -249,7 +252,7 @@ describe('collectSourceFiles', () => {
     it('should handle empty file content', () => {
       const files = [{ path: 'main.ts', content: '' }];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': '',
@@ -261,7 +264,7 @@ describe('collectSourceFiles', () => {
         { path: 'main.ts', content: '// This is a comment\n/* Block comment */' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': '// This is a comment\n/* Block comment */',
@@ -282,7 +285,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.ts', content: 'export const foo = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
       const keys = Object.keys(result);
 
       expect(keys).toHaveLength(2);
@@ -304,7 +307,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.ts', content: 'export const foo = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
       const keys = Object.keys(result);
 
       // Should only collect the real import, not the ones in comments/strings
@@ -320,7 +323,7 @@ describe('collectSourceFiles', () => {
         { path: 'absolute/helper.ts', content: 'export const foo = 1;' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': 'import { foo } from "/absolute/helper";',
@@ -331,7 +334,7 @@ describe('collectSourceFiles', () => {
     it('should handle missing intermediate directories', () => {
       const files = [{ path: 'main.ts', content: 'import { foo } from "./missing/helper";' }];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
 
       expect(result).toEqual({
         'main.ts': 'import { foo } from "./missing/helper";',
@@ -354,7 +357,7 @@ describe('collectSourceFiles', () => {
         { path: 'src/components/types.ts', content: 'export interface Props {}' },
       ];
 
-      const result = collectSourceFiles('src/components/Button/index.ts', files);
+      const result = collector.collect('src/components/Button/index.ts', files);
       const keys = Object.keys(result);
 
       expect(keys).toHaveLength(4);
@@ -382,7 +385,7 @@ describe('collectSourceFiles', () => {
         { path: 'helper.ts', content: 'export const helper = {};' },
       ];
 
-      const result = collectSourceFiles('main.ts', files);
+      const result = collector.collect('main.ts', files);
       const keys = Object.keys(result);
 
       expect(keys).toHaveLength(5);
