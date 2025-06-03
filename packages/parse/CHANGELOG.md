@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.5.0](https://github.com/hyperweb-io/hyperweb-build/compare/v1.4.3...v1.5.0) (2025-06-03)
+
+
+### Features
+
+* add multi-file parsing support ([604e8fd](https://github.com/hyperweb-io/hyperweb-build/commit/604e8fd649b775d03af141387409644b3edb602e))
+* simplify analyzer ([538ae6a](https://github.com/hyperweb-io/hyperweb-build/commit/538ae6a96d126f3e4e181141bb6a5752f3f3de0f))
+* split tests ([b4d3958](https://github.com/hyperweb-io/hyperweb-build/commit/b4d39589060ed61faa2e48746884286137ec345a))
+
+
+
+
+
 ## [1.4.3](https://github.com/hyperweb-io/hyperweb-build/compare/v1.4.2...v1.4.3) (2025-05-31)
 
 **Note:** Version bump only for package @hyperweb/parse

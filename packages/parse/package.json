@@ -1,6 +1,6 @@
 {
   "name": "@hyperweb/parse",
-  "version": "1.4.3",
+  "version": "1.5.0",
   "author": "Hyperweb <developers@hyperweb.io>",
   "description": "Parse Hyperweb contracts",
   "main": "index.js",
