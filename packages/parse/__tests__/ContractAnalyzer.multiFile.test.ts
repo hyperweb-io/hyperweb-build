@@ -1188,4 +1188,92 @@ describe('ContractAnalyzer - Multi-File Analysis', () => {
       ]);
     });
   });
+
+  describe('null and undefined union types', () => {
+    it('should handle multi-file contract with null union parameters', () => {
+      const sourceFiles = {
+        'src/types.ts': `
+          export interface UserData {
+            id: string;
+            name: string | null;
+          }
+        `,
+        'src/contract.ts': `
+          import { UserData } from './types';
+          
+          export default class NullableContract {
+            state = { users: [] as UserData[] };
+            
+            addUser(userData: UserData | null): boolean {
+              if (userData) {
+                this.state.users.push(userData);
+                return true;
+              }
+              return false;
+            }
+            
+            findUser(id: string | null): UserData | null {
+              return id ? this.state.users.find(u => u.id === id) || null : null;
+            }
+          }
+        `,
+      };
+
+      const result = analyzer.analyzeMultiFile(sourceFiles);
+      expect(result.queries).toEqual([
+        {
+          name: 'findUser',
+          params: [{ name: 'id', type: 'string | null' }],
+          returnType: 'UserData | null',
+        },
+      ]);
+      expect(result.mutations).toEqual([
+        {
+          name: 'addUser',
+          params: [{ name: 'userData', type: 'UserData | null' }],
+          returnType: 'boolean',
+        },
+      ]);
+    });
+
+    it('should handle multi-file contract with undefined union parameters', () => {
+      const sourceFiles = {
+        'src/models.ts': `
+          export type OptionalString = string | undefined;
+          export type NullableNumber = number | null | undefined;
+        `,
+        'src/contract.ts': `
+          import { OptionalString, NullableNumber } from './models';
+          
+          export default class UndefinedContract {
+            state = { data: {} };
+            
+            processValue(value: OptionalString): string {
+              return value || 'default';
+            }
+            
+            updateCounter(increment: NullableNumber): void {
+              this.state.data.counter = (this.state.data.counter || 0) + (increment || 0);
+            }
+          }
+        `,
+      };
+
+      const result = analyzer.analyzeMultiFile(sourceFiles);
+      expect(result.queries).toEqual([
+        {
+          name: 'processValue',
+          params: [{ name: 'value', type: 'OptionalString' }],
+          returnType: 'string',
+        },
+      ]);
+      expect(result.mutations).toEqual([
+        {
+          name: 'updateCounter',
+          params: [{ name: 'increment', type: 'NullableNumber' }],
+          returnType: 'void',
+        },
+      ]);
+    });
+  });
 });

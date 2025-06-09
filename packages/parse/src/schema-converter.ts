@@ -46,6 +46,8 @@ export class SchemaConverter {
     if (t.isTSStringKeyword(node)) return { type: 'string' };
     if (t.isTSNumberKeyword(node)) return { type: 'number' };
     if (t.isTSBooleanKeyword(node)) return { type: 'boolean' };
+    if (t.isTSNullKeyword(node)) return { type: 'null' };
+    if (t.isTSUndefinedKeyword(node)) return { type: 'null' }; // JSON Schema doesn't have undefined, use null
     // literal types (e.g. 'on', 1, true)
     if (t.isTSLiteralType(node)) {
       const lit = node.literal;
