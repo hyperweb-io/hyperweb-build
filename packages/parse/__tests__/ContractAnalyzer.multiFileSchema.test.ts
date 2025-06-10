@@ -453,7 +453,7 @@ describe('ContractAnalyzer - Multi-File with Schema', () => {
       {
         name: 'checkStatus',
         params: [],
-        returnSchema: { anyOf: [{ type: 'boolean' }, {}] },
+        returnSchema: { anyOf: [{ type: 'boolean' }, { type: 'null' }] },
       },
     ]);
     expect(result.mutations).toEqual([
@@ -587,7 +587,7 @@ describe('ContractAnalyzer - Multi-File with Schema', () => {
               },
               required: ['id', 'name', 'age'],
             },
-            {},
+            { type: 'null' },
           ],
         },
       },
@@ -1075,5 +1075,155 @@ describe('ContractAnalyzer - Multi-File with Schema', () => {
         returnSchema: {},
       },
     ]);
+  });
+
+  describe('null and undefined union types with schemas', () => {
+    it('should handle multi-file contract with null union schemas', () => {
+      const sourceFiles = {
+        'src/types.ts': `
+          export interface UserProfile {
+            id: string;
+            email: string | null;
+            verified: boolean;
+          }
+        `,
+        'src/contract.ts': `
+          import { UserProfile } from './types';
+          
+          export default class NullableSchemaContract {
+            state = { profiles: [] as UserProfile[] };
+            
+            getProfile(id: string | null): UserProfile | null {
+              return this.state.profiles[0];
+            }
+            
+            createProfile(data: UserProfile | null): void {
+              if (data) {
+                this.state.profiles.push(data);
+              }
+            }
+          }
+        `,
+      };
+
+      const result = analyzer.analyzeMultiFileWithSchema(sourceFiles);
+      expect(result.queries).toEqual([
+        {
+          name: 'getProfile',
+          params: [
+            {
+              name: 'id',
+              schema: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+            },
+          ],
+          returnSchema: {
+            anyOf: [
+              {
+                type: 'object',
+                properties: {
+                  id: { type: 'string' },
+                  email: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+                  verified: { type: 'boolean' },
+                },
+                required: ['id', 'email', 'verified'],
+              },
+              { type: 'null' },
+            ],
+          },
+        },
+      ]);
+      expect(result.mutations).toEqual([
+        {
+          name: 'createProfile',
+          params: [
+            {
+              name: 'data',
+              schema: {
+                anyOf: [
+                  {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'string' },
+                      email: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+                      verified: { type: 'boolean' },
+                    },
+                    required: ['id', 'email', 'verified'],
+                  },
+                  { type: 'null' },
+                ],
+              },
+            },
+          ],
+          returnSchema: {},
+        },
+      ]);
+    });
+
+    it('should handle multi-file contract with undefined union schemas', () => {
+      const sourceFiles = {
+        'src/config.ts': `
+          export type OptionalConfig = {
+            timeout?: number | undefined;
+            retries: number | null;
+          };
+        `,
+        'src/contract.ts': `
+          import { OptionalConfig } from './config';
+          
+          export default class UndefinedSchemaContract {
+            state = { settings: {} };
+            
+            updateConfig(config: OptionalConfig): OptionalConfig {
+              this.state.settings = { ...this.state.settings, ...config };
+              return config;
+            }
+            
+            getTimeout(defaultValue: number | undefined): number {
+              return this.state.settings.timeout ?? defaultValue ?? 5000;
+            }
+          }
+        `,
+      };
+
+      const result = analyzer.analyzeMultiFileWithSchema(sourceFiles);
+      expect(result.queries).toEqual([
+        {
+          name: 'getTimeout',
+          params: [
+            {
+              name: 'defaultValue',
+              schema: { anyOf: [{ type: 'number' }, { type: 'null' }] },
+            },
+          ],
+          returnSchema: { type: 'number' },
+        },
+      ]);
+      expect(result.mutations).toEqual([
+        {
+          name: 'updateConfig',
+          params: [
+            {
+              name: 'config',
+              schema: {
+                type: 'object',
+                properties: {
+                  timeout: { anyOf: [{ type: 'number' }, { type: 'null' }] },
+                  retries: { anyOf: [{ type: 'number' }, { type: 'null' }] },
+                },
+                required: ['retries'],
+              },
+            },
+          ],
+          returnSchema: {
+            type: 'object',
+            properties: {
+              timeout: { anyOf: [{ type: 'number' }, { type: 'null' }] },
+              retries: { anyOf: [{ type: 'number' }, { type: 'null' }] },
+            },
+            required: ['retries'],
+          },
+        },
+      ]);
+    });
   });
 });

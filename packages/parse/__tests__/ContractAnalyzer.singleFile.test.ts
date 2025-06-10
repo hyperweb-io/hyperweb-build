@@ -666,4 +666,72 @@ describe('ContractAnalyzer - Single File Analysis', () => {
       expect(result.mutations.map((m) => m.name)).toEqual(['addItem', 'processItem']);
     });
   });
+
+  describe('null and undefined union types', () => {
+    it('should handle parameters with null union types', () => {
+      const code = `
+        export default class Contract {
+          state: any;
+          
+          add(num: number | null) {
+            if (num !== null) {
+              this.state.value += num;
+            }
+          }
+          
+          getName(id: string | null): string {
+            return id ? this.state.names[id] : 'unknown';
+          }
+        }
+      `;
+
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries).toEqual([
+        {
+          name: 'getName',
+          params: [{ name: 'id', type: 'string | null' }],
+          returnType: 'string',
+        },
+      ]);
+      expect(result.mutations).toEqual([
+        {
+          name: 'add',
+          params: [{ name: 'num', type: 'number | null' }],
+          returnType: 'void',
+        },
+      ]);
+    });
+
+    it('should handle parameters with undefined union types and nullable return types', () => {
+      const code = `
+        export default class Contract {
+          state: any;
+          
+          updateCount(increment: number | undefined) {
+            this.state.count += increment || 0;
+          }
+          
+          findUser(id: string): User | null | undefined {
+            return this.state.users.find(u => u.id === id);
+          }
+        }
+      `;
+
+      const result = analyzer.analyzeFromCode(code);
+      expect(result.queries).toEqual([
+        {
+          name: 'findUser',
+          params: [{ name: 'id', type: 'string' }],
+          returnType: 'User | null | undefined',
+        },
+      ]);
+      expect(result.mutations).toEqual([
+        {
+          name: 'updateCount',
+          params: [{ name: 'increment', type: 'number | undefined' }],
+          returnType: 'void',
+        },
+      ]);
+    });
+  });
 });

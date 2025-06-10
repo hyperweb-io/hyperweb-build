@@ -372,4 +372,101 @@ describe('ContractAnalyzer - Single File with Schema', () => {
     ]);
     expect(result.mutations).toEqual([]);
   });
+
+  it('should handle null union types in parameters and return schemas', () => {
+    const code = `
+      export default class Contract {
+        getValue(id: string | null): number | null {
+          return id ? 42 : null;
+        }
+        
+        setData(data: { value: number | null }): void {
+          this.state.data = data;
+        }
+      }
+    `;
+
+    const result = analyzer.analyzeWithSchema(code);
+    expect(result.queries).toEqual([
+      {
+        name: 'getValue',
+        params: [
+          {
+            name: 'id',
+            schema: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+          },
+        ],
+        returnSchema: { anyOf: [{ type: 'number' }, { type: 'null' }] },
+      },
+    ]);
+    expect(result.mutations).toEqual([
+      {
+        name: 'setData',
+        params: [
+          {
+            name: 'data',
+            schema: {
+              type: 'object',
+              properties: {
+                value: { anyOf: [{ type: 'number' }, { type: 'null' }] },
+              },
+              required: ['value'],
+            },
+          },
+        ],
+        returnSchema: {},
+      },
+    ]);
+  });
+
+  it('should handle undefined union types and complex nullable schemas', () => {
+    const code = `
+      export default class Contract {
+        processItems(items: Array<string | undefined>): Array<number | null> {
+          return items.map(item => item ? item.length : null);
+        }
+        
+        updateSettings(config: { timeout?: number | null }): void {
+          this.state.config = config;
+        }
+      }
+    `;
+
+    const result = analyzer.analyzeWithSchema(code);
+    expect(result.queries).toEqual([
+      {
+        name: 'processItems',
+        params: [
+          {
+            name: 'items',
+            schema: {
+              type: 'array',
+              items: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+            },
+          },
+        ],
+        returnSchema: {
+          type: 'array',
+          items: { anyOf: [{ type: 'number' }, { type: 'null' }] },
+        },
+      },
+    ]);
+    expect(result.mutations).toEqual([
+      {
+        name: 'updateSettings',
+        params: [
+          {
+            name: 'config',
+            schema: {
+              type: 'object',
+              properties: {
+                timeout: { anyOf: [{ type: 'number' }, { type: 'null' }] },
+              },
+            },
+          },
+        ],
+        returnSchema: {},
+      },
+    ]);
+  });
 });
