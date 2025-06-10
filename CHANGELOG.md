@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.7.0](https://github.com/cosmology-tech/build/compare/v1.6.0...v1.7.0) (2025-06-10)
+
+
+### Features
+
+* parse nullable args ([fd7d56e](https://github.com/cosmology-tech/build/commit/fd7d56e09d9759a625b1e71b14039e0116bc0527))
+
+
+
+
+
 # [1.6.0](https://github.com/cosmology-tech/build/compare/v1.5.0...v1.6.0) (2025-06-03)
 
 
